@@ -1,12 +1,52 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { ChatHeader } from "@/components/ChatHeader";
+import { ChatMessage } from "@/components/ChatMessage";
+import { ChatInput } from "@/components/ChatInput";
+import { VideoCarousel } from "@/components/VideoCarousel";
+import { PodcastPlatforms } from "@/components/PodcastPlatforms";
+import { NewsletterForm } from "@/components/NewsletterForm";
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background flex flex-col">
+      <ChatHeader />
+      
+      <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-8">
+        {/* Welcome message */}
+        <ChatMessage role="assistant" delay={0}>
+          <p className="text-foreground">
+            Hi there! 👋 I'm here to help you explore the world of AI. Ask me about learning resources, our podcast, or subscribe to our newsletter for weekly insights.
+          </p>
+        </ChatMessage>
+
+        {/* Question 1: Videos */}
+        <ChatMessage role="user" delay={300}>
+          <p className="text-foreground">What are the best videos about AI?</p>
+        </ChatMessage>
+
+        <ChatMessage role="assistant" delay={600}>
+          <VideoCarousel />
+        </ChatMessage>
+
+        {/* Question 2: Podcast */}
+        <ChatMessage role="user" delay={1200}>
+          <p className="text-foreground">How can I subscribe to the podcast?</p>
+        </ChatMessage>
+
+        <ChatMessage role="assistant" delay={1500}>
+          <PodcastPlatforms />
+        </ChatMessage>
+
+        {/* Question 3: Newsletter */}
+        <ChatMessage role="user" delay={2100}>
+          <p className="text-foreground">Can I subscribe to the newsletter?</p>
+        </ChatMessage>
+
+        <ChatMessage role="assistant" delay={2400}>
+          <NewsletterForm />
+        </ChatMessage>
+      </main>
+
+      <ChatInput />
     </div>
   );
 };
