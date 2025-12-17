@@ -1,10 +1,38 @@
 import { useState } from "react";
-import { ArrowRight, Check, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import confetti from "canvas-confetti";
 
 export function NewsletterForm() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+
+  const triggerConfetti = () => {
+    const duration = 3000;
+    const end = Date.now() + duration;
+
+    const frame = () => {
+      confetti({
+        particleCount: 3,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
+      });
+      confetti({
+        particleCount: 3,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    };
+    frame();
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,11 +43,25 @@ export function NewsletterForm() {
     // Simulate subscription
     setTimeout(() => {
       setStatus("success");
+      triggerConfetti();
       toast.success("You're subscribed!", {
         description: "Check your inbox for a confirmation email.",
       });
     }, 1500);
   };
+
+  if (status === "success") {
+    return (
+      <div className="mt-4">
+        <p className="text-foreground mb-4">
+          I like how you think. Where should I send AI builders' playbooks.
+        </p>
+        <p className="text-foreground font-bold text-lg animate-fade-in">
+          Done. Check your email. I sent you something.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-4">
@@ -35,22 +77,17 @@ export function NewsletterForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              disabled={status === "success"}
+              disabled={status === "loading"}
               className="w-full px-4 py-3 rounded-xl bg-muted border border-chat-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all duration-200 text-foreground placeholder:text-muted-foreground disabled:opacity-50"
             />
           </div>
           <button
             type="submit"
-            disabled={status !== "idle" || !email}
+            disabled={status === "loading" || !email}
             className="px-6 py-3 rounded-xl bg-primary text-primary-foreground font-medium flex items-center gap-2 hover:bg-primary/90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
           >
             {status === "loading" ? (
               <Loader2 className="w-5 h-5 animate-spin" />
-            ) : status === "success" ? (
-              <>
-                <Check className="w-5 h-5" />
-                Subscribed
-              </>
             ) : (
               <>
                 Get it
@@ -60,12 +97,6 @@ export function NewsletterForm() {
           </button>
         </div>
       </form>
-      
-      {status === "success" && (
-        <p className="mt-3 text-sm text-muted-foreground animate-fade-in">
-          🎉 Welcome to the community! You'll receive your first newsletter soon.
-        </p>
-      )}
     </div>
   );
 }
