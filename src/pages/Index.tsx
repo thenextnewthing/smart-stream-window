@@ -23,10 +23,10 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Scroll to top after newsletter form appears
+  // Scroll to bottom after newsletter form appears
   useEffect(() => {
     const timer = setTimeout(() => {
-      scrollToTop();
+      scrollToBottom();
     }, 7500); // After newsletter form animation (6000ms) + some viewing time
     return () => clearTimeout(timer);
   }, []);
