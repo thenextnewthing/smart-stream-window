@@ -28,7 +28,7 @@ const platforms = [
 export function PodcastPlatforms() {
   return (
     <div>
-      <p className="text-foreground mb-3">As you requested</p>
+      <p className="text-foreground mb-3">As you requested.</p>
       <div className="flex gap-2 overflow-x-auto scrollbar-hide">
       {platforms.map((platform, index) => (
         <a
