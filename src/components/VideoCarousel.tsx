@@ -65,7 +65,7 @@ export function VideoCarousel() {
               className="w-full h-36 object-cover transition-transform duration-300 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-colors duration-300 flex items-center justify-center">
-              <div className="w-12 h-12 rounded-full bg-primary/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
+              <div className="w-12 h-12 rounded-full bg-primary/90 flex items-center justify-center transition-transform duration-300 shadow-lg group-hover:scale-110">
                 <Play className="w-5 h-5 text-primary-foreground ml-0.5" fill="currentColor" />
               </div>
             </div>
