@@ -24,7 +24,7 @@ export function NewsletterForm() {
   return (
     <div className="mt-4">
       <p className="text-foreground mb-4">
-        Of course! Enter your email below to get weekly AI insights, curated resources, and exclusive content delivered straight to your inbox.
+        I like how you think. I'll email them to you.
       </p>
       
       <form onSubmit={handleSubmit} className="animate-slide-up opacity-0" style={{ animationDelay: "200ms" }}>
@@ -53,7 +53,7 @@ export function NewsletterForm() {
               </>
             ) : (
               <>
-                Subscribe
+                Get it
                 <ArrowRight className="w-4 h-4" />
               </>
             )}

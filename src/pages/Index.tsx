@@ -18,7 +18,7 @@ const Index = () => {
 
         {/* Question 1: Videos */}
         <ChatMessage role="user" delay={300}>
-          <p className="text-foreground">What are the best videos about AI?</p>
+          <p className="text-foreground">I want to see what the big thinkers in AI are building.</p>
         </ChatMessage>
 
         <ChatMessage role="assistant" delay={600}>
@@ -27,7 +27,7 @@ const Index = () => {
 
         {/* Question 2: Podcast */}
         <ChatMessage role="user" delay={1200}>
-          <p className="text-foreground">How can I subscribe to the podcast?</p>
+          <p className="text-foreground">I prefer audio. I want podcast links</p>
         </ChatMessage>
 
         <ChatMessage role="assistant" delay={1500}>
@@ -36,7 +36,7 @@ const Index = () => {
 
         {/* Question 3: Newsletter */}
         <ChatMessage role="user" delay={2100}>
-          <p className="text-foreground">Can I subscribe to the newsletter?</p>
+          <p className="text-foreground">I want the playbooks these founders use to build.</p>
         </ChatMessage>
 
         <ChatMessage role="assistant" delay={2400}>

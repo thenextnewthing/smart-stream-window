@@ -33,12 +33,12 @@ const platforms = [
 
 export function PodcastPlatforms() {
   return (
-    <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+    <div className="flex gap-2 overflow-x-auto scrollbar-hide">
       {platforms.map((platform, index) => (
         <a
           key={platform.name}
           href={platform.url}
-          className="flex-shrink-0 flex items-center justify-center p-4 rounded-xl bg-muted/50 hover:bg-muted transition-all duration-300 group animate-slide-up opacity-0"
+          className="flex-shrink-0 flex items-center justify-center p-2 rounded-xl bg-muted/50 hover:bg-muted transition-all duration-300 group animate-slide-up opacity-0"
           style={{ animationDelay: `${index * 80 + 200}ms` }}
         >
           <div className="w-14 h-14 rounded-xl bg-card flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow duration-300 group-hover:scale-110 transform">
