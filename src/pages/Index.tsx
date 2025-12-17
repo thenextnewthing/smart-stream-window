@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ChatHeader } from "@/components/ChatHeader";
 import { ChatMessage } from "@/components/ChatMessage";
 import { ChatInput } from "@/components/ChatInput";
@@ -5,7 +6,26 @@ import { VideoCarousel } from "@/components/VideoCarousel";
 import { PodcastPlatforms } from "@/components/PodcastPlatforms";
 import { NewsletterForm } from "@/components/NewsletterForm";
 
+interface UserMessage {
+  content: string;
+  showResponse: boolean;
+}
+
 const Index = () => {
+  const [userMessages, setUserMessages] = useState<UserMessage[]>([]);
+
+  const handleUserSubmit = (message: string) => {
+    setUserMessages((prev) => [...prev, { content: message, showResponse: false }]);
+    // Show response after a brief delay
+    setTimeout(() => {
+      setUserMessages((prev) => 
+        prev.map((msg, idx) => 
+          idx === prev.length - 1 ? { ...msg, showResponse: true } : msg
+        )
+      );
+    }, 500);
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <ChatHeader />
@@ -42,9 +62,33 @@ const Index = () => {
         <ChatMessage role="assistant" delay={6000}>
           <NewsletterForm />
         </ChatMessage>
+
+        {/* Dynamic user messages */}
+        {userMessages.map((msg, index) => (
+          <div key={index}>
+            <ChatMessage role="user" delay={0}>
+              <p className="text-foreground">{msg.content}</p>
+            </ChatMessage>
+            {msg.showResponse && (
+              <ChatMessage role="assistant" delay={0}>
+                <p className="text-foreground">
+                  Dude, I'm not a real AI. I'm a landing page with a playful AI-like design. Could you tell that? You need to brush up on how AI works.{" "}
+                  <a 
+                    href="https://youtube.com/@TheNextNewThingAI?sub_confirmation=1" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary underline hover:text-primary/80"
+                  >
+                    Go here.
+                  </a>
+                </p>
+              </ChatMessage>
+            )}
+          </div>
+        ))}
       </main>
 
-      <ChatInput />
+      <ChatInput onSubmit={handleUserSubmit} />
     </div>
   );
 };
