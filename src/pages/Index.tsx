@@ -23,12 +23,20 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Scroll to bottom after newsletter form appears
+  // Scroll when playbook message appears and when newsletter form appears
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const timer1 = setTimeout(() => {
       scrollToBottom();
-    }, 7500); // After newsletter form animation (6000ms) + some viewing time
-    return () => clearTimeout(timer);
+    }, 5100); // When "I want the playbooks..." message appears (delay 5000)
+    
+    const timer2 = setTimeout(() => {
+      scrollToBottom();
+    }, 6100); // When newsletter form appears (delay 6000)
+    
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
   }, []);
 
   useEffect(() => {
