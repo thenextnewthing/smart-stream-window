@@ -48,7 +48,9 @@ const videos: Video[] = [
 
 export function VideoCarousel() {
   return (
-    <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-2 px-2">
+    <div>
+      <p className="text-foreground mb-3">Here you go</p>
+      <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-2 px-2">
       {videos.map((video, index) => (
         <a
           key={video.id}
@@ -72,6 +74,7 @@ export function VideoCarousel() {
           </div>
         </a>
       ))}
+      </div>
     </div>
   );
 }
