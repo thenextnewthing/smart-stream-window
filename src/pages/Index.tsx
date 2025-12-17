@@ -17,29 +17,29 @@ const Index = () => {
         </ChatMessage>
 
         {/* Question 1: Videos */}
-        <ChatMessage role="user" delay={300}>
+        <ChatMessage role="user" delay={1000}>
           <p className="text-foreground">I want to see what the big thinkers in AI are building.</p>
         </ChatMessage>
 
-        <ChatMessage role="assistant" delay={600}>
+        <ChatMessage role="assistant" delay={2000}>
           <VideoCarousel />
         </ChatMessage>
 
         {/* Question 2: Podcast */}
-        <ChatMessage role="user" delay={1200}>
+        <ChatMessage role="user" delay={3000}>
           <p className="text-foreground">I prefer audio. I want podcast links</p>
         </ChatMessage>
 
-        <ChatMessage role="assistant" delay={1500}>
+        <ChatMessage role="assistant" delay={4000}>
           <PodcastPlatforms />
         </ChatMessage>
 
         {/* Question 3: Newsletter */}
-        <ChatMessage role="user" delay={2100}>
+        <ChatMessage role="user" delay={5000}>
           <p className="text-foreground">I want the playbooks these founders use to build.</p>
         </ChatMessage>
 
-        <ChatMessage role="assistant" delay={2400}>
+        <ChatMessage role="assistant" delay={6000}>
           <NewsletterForm />
         </ChatMessage>
       </main>
