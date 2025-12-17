@@ -72,14 +72,14 @@ const Index = () => {
             {msg.showResponse && (
               <ChatMessage role="assistant" delay={0}>
                 <p className="text-foreground">
-                  Dude, I'm not a real AI. I'm a landing page with a playful AI-like design. Could you tell that? You need to brush up on how AI works.{" "}
+                  Dude, I'm not a real AI. I'm a landing page with a playful AI-like design. Couldn't you tell that? You need to brush up on how AI works.{" "}
                   <a 
                     href="https://youtube.com/@TheNextNewThingAI?sub_confirmation=1" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-primary underline hover:text-primary/80"
                   >
-                    Go here.
+                    Go here to learn from the best.
                   </a>
                 </p>
               </ChatMessage>
