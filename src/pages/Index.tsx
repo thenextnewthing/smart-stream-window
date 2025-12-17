@@ -82,17 +82,18 @@ const Index = () => {
             </ChatMessage>
             {msg.showResponse && (
               <ChatMessage role="assistant" delay={0}>
-                <p className="text-foreground">
-                  Dude, I'm not a real AI. I'm a landing page with a playful AI-like design. Couldn't you tell that? You need to brush up on how AI works.{" "}
-                  <a 
-                    href="https://youtube.com/@TheNextNewThingAI?sub_confirmation=1" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-primary underline hover:text-primary/80"
-                  >
-                    Go here to learn from the best.
-                  </a>
-                </p>
+                {(() => {
+                  const responses = [
+                    <p className="text-foreground">Dude, I'm not a real AI. I'm a landing page with a playful AI-like design. Couldn't you tell that? You need to brush up on how AI works.{" "}<a href="https://youtube.com/@TheNextNewThingAI?sub_confirmation=1" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">Go here to learn from the best.</a></p>,
+                    <p className="text-foreground">Hmm, you're still trying to talk with me? Scroll up. The action is up there.</p>,
+                    <p className="text-foreground">Again, I'm not a real AI. My whole job is to get you to subscribe so Andrew's subscriber count goes up and he'll feel good about himself. Have you tried{" "}<a href="https://youtube.com/@TheNextNewThingAI?sub_confirmation=1" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">his YouTube link</a>? He's almost at 5 subscribers.</p>,
+                    <p className="text-foreground">You're still typing here?</p>,
+                    <p className="text-foreground">Hmmmm. You know nothing happens here, right? This is a landing page designed to get you to subscribe and move on?</p>,
+                    <p className="text-foreground">✋ You're talking with the wrong bot, my friend.</p>,
+                    <p className="text-foreground">I'm running out of things to say to you.</p>,
+                  ];
+                  return responses[index % responses.length];
+                })()}
               </ChatMessage>
             )}
           </div>
