@@ -42,7 +42,7 @@ export function ChatInput({ onSubmit }: ChatInputProps) {
           </button>
         </div>
         <p className="text-center text-xs text-muted-foreground mt-3">
-          This is a demo interface. Messages shown are pre-defined.
+          I don't make mistakes. Don't bother checking my work.
         </p>
       </div>
     </div>
