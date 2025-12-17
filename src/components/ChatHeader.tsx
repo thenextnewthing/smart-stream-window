@@ -7,7 +7,7 @@ export function ChatHeader() {
         </div>
         <div>
           <h1 className="font-serif text-lg font-medium text-foreground">The Next New Thing</h1>
-          <p className="text-xs text-muted-foreground">AI Creator's Podcast by Andrew Warner</p>
+          <p className="text-xs text-muted-foreground">The Podcast for AI Creator's by the Ultra-Pushy Interviewer Andrew Warner</p>
         </div>
       </div>
     </header>
