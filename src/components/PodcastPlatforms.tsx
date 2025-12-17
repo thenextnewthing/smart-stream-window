@@ -3,31 +3,25 @@ const platforms = [
     name: "Spotify",
     logo: "https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg",
     color: "#1DB954",
-    url: "#",
+    url: "https://open.spotify.com/show/12ewmMQmxDOJUIFzBzygEa",
   },
   {
     name: "Apple Podcasts",
     logo: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Podcasts_%28iOS%29.svg",
     color: "#9933FF",
-    url: "#",
+    url: "https://podcasts.apple.com/podcast/the-next-new-thing/id1844721500",
   },
   {
     name: "YouTube",
     logo: "https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg",
     color: "#FF0000",
-    url: "#",
-  },
-  {
-    name: "Google Podcasts",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/2/25/Google_Podcasts_icon.svg",
-    color: "#4285F4",
-    url: "#",
+    url: "https://youtube.com/@TheNextNewThingAI?sub_confirmation=1",
   },
   {
     name: "Overcast",
     logo: "https://overcast.fm/img/logo.svg?3",
     color: "#FC7E0F",
-    url: "#",
+    url: "https://overcast.fm/itunes1844721500",
   },
 ];
 
