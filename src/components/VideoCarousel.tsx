@@ -49,7 +49,7 @@ const videos: Video[] = [
 export function VideoCarousel() {
   return (
     <div>
-      <p className="text-foreground mb-3">Here you go</p>
+      <p className="text-foreground mb-3">Here you go:</p>
       <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-2 px-2">
       {videos.map((video, index) => (
         <a

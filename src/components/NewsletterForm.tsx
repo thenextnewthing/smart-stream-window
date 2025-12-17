@@ -24,7 +24,7 @@ export function NewsletterForm() {
   return (
     <div className="mt-4">
       <p className="text-foreground mb-4">
-        I like how you think. I'll email them to you.
+        I like how you think. Where should I send AI builders' playbooks.
       </p>
       
       <form onSubmit={handleSubmit} className="animate-slide-up opacity-0" style={{ animationDelay: "200ms" }}>

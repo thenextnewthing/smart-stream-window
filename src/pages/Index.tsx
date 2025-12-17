@@ -19,6 +19,18 @@ const Index = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Scroll to top after newsletter form appears
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      scrollToTop();
+    }, 7500); // After newsletter form animation (6000ms) + some viewing time
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     if (userMessages.some(msg => msg.showResponse)) {
       scrollToBottom();
