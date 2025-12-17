@@ -33,7 +33,9 @@ const platforms = [
 
 export function PodcastPlatforms() {
   return (
-    <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+    <div>
+      <p className="text-foreground mb-3">As you requested</p>
+      <div className="flex gap-2 overflow-x-auto scrollbar-hide">
       {platforms.map((platform, index) => (
         <a
           key={platform.name}
@@ -50,6 +52,7 @@ export function PodcastPlatforms() {
           </div>
         </a>
       ))}
+      </div>
     </div>
   );
 }
