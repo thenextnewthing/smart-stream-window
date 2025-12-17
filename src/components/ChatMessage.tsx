@@ -15,10 +15,10 @@ export function ChatMessage({ role, children, delay = 0 }: ChatMessageProps) {
       style={{ animationDelay: `${delay}ms` }}
     >
       <div
-        className={`flex ${isUser ? "justify-end" : "justify-start"} mb-6`}
+        className={`flex ${isUser ? "justify-end" : "justify-start"} mb-3`}
       >
         <div
-          className={`max-w-2xl px-5 py-4 rounded-2xl ${
+          className={`max-w-2xl px-4 py-2 rounded-2xl ${
             isUser
               ? "bg-chat-user text-foreground"
               : "bg-chat-assistant border border-chat-border text-foreground"

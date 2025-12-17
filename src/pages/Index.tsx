@@ -10,7 +10,7 @@ const Index = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <ChatHeader />
       
-      <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-8">
+      <main className="flex-1 max-w-3xl mx-auto w-full px-4 py-3">
         {/* Welcome message */}
         <ChatMessage role="assistant" delay={0}>
           <p className="text-foreground">How can I blow your mind?</p>
