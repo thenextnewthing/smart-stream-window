@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ChatHeader } from "@/components/ChatHeader";
 import { ChatMessage } from "@/components/ChatMessage";
 import { ChatInput } from "@/components/ChatInput";
@@ -13,6 +13,17 @@ interface UserMessage {
 
 const Index = () => {
   const [userMessages, setUserMessages] = useState<UserMessage[]>([]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    if (userMessages.some(msg => msg.showResponse)) {
+      scrollToBottom();
+    }
+  }, [userMessages]);
 
   const handleUserSubmit = (message: string) => {
     setUserMessages((prev) => [...prev, { content: message, showResponse: false }]);
@@ -86,6 +97,7 @@ const Index = () => {
             )}
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </main>
 
       <ChatInput onSubmit={handleUserSubmit} />
