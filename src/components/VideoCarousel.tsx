@@ -10,39 +10,39 @@ interface Video {
 
 const videos: Video[] = [
   {
-    id: "1",
-    title: "The Future of AI: What's Next?",
-    channel: "Lex Fridman",
-    thumbnail: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=225&fit=crop",
-    duration: "2:34:15",
+    id: "r70l1TBkI_k",
+    title: "The Next New Thing AI",
+    channel: "The Next New Thing AI",
+    thumbnail: "https://img.youtube.com/vi/r70l1TBkI_k/hqdefault.jpg",
+    duration: "",
   },
   {
-    id: "2",
-    title: "How ChatGPT Actually Works",
-    channel: "3Blue1Brown",
-    thumbnail: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&h=225&fit=crop",
-    duration: "26:42",
+    id: "Y9ja7Oj1Qcs",
+    title: "The Next New Thing AI",
+    channel: "The Next New Thing AI",
+    thumbnail: "https://img.youtube.com/vi/Y9ja7Oj1Qcs/hqdefault.jpg",
+    duration: "",
   },
   {
-    id: "3",
-    title: "AI Won't Replace You, But...",
-    channel: "Fireship",
-    thumbnail: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=225&fit=crop",
-    duration: "8:21",
+    id: "rkgK_zEe5EI",
+    title: "The Next New Thing AI",
+    channel: "The Next New Thing AI",
+    thumbnail: "https://img.youtube.com/vi/rkgK_zEe5EI/hqdefault.jpg",
+    duration: "",
   },
   {
-    id: "4",
-    title: "Building AGI: The Path Forward",
-    channel: "Two Minute Papers",
-    thumbnail: "https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=400&h=225&fit=crop",
-    duration: "12:08",
+    id: "2CmZ_6ji5Jk",
+    title: "The Next New Thing AI",
+    channel: "The Next New Thing AI",
+    thumbnail: "https://img.youtube.com/vi/2CmZ_6ji5Jk/hqdefault.jpg",
+    duration: "",
   },
   {
-    id: "5",
-    title: "Neural Networks Explained",
-    channel: "Andrej Karpathy",
-    thumbnail: "https://images.unsplash.com/photo-1555255707-c07966088b7b?w=400&h=225&fit=crop",
-    duration: "1:45:30",
+    id: "5H-B_tlYJps",
+    title: "The Next New Thing AI",
+    channel: "The Next New Thing AI",
+    thumbnail: "https://img.youtube.com/vi/5H-B_tlYJps/hqdefault.jpg",
+    duration: "",
   },
 ];
 
@@ -52,7 +52,9 @@ export function VideoCarousel() {
       {videos.map((video, index) => (
         <a
           key={video.id}
-          href="#"
+          href={`https://www.youtube.com/watch?v=${video.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
           className="flex-shrink-0 w-64 group animate-slide-up opacity-0"
           style={{ animationDelay: `${index * 100 + 200}ms` }}
         >
@@ -67,9 +69,6 @@ export function VideoCarousel() {
                 <Play className="w-5 h-5 text-primary-foreground ml-0.5" fill="currentColor" />
               </div>
             </div>
-            <span className="absolute bottom-2 right-2 bg-foreground/80 text-background text-xs px-2 py-0.5 rounded font-medium">
-              {video.duration}
-            </span>
           </div>
         </a>
       ))}
