@@ -13,9 +13,7 @@ const Index = () => {
       <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-8">
         {/* Welcome message */}
         <ChatMessage role="assistant" delay={0}>
-          <p className="text-foreground">
-            Hi there! 👋 I'm here to help you explore the world of AI. Ask me about learning resources, our podcast, or subscribe to our newsletter for weekly insights.
-          </p>
+          <p className="text-foreground">How can I blow your mind?</p>
         </ChatMessage>
 
         {/* Question 1: Videos */}
