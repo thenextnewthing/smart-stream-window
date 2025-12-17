@@ -52,7 +52,7 @@ export function VideoCarousel() {
       {videos.map((video, index) => (
         <a
           key={video.id}
-          href={`https://www.youtube.com/watch?v=${video.id}`}
+          href="https://www.youtube.com/@TheNextNewThingAI?sub_confirmation=1"
           target="_blank"
           rel="noopener noreferrer"
           className="flex-shrink-0 w-64 group animate-slide-up opacity-0"
