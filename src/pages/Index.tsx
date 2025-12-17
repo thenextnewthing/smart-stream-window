@@ -20,7 +20,7 @@ const Index = () => {
 
         {/* Question 1: Videos */}
         <ChatMessage role="user" delay={300}>
-          <p className="text-foreground">What are the best videos about AI?</p>
+          <p className="text-foreground">How can I blow your mind?</p>
         </ChatMessage>
 
         <ChatMessage role="assistant" delay={600}>

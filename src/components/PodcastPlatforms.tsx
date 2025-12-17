@@ -33,31 +33,23 @@ const platforms = [
 
 export function PodcastPlatforms() {
   return (
-    <div className="mt-4">
-      <p className="text-foreground mb-4">
-        You can subscribe to the podcast on any of these platforms:
-      </p>
-      <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-        {platforms.map((platform, index) => (
-          <a
-            key={platform.name}
-            href={platform.url}
-            className="flex-shrink-0 flex flex-col items-center gap-3 p-4 rounded-xl bg-muted/50 hover:bg-muted transition-all duration-300 group animate-slide-up opacity-0 min-w-[100px]"
-            style={{ animationDelay: `${index * 80 + 200}ms` }}
-          >
-            <div className="w-14 h-14 rounded-xl bg-card flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow duration-300 group-hover:scale-110 transform">
-              <img
-                src={platform.logo}
-                alt={platform.name}
-                className="w-8 h-8 object-contain"
-              />
-            </div>
-            <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors whitespace-nowrap">
-              {platform.name}
-            </span>
-          </a>
-        ))}
-      </div>
+    <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+      {platforms.map((platform, index) => (
+        <a
+          key={platform.name}
+          href={platform.url}
+          className="flex-shrink-0 flex items-center justify-center p-4 rounded-xl bg-muted/50 hover:bg-muted transition-all duration-300 group animate-slide-up opacity-0"
+          style={{ animationDelay: `${index * 80 + 200}ms` }}
+        >
+          <div className="w-14 h-14 rounded-xl bg-card flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow duration-300 group-hover:scale-110 transform">
+            <img
+              src={platform.logo}
+              alt={platform.name}
+              className="w-8 h-8 object-contain"
+            />
+          </div>
+        </a>
+      ))}
     </div>
   );
 }

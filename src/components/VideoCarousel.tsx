@@ -48,42 +48,31 @@ const videos: Video[] = [
 
 export function VideoCarousel() {
   return (
-    <div className="mt-4">
-      <p className="text-foreground mb-4">
-        Here are some of the best videos about AI that I'd recommend:
-      </p>
-      <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-2 px-2">
-        {videos.map((video, index) => (
-          <a
-            key={video.id}
-            href="#"
-            className="flex-shrink-0 w-64 group animate-slide-up opacity-0"
-            style={{ animationDelay: `${index * 100 + 200}ms` }}
-          >
-            <div className="relative overflow-hidden rounded-xl bg-muted">
-              <img
-                src={video.thumbnail}
-                alt={video.title}
-                className="w-full h-36 object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-colors duration-300 flex items-center justify-center">
-                <div className="w-12 h-12 rounded-full bg-primary/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
-                  <Play className="w-5 h-5 text-primary-foreground ml-0.5" fill="currentColor" />
-                </div>
+    <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-2 px-2">
+      {videos.map((video, index) => (
+        <a
+          key={video.id}
+          href="#"
+          className="flex-shrink-0 w-64 group animate-slide-up opacity-0"
+          style={{ animationDelay: `${index * 100 + 200}ms` }}
+        >
+          <div className="relative overflow-hidden rounded-xl bg-muted">
+            <img
+              src={video.thumbnail}
+              alt={video.title}
+              className="w-full h-36 object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-colors duration-300 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-primary/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
+                <Play className="w-5 h-5 text-primary-foreground ml-0.5" fill="currentColor" />
               </div>
-              <span className="absolute bottom-2 right-2 bg-foreground/80 text-background text-xs px-2 py-0.5 rounded font-medium">
-                {video.duration}
-              </span>
             </div>
-            <div className="mt-3">
-              <h3 className="font-medium text-sm text-foreground line-clamp-2 group-hover:text-primary transition-colors">
-                {video.title}
-              </h3>
-              <p className="text-xs text-muted-foreground mt-1">{video.channel}</p>
-            </div>
-          </a>
-        ))}
-      </div>
+            <span className="absolute bottom-2 right-2 bg-foreground/80 text-background text-xs px-2 py-0.5 rounded font-medium">
+              {video.duration}
+            </span>
+          </div>
+        </a>
+      ))}
     </div>
   );
 }
