@@ -50,9 +50,6 @@ export function NewsletterForm() {
 
       setStatus("success");
       triggerConfetti();
-      toast.success("You're subscribed!", {
-        description: "Check your inbox for a confirmation email.",
-      });
     } catch (error: any) {
       console.error("Subscription error:", error);
       setStatus("idle");
