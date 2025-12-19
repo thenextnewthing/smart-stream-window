@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
+import { supabase } from "@/integrations/supabase/client";
 
 export function NewsletterForm() {
   const [email, setEmail] = useState("");
@@ -34,20 +35,31 @@ export function NewsletterForm() {
     frame();
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
 
     setStatus("loading");
     
-    // Simulate subscription
-    setTimeout(() => {
+    try {
+      const { data, error } = await supabase.functions.invoke('subscribe-beehiiv', {
+        body: { email }
+      });
+
+      if (error) throw error;
+
       setStatus("success");
       triggerConfetti();
       toast.success("You're subscribed!", {
         description: "Check your inbox for a confirmation email.",
       });
-    }, 1500);
+    } catch (error: any) {
+      console.error("Subscription error:", error);
+      setStatus("idle");
+      toast.error("Subscription failed", {
+        description: "Please try again later.",
+      });
+    }
   };
 
   if (status === "success") {
