@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -34,6 +35,24 @@ const handler = async (req: Request): Promise<Response> => {
         JSON.stringify({ error: "Server configuration error" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
+    }
+
+    // Save email to database
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    const { error: dbError } = await supabase
+      .from("newsletter_subscribers")
+      .upsert(
+        { email, utm_source: "website", utm_medium: "homepage" },
+        { onConflict: "email" }
+      );
+
+    if (dbError) {
+      console.error("Database error:", dbError);
+    } else {
+      console.log(`Email ${email} saved to database`);
     }
 
     console.log(`Subscribing email: ${email} to publication: ${publicationId}`);
