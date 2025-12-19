@@ -50,6 +50,8 @@ const handler = async (req: Request): Promise<Response> => {
           email: email,
           reactivate_existing: true,
           send_welcome_email: true,
+          utm_source: "website",
+          utm_medium: "homepage",
         }),
       }
     );
