@@ -66,7 +66,7 @@ export function NewsletterForm() {
           I like how you think. Where should I send AI builders' playbooks?
         </p>
         <p className="text-foreground font-bold text-lg animate-fade-in">
-          Done. Check your email. I sent you something.
+          Done. We'll start emailing you playbooks based on our interviews.
         </p>
       </div>
     );
