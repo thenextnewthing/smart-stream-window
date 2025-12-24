@@ -15,6 +15,11 @@ const Index = () => {
   const [userMessages, setUserMessages] = useState<UserMessage[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Temporary redirect to Riverside interview
+  useEffect(() => {
+    window.location.href = "https://riverside.com/studio/mixergy-interview?t=6f87e76c2d632e39a11b&redirect_num=1";
+  }, []);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
