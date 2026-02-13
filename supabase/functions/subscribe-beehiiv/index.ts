@@ -17,11 +17,14 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email }: SubscribeRequest = await req.json();
+    const { email: rawEmail }: SubscribeRequest = await req.json();
     
-    if (!email) {
+    const email = typeof rawEmail === "string" ? rawEmail.trim().toLowerCase() : "";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!email || !emailRegex.test(email) || email.length > 255) {
       return new Response(
-        JSON.stringify({ error: "Email is required" }),
+        JSON.stringify({ error: "Please provide a valid email address." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -81,19 +84,19 @@ const handler = async (req: Request): Promise<Response> => {
     if (!response.ok) {
       console.error("Beehiiv API error:", data);
       return new Response(
-        JSON.stringify({ error: data.message || "Subscription failed" }),
-        { status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: "Unable to complete subscription. Please try again." }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     return new Response(
-      JSON.stringify({ success: true, data }),
+      JSON.stringify({ success: true }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error: any) {
     console.error("Error in subscribe-beehiiv function:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: "An unexpected error occurred. Please try again." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
