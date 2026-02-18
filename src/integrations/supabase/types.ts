@@ -14,6 +14,74 @@ export type Database = {
   }
   public: {
     Tables: {
+      landing_pages: {
+        Row: {
+          cloned_from: string | null
+          created_at: string
+          cta_label: string | null
+          description: string | null
+          headline: string | null
+          id: string
+          is_published: boolean
+          lead_magnet_type: string | null
+          lead_magnet_value: string | null
+          seo_description: string | null
+          seo_title: string | null
+          slug: string
+          subheadline: string | null
+          submission_count: number
+          title: string
+          updated_at: string
+          view_count: number
+        }
+        Insert: {
+          cloned_from?: string | null
+          created_at?: string
+          cta_label?: string | null
+          description?: string | null
+          headline?: string | null
+          id?: string
+          is_published?: boolean
+          lead_magnet_type?: string | null
+          lead_magnet_value?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug: string
+          subheadline?: string | null
+          submission_count?: number
+          title: string
+          updated_at?: string
+          view_count?: number
+        }
+        Update: {
+          cloned_from?: string | null
+          created_at?: string
+          cta_label?: string | null
+          description?: string | null
+          headline?: string | null
+          id?: string
+          is_published?: boolean
+          lead_magnet_type?: string | null
+          lead_magnet_value?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string
+          subheadline?: string | null
+          submission_count?: number
+          title?: string
+          updated_at?: string
+          view_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "landing_pages_cloned_from_fkey"
+            columns: ["cloned_from"]
+            isOneToOne: false
+            referencedRelation: "landing_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       link_redirects: {
         Row: {
           created_at: string
