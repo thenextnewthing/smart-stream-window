@@ -45,6 +45,7 @@ import {
   Eye,
   EyeOff,
   Pencil,
+  KeyRound,
 } from "lucide-react";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
@@ -229,6 +230,23 @@ const Admin = () => {
   const [lpLoading, setLpLoading] = useState(true);
   const [lpSearch, setLpSearch] = useState("");
 
+  // Reset password dialog
+  const [resetOpen, setResetOpen] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetSending, setResetSending] = useState(false);
+  const [resetStatus, setResetStatus] = useState<"idle" | "sent" | "error">("idle");
+
+  const handleResetPassword = async () => {
+    if (!resetEmail.trim()) return;
+    setResetSending(true);
+    setResetStatus("idle");
+    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail.trim().toLowerCase(), {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setResetSending(false);
+    setResetStatus(error ? "error" : "sent");
+  };
+
   // New / clone dialog
   const [newPageOpen, setNewPageOpen] = useState(false);
   const [newPageTitle, setNewPageTitle] = useState("");
@@ -393,6 +411,10 @@ const Admin = () => {
               <p className="text-sm text-muted-foreground">Manage your site, landing pages, and links</p>
             </div>
           </div>
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => { setResetEmail(""); setResetStatus("idle"); setResetOpen(true); }}>
+            <KeyRound className="h-4 w-4" />
+            Reset password
+          </Button>
           <Button variant="outline" size="sm" onClick={handleLogout}>
             Sign out
           </Button>
@@ -745,6 +767,53 @@ const Admin = () => {
             >
               {newPageSaving ? "Creating…" : cloneSource ? "Clone page" : "Create page"}
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* ── Reset Password dialog ───────────────────────────────────────── */}
+      <Dialog open={resetOpen} onOpenChange={(v) => { setResetOpen(v); if (!v) setResetStatus("idle"); }}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Reset admin password</DialogTitle>
+          </DialogHeader>
+          {resetStatus === "sent" ? (
+            <div className="py-4 text-center space-y-2">
+              <p className="text-sm font-medium text-primary">Password reset email sent!</p>
+              <p className="text-xs text-muted-foreground">
+                Check the inbox for <strong>{resetEmail}</strong> and follow the link to set a new password.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-4 py-2">
+              <p className="text-sm text-muted-foreground">
+                Enter the admin email address. We'll send a secure link to reset the password.
+              </p>
+              <div className="space-y-1.5">
+                <Label htmlFor="reset-email">Email address</Label>
+                <Input
+                  id="reset-email"
+                  type="email"
+                  placeholder="admin@example.com"
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleResetPassword()}
+                />
+              </div>
+              {resetStatus === "error" && (
+                <p className="text-xs text-destructive">Failed to send reset email. Check the address and try again.</p>
+              )}
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setResetOpen(false)}>
+              {resetStatus === "sent" ? "Close" : "Cancel"}
+            </Button>
+            {resetStatus !== "sent" && (
+              <Button onClick={handleResetPassword} disabled={!resetEmail.trim() || resetSending}>
+                {resetSending ? "Sending…" : "Send reset link"}
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
