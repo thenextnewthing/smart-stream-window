@@ -1,17 +1,24 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 const LinkRedirect = () => {
   const { "*": wildcard } = useParams();
+  const navigate = useNavigate();
   const [destination, setDestination] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const path = wildcard ?? "";
+
+    // Empty path → redirect home
+    if (!path || path.trim() === "") {
+      navigate("/", { replace: true });
+      return;
+    }
 
     // Block obviously external attempts before even calling the function
     if (/^(https?:)?\/\//i.test(path) || path.includes("..")) {
