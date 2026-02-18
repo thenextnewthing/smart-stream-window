@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -39,6 +40,7 @@ const Admin = () => {
   const [redirects, setRedirects] = useState<Redirect[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const init = async () => {
@@ -80,6 +82,16 @@ const Admin = () => {
     navigate("/login");
   };
 
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    if (!q) return redirects;
+    return redirects.filter(
+      (r) =>
+        r.path.toLowerCase().includes(q) ||
+        r.destination.toLowerCase().includes(q)
+    );
+  }, [redirects, search]);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="max-w-6xl mx-auto px-4 py-10 space-y-6">
@@ -95,6 +107,16 @@ const Admin = () => {
             Sign out
           </Button>
         </div>
+
+        {/* Search */}
+        {!loading && !error && redirects.length > 0 && (
+          <Input
+            placeholder="Search by path or destination…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="max-w-sm"
+          />
+        )}
 
         {/* Content */}
         {loading ? (
@@ -128,25 +150,40 @@ const Admin = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {redirects.map((r) => (
-                  <TableRow key={r.id}>
-                    <TableCell className="font-mono text-sm">
-                      /l/{r.path}
-                    </TableCell>
-                    <TableCell className="font-mono text-sm text-muted-foreground">
-                      {r.destination}
-                    </TableCell>
-                    <TableCell className="text-right font-semibold tabular-nums">
-                      {r.visit_count.toLocaleString()}
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {formatDate(r.last_visited_at)}
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {formatDate(r.created_at)}
+                {filtered.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center text-muted-foreground text-sm py-10">
+                      No results for "{search}"
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  filtered.map((r) => (
+                    <TableRow key={r.id}>
+                      <TableCell className="font-mono text-sm">
+                        <a
+                          href={`/l/${r.path}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary underline underline-offset-2 hover:opacity-70 transition-opacity"
+                        >
+                          /l/{r.path}
+                        </a>
+                      </TableCell>
+                      <TableCell className="font-mono text-sm text-muted-foreground">
+                        {r.destination}
+                      </TableCell>
+                      <TableCell className="text-right font-semibold tabular-nums">
+                        {r.visit_count.toLocaleString()}
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground">
+                        {formatDate(r.last_visited_at)}
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground">
+                        {formatDate(r.created_at)}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>
