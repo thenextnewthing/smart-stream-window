@@ -42,8 +42,8 @@ Deno.serve(async (req) => {
       });
     }
 
-    // The destination is always an internal path
-    const destination = `/${cleanPath}`;
+    // The destination is always on the target domain
+    const destination = `https://your-doc-quest.lovable.app/${cleanPath}`;
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
