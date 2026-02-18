@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      link_redirects: {
+        Row: {
+          created_at: string
+          destination: string
+          id: string
+          last_visited_at: string | null
+          path: string
+          visit_count: number
+        }
+        Insert: {
+          created_at?: string
+          destination: string
+          id?: string
+          last_visited_at?: string | null
+          path: string
+          visit_count?: number
+        }
+        Update: {
+          created_at?: string
+          destination?: string
+          id?: string
+          last_visited_at?: string | null
+          path?: string
+          visit_count?: number
+        }
+        Relationships: []
+      }
       newsletter_subscribers: {
         Row: {
           email: string
