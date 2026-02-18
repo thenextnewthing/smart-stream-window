@@ -42,9 +42,9 @@ import {
   Plus,
   ChevronRight,
   Globe,
-  Lock,
   Eye,
   EyeOff,
+  Pencil,
 } from "lucide-react";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
@@ -87,6 +87,11 @@ interface StaticPage {
 }
 
 // ─── Static site map ─────────────────────────────────────────────────────────
+
+const LOVABLE_PROJECT_ID = "1fb725f6-59d2-4adc-9d02-122eab9f8a4d";
+
+const lovableEditUrl = (path: string) =>
+  `https://lovable.dev/projects/${LOVABLE_PROJECT_ID}/chat?message=${encodeURIComponent(`Edit the ${path} page`)}`;
 
 const SITE_MAP: StaticPage[] = [
   {
@@ -174,16 +179,31 @@ function StaticPageRow({ page, depth = 0 }: { page: StaticPage; depth?: number }
           )}
         </TableCell>
         <TableCell>
-          {page.path !== "/l/*" && (
-            <a
-              href={page.path === "/admin" ? "/admin" : page.path}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs text-primary hover:opacity-70 transition-opacity"
-            >
-              Visit <ExternalLink className="h-3 w-3" />
-            </a>
-          )}
+          <div className="flex items-center gap-3">
+            {page.path !== "/l/*" && (
+              <a
+                href={page.path}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                title="Visit page"
+              >
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            )}
+            {!page.external && (
+              <a
+                href={lovableEditUrl(page.path)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs text-primary hover:opacity-70 transition-opacity"
+                title="Edit in Lovable"
+              >
+                <Pencil className="h-3 w-3" />
+                <span>Edit</span>
+              </a>
+            )}
+          </div>
         </TableCell>
       </TableRow>
       {page.children?.map((child) => (
