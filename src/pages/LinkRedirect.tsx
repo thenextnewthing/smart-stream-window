@@ -44,8 +44,10 @@ const LinkRedirect = () => {
         const dest: string = json.destination;
 
         // Final client-side safety check: destination must be an internal path
-        if (!dest.startsWith("/") || /^(https?:)?\/\//i.test(dest)) {
-          setError("This link points to an external destination and is blocked.");
+        // Only allow destinations on the approved domain
+        const ALLOWED_ORIGIN = "https://your-doc-quest.lovable.app";
+        if (!dest.startsWith(ALLOWED_ORIGIN)) {
+          setError("This link points to a destination that is not permitted.");
           return;
         }
 
@@ -84,12 +86,9 @@ const LinkRedirect = () => {
 
   if (!destination) return null;
 
-  // Build the full iframe src from the same origin
-  const iframeSrc = `${window.location.origin}${destination}`;
-
   return (
     <iframe
-      src={iframeSrc}
+      src={destination}
       className="w-full h-screen border-0"
       title="Redirected page"
       allow="clipboard-write"
