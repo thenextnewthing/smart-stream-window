@@ -11,6 +11,7 @@ interface Message {
   role: "bot" | "user";
   content: string;
   time: string;
+  chat: string;
 }
 
 interface SidebarChat {
@@ -53,19 +54,31 @@ const OpenClawWeb = () => {
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = [];
     const time = getNow();
+    // OpenClaw messages
     timers.push(setTimeout(() => {
-      setMessages([{ id: 1, role: "bot", content: "Your friends are using OpenClaw and you feel left out?\n\nI got you.\n\nWith this web version, there's no Mac Mini to buy and nothing to install.", time }]);
+      setMessages(prev => [...prev, { id: 1, role: "bot", content: "Your friends are using OpenClaw and you feel left out?\n\nI got you.\n\nWith this web version, there's no Mac Mini to buy and nothing to install.", time, chat: "OpenClaw" }]);
       setPhase(1);
     }, 800));
     timers.push(setTimeout(() => {
-      setMessages(prev => [...prev, { id: 2, role: "bot", content: "How can I help?", time }]);
+      setMessages(prev => [...prev, { id: 2, role: "bot", content: "How can I help?", time, chat: "OpenClaw" }]);
       setPhase(1.5);
     }, 1800));
     timers.push(setTimeout(() => {
-      setMessages(prev => [...prev, { id: 3, role: "bot", content: "Enter your email to begin 👇", time }]);
+      setMessages(prev => [...prev, { id: 3, role: "bot", content: "Enter your email to begin 👇", time, chat: "OpenClaw" }]);
       setPhase(2);
     }, 3000));
     timers.push(setTimeout(() => setPhase(3), 3600));
+    // Andrew Warner messages
+    const andrewTime = getTenMinAgo();
+    timers.push(setTimeout(() => {
+      setMessages(prev => [...prev, { id: 100, role: "bot", content: "Hi, I created this site.", time: andrewTime, chat: "Andrew Warner" }]);
+    }, 1000));
+    timers.push(setTimeout(() => {
+      setMessages(prev => [...prev, { id: 101, role: "bot", content: "I love OpenClaw, but it can still be frustrating.", time: andrewTime, chat: "Andrew Warner" }]);
+    }, 2000));
+    timers.push(setTimeout(() => {
+      setMessages(prev => [...prev, { id: 102, role: "bot", content: "I think it can be revolutionary, but for now it's still a bit frustrating.", time: andrewTime, chat: "Andrew Warner" }]);
+    }, 3000));
     return () => timers.forEach(clearTimeout);
   }, []);
 
@@ -74,7 +87,7 @@ const OpenClawWeb = () => {
     if (!email) return;
     setEmailStatus("loading");
     const time = getNow();
-    setMessages(prev => [...prev, { id: 10, role: "user", content: email, time }]);
+    setMessages(prev => [...prev, { id: 10, role: "user", content: email, time, chat: activeChat }]);
     try {
       await supabase.functions.invoke("subscribe-beehiiv", { body: { email } });
       setEmailStatus("success");
@@ -87,7 +100,7 @@ const OpenClawWeb = () => {
       };
       frame();
       setTimeout(() => {
-        setMessages(prev => [...prev, { id: 20, role: "bot", content: "What would you like me to do?", time: getNow() }]);
+        setMessages(prev => [...prev, { id: 20, role: "bot", content: "What would you like me to do?", time: getNow(), chat: activeChat }]);
         setPhase(5);
       }, 1200);
     } catch {
@@ -100,10 +113,10 @@ const OpenClawWeb = () => {
     e.preventDefault();
     if (!chatInput.trim()) return;
     const time = getNow();
-    setMessages(prev => [...prev, { id: Date.now(), role: "user", content: chatInput, time }]);
+    setMessages(prev => [...prev, { id: Date.now(), role: "user", content: chatInput, time, chat: activeChat }]);
     setChatInput("");
     setTimeout(() => {
-      setMessages(prev => [...prev, { id: Date.now() + 1, role: "bot", content: "Got it! I'm working on that for you. 🦞", time: getNow() }]);
+      setMessages(prev => [...prev, { id: Date.now() + 1, role: "bot", content: "Got it! I'm working on that for you. 🦞", time: getNow(), chat: activeChat }]);
     }, 1000);
   };
 
@@ -267,7 +280,7 @@ const OpenClawWeb = () => {
           }}
         >
           <div className="max-w-3xl mx-auto px-4 py-4 pb-20 space-y-1">
-            {messages.map((msg) => {
+            {messages.filter(m => m.chat === activeChat).map((msg) => {
               const isBot = msg.role === "bot";
               return (
                 <div key={msg.id} className={`flex ${isBot ? "justify-start" : "justify-end"} mb-1`}>
