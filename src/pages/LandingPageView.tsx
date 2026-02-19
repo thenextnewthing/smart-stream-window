@@ -13,9 +13,11 @@ interface LandingPage {
   cta_label: string | null;
   lead_magnet_type: string | null;
   lead_magnet_value: string | null;
+  hero_image_url: string | null;
   is_published: boolean;
   seo_title: string | null;
   seo_description: string | null;
+  view_count: number;
 }
 
 const LandingPageView = () => {
@@ -79,7 +81,16 @@ const LandingPageView = () => {
       )}
 
       <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center px-4 py-16">
-        <div className="max-w-2xl w-full mx-auto space-y-8 text-center">
+      <div className="max-w-2xl w-full mx-auto space-y-8 text-center">
+          {/* Hero image */}
+          {page.hero_image_url && (
+            <img
+              src={page.hero_image_url}
+              alt="Hero"
+              className="w-full rounded-2xl object-cover max-h-72 mx-auto"
+            />
+          )}
+
           {page.headline && (
             <h1 className="text-3xl sm:text-4xl font-bold leading-tight tracking-tight">
               {page.headline}

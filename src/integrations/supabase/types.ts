@@ -21,6 +21,7 @@ export type Database = {
           cta_label: string | null
           description: string | null
           headline: string | null
+          hero_image_url: string | null
           id: string
           is_published: boolean
           lead_magnet_type: string | null
@@ -40,6 +41,7 @@ export type Database = {
           cta_label?: string | null
           description?: string | null
           headline?: string | null
+          hero_image_url?: string | null
           id?: string
           is_published?: boolean
           lead_magnet_type?: string | null
@@ -59,6 +61,7 @@ export type Database = {
           cta_label?: string | null
           description?: string | null
           headline?: string | null
+          hero_image_url?: string | null
           id?: string
           is_published?: boolean
           lead_magnet_type?: string | null

@@ -652,19 +652,13 @@ const Admin = () => {
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center gap-1 justify-end">
-                                {/* AI Edit */}
+                                {/* AI Edit — opens full editor */}
                                 <Button
                                   variant="ghost"
                                   size="icon"
                                   className="h-7 w-7 text-primary"
-                                  title="AI Edit"
-                                  onClick={() => {
-                                    setEditPage(page);
-                                    setEditDraft(null);
-                                    setEditSummary(null);
-                                    setEditInstruction("");
-                                    setEditSaved(false);
-                                  }}
+                                  title="Edit page"
+                                  onClick={() => navigate(`/admin/edit/${page.id}`)}
                                 >
                                   <Wand2 className="h-3.5 w-3.5" />
                                 </Button>
