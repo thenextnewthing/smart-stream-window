@@ -1,1 +1,4 @@
 project_id = "bytetcbqpirrtcqxpyku"
+
+[functions.edit-landing-page]
+verify_jwt = false
