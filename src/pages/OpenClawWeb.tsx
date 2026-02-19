@@ -42,6 +42,7 @@ const OpenClawWeb = () => {
   const [chatInput, setChatInput] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeChat, setActiveChat] = useState("OpenClaw");
+  const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const [phase, setPhase] = useState(0);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -205,7 +206,6 @@ const OpenClawWeb = () => {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <Search className="w-[22px] h-[22px] cursor-pointer" style={{ color: "#707579" }} />
             <div className="relative">
               <MoreVertical
                 className="w-[22px] h-[22px] cursor-pointer"
@@ -337,9 +337,33 @@ const OpenClawWeb = () => {
             className="flex-1 flex items-center rounded-xl px-2"
             style={{ background: "#fff", boxShadow: "0 1px 4px rgba(0,0,0,0.12)", minHeight: 48 }}
           >
-            <button type="button" className="p-2 rounded-full hover:bg-black/5 flex-shrink-0">
-              <Smile className="w-[24px] h-[24px]" style={{ color: "#707579" }} />
-            </button>
+            <div className="relative">
+              <button type="button" className="p-2 rounded-full hover:bg-black/5 flex-shrink-0" onClick={() => setEmojiPickerOpen(!emojiPickerOpen)}>
+                <Smile className="w-[24px] h-[24px]" style={{ color: "#707579" }} />
+              </button>
+              {emojiPickerOpen && (
+                <>
+                  <div className="fixed inset-0 z-20" onClick={() => setEmojiPickerOpen(false)} />
+                  <div
+                    className="absolute bottom-12 left-0 z-30 rounded-xl shadow-lg p-3 grid grid-cols-8 gap-1"
+                    style={{ background: "#fff", minWidth: 280 }}
+                  >
+                    {["😀","😂","🥰","😎","🤔","👍","❤️","🔥","🎉","✅","👀","🦞","💪","🙏","😢","🤯","💡","⭐","🚀","😅","🤝","💯","🎯","👋"].map((emoji) => (
+                      <button
+                        key={emoji}
+                        className="w-9 h-9 flex items-center justify-center text-[22px] rounded-lg hover:bg-black/5"
+                        onClick={() => {
+                          setChatInput(prev => prev + emoji);
+                          setEmojiPickerOpen(false);
+                        }}
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
             <form onSubmit={handleChatSubmit} className="flex-1 flex items-center">
               <input
                 type="text"
@@ -351,9 +375,6 @@ const OpenClawWeb = () => {
                 style={{ color: "#000" }}
               />
             </form>
-            <button type="button" className="p-2 rounded-full hover:bg-black/5 flex-shrink-0">
-              <Paperclip className="w-[22px] h-[22px] rotate-[-45deg]" style={{ color: "#707579" }} />
-            </button>
           </div>
           {chatInput.trim() ? (
             <button onClick={handleChatSubmit} className="w-[52px] h-[52px] rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#3390ec", color: "#fff" }}>
