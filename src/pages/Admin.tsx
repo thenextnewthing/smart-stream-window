@@ -421,7 +421,7 @@ const Admin = () => {
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="pages">
+        <Tabs defaultValue="landing">
           <TabsList>
             <TabsTrigger value="pages" className="gap-2">
               <Globe className="h-4 w-4" />
