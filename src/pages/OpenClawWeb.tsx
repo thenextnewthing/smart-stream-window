@@ -33,7 +33,7 @@ const getTenMinAgo = () => {
 
 const sidebarChatsData: SidebarChat[] = [
   { name: "OpenClaw", avatar: "lobster", initials: "🦞", color: "#7bc862", lastMessage: "Enter your email to begin 👇", time: "now" },
-  { name: "Andrew Warner", avatar: "andrew", initials: "AW", color: "#3390ec", lastMessage: "Hey! Check out OpenClaw 🦞", time: "ago" },
+  { name: "Andrew Warner", avatar: "andrew", initials: "AW", color: "#3390ec", lastMessage: "Hi, I created this site.", time: "ago" },
 ];
 
 const OpenClawWeb = () => {
@@ -306,7 +306,7 @@ const OpenClawWeb = () => {
             })}
 
             {/* Inline email input */}
-            {phase === 3 && emailStatus !== "success" && (
+            {activeChat === "OpenClaw" && phase === 3 && emailStatus !== "success" && (
               <div className="flex justify-start mb-1">
                 <div
                   className="max-w-[65%] px-[10px] py-[6px]"
