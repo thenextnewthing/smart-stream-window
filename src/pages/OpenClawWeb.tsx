@@ -79,6 +79,9 @@ const OpenClawWeb = () => {
     timers.push(setTimeout(() => {
       setMessages(prev => [...prev, { id: 102, role: "bot", content: "I think it can be revolutionary, but for now it's still a bit frustrating.", time: andrewTime, chat: "Andrew Warner" }]);
     }, 3000));
+    timers.push(setTimeout(() => {
+      setMessages(prev => [...prev, { id: 103, role: "bot", content: "People online make it look easy. This was my way of showing you what it's really like.", time: andrewTime, chat: "Andrew Warner" }]);
+    }, 4000));
     return () => timers.forEach(clearTimeout);
   }, []);
 
