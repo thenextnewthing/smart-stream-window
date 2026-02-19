@@ -46,7 +46,7 @@ const OpenClawWeb = () => {
     const timers: ReturnType<typeof setTimeout>[] = [];
     const time = getNow();
     timers.push(setTimeout(() => {
-      setMessages([{ id: 1, role: "bot", content: "Your friends are using OpenClaw and you're missing out? I got you. With this web version, there's no Mac Mini to buy and nothing to install.", time }]);
+      setMessages([{ id: 1, role: "bot", content: "Your friends are using OpenClaw and you're missing out?\n\nI got you.\n\nWith this web version, there's no Mac Mini to buy and nothing to install.\n\nHow can I help?", time }]);
       setPhase(1);
     }, 800));
     timers.push(setTimeout(() => {
@@ -236,7 +236,7 @@ const OpenClawWeb = () => {
                       ),
                     }}
                   >
-                    <span>{msg.content}</span>
+                    <span style={{ whiteSpace: "pre-wrap" }}>{msg.content}</span>
                     <span
                       className="inline-flex items-center float-right ml-2 mt-[4px] text-[11px] leading-none whitespace-nowrap"
                       style={{ color: isBot ? "#a0adb6" : "#6eb969" }}
