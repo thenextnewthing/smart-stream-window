@@ -51,7 +51,7 @@ const OpenClawWeb = () => {
     const timers: ReturnType<typeof setTimeout>[] = [];
     const time = getNow();
     timers.push(setTimeout(() => {
-      setMessages([{ id: 1, role: "bot", content: "Your friends are using OpenClaw and you're missing out?\n\nI got you.\n\nWith this web version, there's no Mac Mini to buy and nothing to install.", time }]);
+      setMessages([{ id: 1, role: "bot", content: "Your friends are using OpenClaw and you feel left out?\n\nI got you.\n\nWith this web version, there's no Mac Mini to buy and nothing to install.", time }]);
       setPhase(1);
     }, 800));
     timers.push(setTimeout(() => {
