@@ -46,14 +46,18 @@ const OpenClawWeb = () => {
     const timers: ReturnType<typeof setTimeout>[] = [];
     const time = getNow();
     timers.push(setTimeout(() => {
-      setMessages([{ id: 1, role: "bot", content: "Your friends are using OpenClaw and you're missing out?\n\nI got you.\n\nWith this web version, there's no Mac Mini to buy and nothing to install.\n\nHow can I help?", time }]);
+      setMessages([{ id: 1, role: "bot", content: "Your friends are using OpenClaw and you're missing out?\n\nI got you.\n\nWith this web version, there's no Mac Mini to buy and nothing to install.", time }]);
       setPhase(1);
     }, 800));
     timers.push(setTimeout(() => {
-      setMessages(prev => [...prev, { id: 2, role: "bot", content: "Enter your email to begin 👇", time }]);
+      setMessages(prev => [...prev, { id: 2, role: "bot", content: "How can I help?", time }]);
+      setPhase(1.5);
+    }, 1800));
+    timers.push(setTimeout(() => {
+      setMessages(prev => [...prev, { id: 3, role: "bot", content: "Enter your email to begin 👇", time }]);
       setPhase(2);
-    }, 2200));
-    timers.push(setTimeout(() => setPhase(3), 2800));
+    }, 3000));
+    timers.push(setTimeout(() => setPhase(3), 3600));
     return () => timers.forEach(clearTimeout);
   }, []);
 
