@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { supabase } from "@/integrations/supabase/client";
 import lobsterAvatar from "@/assets/openclaw-lobster.png";
+import andrewAvatar from "@/assets/andrew-warner.jpg";
 
 interface Message {
   id: number;
@@ -25,11 +26,8 @@ interface SidebarChat {
 const getNow = () => new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
 const sidebarChats: SidebarChat[] = [
-  { name: "Calorie Counter", avatar: "", initials: "🍔", color: "#e17076", lastMessage: "Logged: • veggie burger: 300 cal Total to...", time: "11:55 AM" },
   { name: "OpenClaw", avatar: "lobster", initials: "🦞", color: "#7bc862", lastMessage: "Enter your email to begin 👇", time: "", active: true },
-  { name: "Raj S", avatar: "", initials: "RS", color: "#e17076", lastMessage: "Hey bro, good to see you here as well", time: "11:04 AM" },
-  { name: "Victoria Beckham", avatar: "", initials: "VB", color: "#6ec9cb", lastMessage: "Morgan Brooks: 🧵 3 new pants are up — all...", time: "10:30 AM" },
-  { name: "Albert Newton", avatar: "", initials: "AN", color: "#faa774", lastMessage: "Morgan Brooks: Here it is, Andrew: 📁 Hot T...", time: "08:47 AM" },
+  { name: "Andrew Warner", avatar: "andrew", initials: "AW", color: "#3390ec", lastMessage: "Hey! Check out OpenClaw 🦞", time: "09:15 AM" },
 ];
 
 const OpenClawWeb = () => {
@@ -135,6 +133,8 @@ const OpenClawWeb = () => {
               >
                 {chat.avatar === "lobster" ? (
                   <img src={lobsterAvatar} alt="" className="w-full h-full object-cover" />
+                ) : chat.avatar === "andrew" ? (
+                  <img src={andrewAvatar} alt="" className="w-full h-full object-cover" />
                 ) : (
                   <span>{chat.initials}</span>
                 )}
