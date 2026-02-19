@@ -30,8 +30,8 @@ const getTenMinAgo = () => {
   return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 };
 
-const sidebarChats: SidebarChat[] = [
-  { name: "OpenClaw", avatar: "lobster", initials: "🦞", color: "#7bc862", lastMessage: "Enter your email to begin 👇", time: "now", active: true },
+const sidebarChatsData: SidebarChat[] = [
+  { name: "OpenClaw", avatar: "lobster", initials: "🦞", color: "#7bc862", lastMessage: "Enter your email to begin 👇", time: "now" },
   { name: "Andrew Warner", avatar: "andrew", initials: "AW", color: "#3390ec", lastMessage: "Hey! Check out OpenClaw 🦞", time: "ago" },
 ];
 
@@ -41,6 +41,7 @@ const OpenClawWeb = () => {
   const [emailStatus, setEmailStatus] = useState<"idle" | "loading" | "success">("idle");
   const [chatInput, setChatInput] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeChat, setActiveChat] = useState("OpenClaw");
   const [phase, setPhase] = useState(0);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -128,13 +129,14 @@ const OpenClawWeb = () => {
 
         {/* Chat list */}
         <div className="flex-1 overflow-y-auto">
-          {sidebarChats.map((chat, i) => (
+          {sidebarChatsData.map((chat, i) => (
             <div
               key={i}
               className="flex items-center gap-3 px-3 py-[9px] cursor-pointer"
               style={{
-                background: chat.active ? "#3390ec" : "transparent",
+                background: chat.name === activeChat ? "#3390ec" : "transparent",
               }}
+              onClick={() => setActiveChat(chat.name)}
             >
               {/* Avatar */}
               <div
@@ -154,20 +156,20 @@ const OpenClawWeb = () => {
                 <div className="flex items-center justify-between">
                   <span
                     className="text-[15px] font-semibold truncate"
-                    style={{ color: chat.active ? "#fff" : "#000" }}
+                    style={{ color: chat.name === activeChat ? "#fff" : "#000" }}
                   >
                     {chat.name}
                   </span>
                   <span
                     className="text-[12px] flex-shrink-0 ml-2"
-                    style={{ color: chat.active ? "rgba(255,255,255,0.7)" : "#8a9aa5" }}
+                    style={{ color: chat.name === activeChat ? "rgba(255,255,255,0.7)" : "#8a9aa5" }}
                   >
                     {chat.time === "now" ? getNow() : chat.time === "ago" ? getTenMinAgo() : chat.time}
                   </span>
                 </div>
                 <p
                   className="text-[14px] truncate mt-[1px]"
-                  style={{ color: chat.active ? "rgba(255,255,255,0.8)" : "#707579" }}
+                  style={{ color: chat.name === activeChat ? "rgba(255,255,255,0.8)" : "#707579" }}
                 >
                   {chat.lastMessage}
                 </p>
@@ -196,9 +198,9 @@ const OpenClawWeb = () => {
           style={{ background: "#fff", borderBottom: "1px solid #dadce0", minHeight: 56 }}
         >
           <div className="flex items-center gap-3">
-            <img src={lobsterAvatar} alt="OpenClaw" className="w-[42px] h-[42px] rounded-full object-cover" />
+            <img src={activeChat === "OpenClaw" ? lobsterAvatar : andrewAvatar} alt={activeChat} className="w-[42px] h-[42px] rounded-full object-cover" />
             <div className="leading-tight">
-              <h1 className="text-[16px] font-semibold" style={{ color: "#000" }}>OpenClaw</h1>
+              <h1 className="text-[16px] font-semibold" style={{ color: "#000" }}>{activeChat}</h1>
               <p className="text-[13px]" style={{ color: "#707579" }}>bot</p>
             </div>
           </div>
@@ -249,10 +251,10 @@ const OpenClawWeb = () => {
             <ArrowLeft className="w-[24px] h-[24px]" style={{ color: "#707579" }} />
           </button>
           <div className="flex-1 flex flex-col items-center leading-tight">
-            <h1 className="text-[17px] font-semibold" style={{ color: "#000" }}>OpenClaw</h1>
+            <h1 className="text-[17px] font-semibold" style={{ color: "#000" }}>{activeChat}</h1>
             <p className="text-[13px]" style={{ color: "#707579" }}>bot</p>
           </div>
-          <img src={lobsterAvatar} alt="OpenClaw" className="w-[40px] h-[40px] rounded-full object-cover mr-1" />
+          <img src={activeChat === "OpenClaw" ? lobsterAvatar : andrewAvatar} alt={activeChat} className="w-[40px] h-[40px] rounded-full object-cover mr-1" />
         </header>
 
         {/* Messages area — green Telegram wallpaper */}
