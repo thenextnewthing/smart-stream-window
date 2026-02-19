@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { ArrowRight, Loader2, Mic, Search, MoreVertical, Menu, Smile, Paperclip, Pencil } from "lucide-react";
+import { ArrowRight, ArrowLeft, Loader2, Mic, Search, MoreVertical, Menu, Smile, Paperclip, Pencil, Clock } from "lucide-react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { supabase } from "@/integrations/supabase/client";
@@ -99,8 +99,8 @@ const OpenClawWeb = () => {
 
   return (
     <div className="flex h-screen" style={{ background: "#e6ebee" }}>
-      {/* ===== LEFT SIDEBAR ===== */}
-      <div className="flex flex-col w-[420px] border-r" style={{ background: "#fff", borderColor: "#dadce0" }}>
+      {/* ===== LEFT SIDEBAR (hidden on mobile) ===== */}
+      <div className="hidden md:flex flex-col w-[420px] border-r" style={{ background: "#fff", borderColor: "#dadce0" }}>
         {/* Sidebar header */}
         <div className="flex items-center gap-2 px-4 py-2" style={{ minHeight: 56 }}>
           <button className="p-2 rounded-full hover:bg-black/5">
@@ -180,8 +180,9 @@ const OpenClawWeb = () => {
       {/* ===== RIGHT CHAT PANEL ===== */}
       <div className="flex flex-col flex-1">
         {/* Chat header */}
+        {/* Desktop header */}
         <header
-          className="flex items-center justify-between px-4 py-2"
+          className="hidden md:flex items-center justify-between px-4 py-2"
           style={{ background: "#fff", borderBottom: "1px solid #dadce0", minHeight: 56 }}
         >
           <div className="flex items-center gap-3">
@@ -195,6 +196,21 @@ const OpenClawWeb = () => {
             <Search className="w-[22px] h-[22px] cursor-pointer" style={{ color: "#707579" }} />
             <MoreVertical className="w-[22px] h-[22px] cursor-pointer" style={{ color: "#707579" }} />
           </div>
+        </header>
+
+        {/* Mobile header — Telegram mobile style */}
+        <header
+          className="flex md:hidden items-center justify-between px-2 py-2"
+          style={{ background: "#fff", borderBottom: "1px solid #dadce0", minHeight: 56 }}
+        >
+          <button className="p-2 rounded-full hover:bg-black/5">
+            <ArrowLeft className="w-[24px] h-[24px]" style={{ color: "#707579" }} />
+          </button>
+          <div className="flex-1 flex flex-col items-center leading-tight">
+            <h1 className="text-[17px] font-semibold" style={{ color: "#000" }}>OpenClaw</h1>
+            <p className="text-[13px]" style={{ color: "#707579" }}>bot</p>
+          </div>
+          <img src={lobsterAvatar} alt="OpenClaw" className="w-[40px] h-[40px] rounded-full object-cover mr-1" />
         </header>
 
         {/* Messages area — green Telegram wallpaper */}
@@ -270,9 +286,9 @@ const OpenClawWeb = () => {
           </div>
         </div>
 
-        {/* Bottom input bar */}
+        {/* Desktop bottom input bar */}
         <div
-          className="flex items-center gap-1 px-2 py-1.5"
+          className="hidden md:flex items-center gap-1 px-2 py-1.5"
           style={{ background: "#fff", borderTop: "1px solid #dadce0" }}
         >
           <button type="button" className="p-2 rounded-full hover:bg-black/5">
@@ -302,6 +318,47 @@ const OpenClawWeb = () => {
           ) : (
             <button type="button" className="w-[52px] h-[52px] rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#3390ec", color: "#fff" }}>
               <Mic className="w-5 h-5" />
+            </button>
+          )}
+        </div>
+
+        {/* Mobile bottom input bar — matches Telegram iOS style */}
+        <div
+          className="flex md:hidden items-center gap-1 px-2 py-2"
+          style={{ background: "#f6f6f6", borderTop: "1px solid #dadce0" }}
+        >
+          <button
+            type="button"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-full text-[15px] font-medium text-white"
+            style={{ background: "#3390ec" }}
+          >
+            <Menu className="w-[18px] h-[18px]" />
+            Menu
+          </button>
+          <button type="button" className="p-2 rounded-full hover:bg-black/5">
+            <Paperclip className="w-[24px] h-[24px] rotate-[-45deg]" style={{ color: "#707579" }} />
+          </button>
+          <form onSubmit={handleChatSubmit} className="flex-1 flex items-center">
+            <input
+              type="text"
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              placeholder="Message"
+              disabled={phase < 5}
+              className="w-full px-3 py-2 text-[15px] outline-none rounded-full"
+              style={{ color: "#000", background: "#fff", border: "1px solid #dadce0" }}
+            />
+          </form>
+          <button type="button" className="p-2 rounded-full hover:bg-black/5">
+            <Clock className="w-[24px] h-[24px]" style={{ color: "#707579" }} />
+          </button>
+          {chatInput.trim() ? (
+            <button onClick={handleChatSubmit} className="w-[44px] h-[44px] rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#3390ec", color: "#fff" }}>
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          ) : (
+            <button type="button" className="w-[44px] h-[44px] rounded-full flex items-center justify-center flex-shrink-0" style={{ color: "#3390ec" }}>
+              <Mic className="w-6 h-6" />
             </button>
           )}
         </div>
