@@ -24,10 +24,15 @@ interface SidebarChat {
 }
 
 const getNow = () => new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+const getTenMinAgo = () => {
+  const d = new Date();
+  d.setMinutes(d.getMinutes() - 10);
+  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+};
 
 const sidebarChats: SidebarChat[] = [
-  { name: "OpenClaw", avatar: "lobster", initials: "🦞", color: "#7bc862", lastMessage: "Enter your email to begin 👇", time: "", active: true },
-  { name: "Andrew Warner", avatar: "andrew", initials: "AW", color: "#3390ec", lastMessage: "Hey! Check out OpenClaw 🦞", time: "09:15 AM" },
+  { name: "OpenClaw", avatar: "lobster", initials: "🦞", color: "#7bc862", lastMessage: "Enter your email to begin 👇", time: "now", active: true },
+  { name: "Andrew Warner", avatar: "andrew", initials: "AW", color: "#3390ec", lastMessage: "Hey! Check out OpenClaw 🦞", time: "ago" },
 ];
 
 const OpenClawWeb = () => {
@@ -102,7 +107,7 @@ const OpenClawWeb = () => {
   return (
     <div className="flex h-screen" style={{ background: "#e6ebee" }}>
       {/* ===== LEFT SIDEBAR (hidden on mobile) ===== */}
-      <div className="hidden md:flex flex-col w-[420px] border-r" style={{ background: "#fff", borderColor: "#dadce0" }}>
+      <div className="hidden md:flex flex-col w-[300px] border-r" style={{ background: "#fff", borderColor: "#dadce0" }}>
         {/* Sidebar header */}
         <div className="flex items-center gap-2 px-4 py-2" style={{ minHeight: 56 }}>
           <button className="p-2 rounded-full hover:bg-black/5">
@@ -156,7 +161,7 @@ const OpenClawWeb = () => {
                     className="text-[12px] flex-shrink-0 ml-2"
                     style={{ color: chat.active ? "rgba(255,255,255,0.7)" : "#8a9aa5" }}
                   >
-                    {chat.active ? getNow() : chat.time}
+                    {chat.time === "now" ? getNow() : chat.time === "ago" ? getTenMinAgo() : chat.time}
                   </span>
                 </div>
                 <p
