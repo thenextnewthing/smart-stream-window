@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { ArrowRight, Loader2, Smile, Paperclip, Mic, Search, MoreVertical } from "lucide-react";
+import { ArrowRight, Loader2, Mic, Search, MoreVertical, Menu, Smile, Paperclip, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,7 +12,25 @@ interface Message {
   time: string;
 }
 
+interface SidebarChat {
+  name: string;
+  avatar: string;
+  initials: string;
+  color: string;
+  lastMessage: string;
+  time: string;
+  active?: boolean;
+}
+
 const getNow = () => new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+const sidebarChats: SidebarChat[] = [
+  { name: "Calorie Counter", avatar: "", initials: "🍔", color: "#e17076", lastMessage: "Logged: • veggie burger: 300 cal Total to...", time: "11:55 AM" },
+  { name: "OpenClaw", avatar: "lobster", initials: "🦞", color: "#7bc862", lastMessage: "Enter your email to begin 👇", time: "", active: true },
+  { name: "Raj S", avatar: "", initials: "RS", color: "#e17076", lastMessage: "Hey bro, good to see you here as well", time: "11:04 AM" },
+  { name: "Victoria Beckham", avatar: "", initials: "VB", color: "#6ec9cb", lastMessage: "Morgan Brooks: 🧵 3 new pants are up — all...", time: "10:30 AM" },
+  { name: "Albert Newton", avatar: "", initials: "AN", color: "#faa774", lastMessage: "Morgan Brooks: Here it is, Andrew: 📁 Hot T...", time: "08:47 AM" },
+];
 
 const OpenClawWeb = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -80,130 +98,213 @@ const OpenClawWeb = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen" style={{ background: "#c6d8e3" }}>
-      {/* Telegram-style header */}
-      <header
-        className="flex items-center justify-between px-4 py-2 z-10"
-        style={{ background: "#517da2", color: "#fff", minHeight: 56 }}
-      >
-        <div className="flex items-center gap-3">
-          <img src={lobsterAvatar} alt="OpenClaw" className="w-10 h-10 rounded-full object-cover border-2 border-white/20" />
-          <div className="leading-tight">
-            <h1 className="text-[15px] font-semibold">OpenClaw</h1>
-            <p className="text-[13px] opacity-70">bot</p>
+    <div className="flex h-screen" style={{ background: "#e6ebee" }}>
+      {/* ===== LEFT SIDEBAR ===== */}
+      <div className="flex flex-col w-[420px] border-r" style={{ background: "#fff", borderColor: "#dadce0" }}>
+        {/* Sidebar header */}
+        <div className="flex items-center gap-2 px-4 py-2" style={{ minHeight: 56 }}>
+          <button className="p-2 rounded-full hover:bg-black/5">
+            <Menu className="w-[22px] h-[22px]" style={{ color: "#707579" }} />
+          </button>
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-[18px] h-[18px]" style={{ color: "#a2acb4" }} />
+            <input
+              type="text"
+              placeholder="Search"
+              className="w-full pl-10 pr-3 py-[7px] rounded-full text-[14px] outline-none"
+              style={{ background: "#f0f2f5", color: "#000" }}
+              readOnly
+            />
           </div>
         </div>
-        <div className="flex items-center gap-5">
-          <Search className="w-[22px] h-[22px] opacity-70 cursor-pointer" />
-          <MoreVertical className="w-[22px] h-[22px] opacity-70 cursor-pointer" />
-        </div>
-      </header>
 
-      {/* Chat area — Telegram doodle wallpaper */}
-      <div
-        className="flex-1 overflow-y-auto scrollbar-hide"
-        style={{
-          background: "#c6d8e3",
-          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect width='200' height='200' fill='%23c6d8e3'/%3E%3Ccircle cx='25' cy='25' r='3' fill='none' stroke='%23b6c8d4' stroke-width='0.8'/%3E%3Cpath d='M70 15 l6 10 l-12 0z' fill='none' stroke='%23b6c8d4' stroke-width='0.8'/%3E%3Crect x='120' y='18' width='8' height='8' rx='1' fill='none' stroke='%23b6c8d4' stroke-width='0.8'/%3E%3Ccircle cx='175' cy='30' r='4' fill='none' stroke='%23b6c8d4' stroke-width='0.8'/%3E%3Cpath d='M20 75 l8 0 l-4-7z' fill='none' stroke='%23b6c8d4' stroke-width='0.8'/%3E%3Ccircle cx='80' cy='80' r='2.5' fill='none' stroke='%23b6c8d4' stroke-width='0.8'/%3E%3Crect x='130' y='72' width='6' height='9' rx='1' fill='none' stroke='%23b6c8d4' stroke-width='0.8'/%3E%3Cpath d='M180 70 q5 10 10 0' fill='none' stroke='%23b6c8d4' stroke-width='0.8'/%3E%3Ccircle cx='35' cy='130' r='3.5' fill='none' stroke='%23b6c8d4' stroke-width='0.8'/%3E%3Cpath d='M90 125 l5 8 l-10 0z' fill='none' stroke='%23b6c8d4' stroke-width='0.8'/%3E%3Crect x='145' y='125' width='7' height='7' rx='1' fill='none' stroke='%23b6c8d4' stroke-width='0.8'/%3E%3Ccircle cx='190' cy='135' r='2' fill='none' stroke='%23b6c8d4' stroke-width='0.8'/%3E%3Cpath d='M50 175 q4 8 8 0' fill='none' stroke='%23b6c8d4' stroke-width='0.8'/%3E%3Ccircle cx='110' cy='180' r='3' fill='none' stroke='%23b6c8d4' stroke-width='0.8'/%3E%3Crect x='160' y='172' width='8' height='6' rx='1' fill='none' stroke='%23b6c8d4' stroke-width='0.8'/%3E%3C/svg%3E")`,
-          backgroundSize: "200px 200px",
-        }}
-      >
-        <div className="max-w-2xl mx-auto px-3 py-4 space-y-1">
-          {messages.map((msg) => {
-            const isBot = msg.role === "bot";
-            return (
-              <div key={msg.id} className={`flex ${isBot ? "justify-start" : "justify-end"} animate-message-in mb-1`}>
-                {isBot && (
-                  <img src={lobsterAvatar} alt="" className="w-[34px] h-[34px] rounded-full mr-1.5 mt-0.5 flex-shrink-0 object-cover" />
+        {/* Chat list */}
+        <div className="flex-1 overflow-y-auto">
+          {sidebarChats.map((chat, i) => (
+            <div
+              key={i}
+              className="flex items-center gap-3 px-3 py-[9px] cursor-pointer"
+              style={{
+                background: chat.active ? "#3390ec" : "transparent",
+              }}
+            >
+              {/* Avatar */}
+              <div
+                className="w-[54px] h-[54px] rounded-full flex-shrink-0 flex items-center justify-center text-white text-[18px] font-medium overflow-hidden"
+                style={{ background: chat.avatar === "lobster" ? "#7bc862" : chat.color }}
+              >
+                {chat.avatar === "lobster" ? (
+                  <img src={lobsterAvatar} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  <span>{chat.initials}</span>
                 )}
-                <div
-                  className="relative max-w-[70%] px-[9px] py-[6px] text-[14px] leading-[19px]"
-                  style={{
-                    ...(isBot
-                      ? { background: "#fff", color: "#000", borderRadius: "4px 12px 12px 12px", boxShadow: "0 1px 1px rgba(0,0,0,0.08)" }
-                      : { background: "#eeffde", color: "#000", borderRadius: "12px 4px 12px 12px", boxShadow: "0 1px 1px rgba(0,0,0,0.08)" }
-                    ),
-                  }}
-                >
-                  <span>{msg.content}</span>
+              </div>
+              {/* Text */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
                   <span
-                    className="inline-flex items-center float-right ml-2 mt-[3px] text-[11px] leading-none whitespace-nowrap"
-                    style={{ color: isBot ? "#a0adb6" : "#6eb969" }}
+                    className="text-[15px] font-semibold truncate"
+                    style={{ color: chat.active ? "#fff" : "#000" }}
                   >
-                    {msg.time}
+                    {chat.name}
+                  </span>
+                  <span
+                    className="text-[12px] flex-shrink-0 ml-2"
+                    style={{ color: chat.active ? "rgba(255,255,255,0.7)" : "#8a9aa5" }}
+                  >
+                    {chat.active ? getNow() : chat.time}
                   </span>
                 </div>
-              </div>
-            );
-          })}
-
-          {/* Inline email input */}
-          {phase === 3 && emailStatus !== "success" && (
-            <div className="animate-message-in pl-[42px]">
-              <form onSubmit={handleEmailSubmit} className="flex gap-2 mt-1 max-w-sm">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  disabled={emailStatus === "loading"}
-                  autoFocus
-                  className="flex-1 px-3 py-2 rounded-lg text-[14px] outline-none"
-                  style={{ background: "#fff", color: "#000", border: "1px solid #d4dbe0" }}
-                />
-                <button
-                  type="submit"
-                  disabled={emailStatus === "loading" || !email}
-                  className="px-3 py-2 rounded-lg text-[14px] flex items-center transition-all disabled:opacity-40 text-white"
-                  style={{ background: "#517da2" }}
+                <p
+                  className="text-[14px] truncate mt-[1px]"
+                  style={{ color: chat.active ? "rgba(255,255,255,0.8)" : "#707579" }}
                 >
-                  {emailStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
-                </button>
-              </form>
-              <p className="text-[12px] mt-1.5" style={{ color: "#8a9aa5" }}>
-                You'll get access to this site and join my AI newsletter.
-              </p>
+                  {chat.lastMessage}
+                </p>
+              </div>
             </div>
-          )}
+          ))}
+        </div>
 
-          <div ref={bottomRef} />
+        {/* FAB */}
+        <div className="relative">
+          <button
+            className="absolute bottom-5 right-5 w-[56px] h-[56px] rounded-full flex items-center justify-center shadow-lg"
+            style={{ background: "#3390ec", color: "#fff" }}
+          >
+            <Pencil className="w-6 h-6" />
+          </button>
         </div>
       </div>
 
-      {/* Bottom input — always visible like real Telegram */}
-      <div
-        className="flex items-center gap-1 px-2 py-1.5"
-        style={{ background: "#f0f2f5", borderTop: "1px solid #d6dce1" }}
-      >
-        <button type="button" className="p-2" style={{ color: "#8a9aa5" }}>
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-        </button>
-        <button type="button" className="p-2" style={{ color: "#8a9aa5" }}>
-          <Smile className="w-[26px] h-[26px]" />
-        </button>
-        <form onSubmit={handleChatSubmit} className="flex-1 flex items-center">
-          <input
-            type="text"
-            value={chatInput}
-            onChange={(e) => setChatInput(e.target.value)}
-            placeholder="Message"
-            disabled={phase < 5}
-            className="w-full px-3 py-2 text-[15px] outline-none bg-transparent"
-            style={{ color: "#000" }}
-          />
-        </form>
-        <button type="button" className="p-2" style={{ color: "#8a9aa5" }}>
-          <Paperclip className="w-[24px] h-[24px] rotate-45" />
-        </button>
-        {chatInput.trim() ? (
-          <button onClick={handleChatSubmit} className="w-[48px] h-[48px] rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#517da2", color: "#fff" }}>
-            <ArrowRight className="w-5 h-5" />
+      {/* ===== RIGHT CHAT PANEL ===== */}
+      <div className="flex flex-col flex-1">
+        {/* Chat header */}
+        <header
+          className="flex items-center justify-between px-4 py-2"
+          style={{ background: "#fff", borderBottom: "1px solid #dadce0", minHeight: 56 }}
+        >
+          <div className="flex items-center gap-3">
+            <img src={lobsterAvatar} alt="OpenClaw" className="w-[42px] h-[42px] rounded-full object-cover" />
+            <div className="leading-tight">
+              <h1 className="text-[16px] font-semibold" style={{ color: "#000" }}>OpenClaw</h1>
+              <p className="text-[13px]" style={{ color: "#707579" }}>bot</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <Search className="w-[22px] h-[22px] cursor-pointer" style={{ color: "#707579" }} />
+            <MoreVertical className="w-[22px] h-[22px] cursor-pointer" style={{ color: "#707579" }} />
+          </div>
+        </header>
+
+        {/* Messages area — green Telegram wallpaper */}
+        <div
+          className="flex-1 overflow-y-auto"
+          style={{
+            background: "#b5d1a4",
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Crect width='300' height='300' fill='%23b5d1a4'/%3E%3Ccircle cx='30' cy='30' r='5' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3Cpath d='M80 20 l8 14 l-16 0z' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3Crect x='150' y='15' width='12' height='12' rx='2' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3Ccircle cx='250' cy='35' r='6' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3Cpath d='M20 90 q8 15 16 0' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3Ccircle cx='110' cy='95' r='4' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3Crect x='190' y='85' width='10' height='14' rx='2' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3Cpath d='M270 80 l6 10 l-12 0z' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3Ccircle cx='45' cy='160' r='5.5' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3Cpath d='M130 150 l7 12 l-14 0z' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3Crect x='210' y='148' width='11' height='11' rx='2' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3Ccircle cx='280' cy='165' r='3.5' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3Cpath d='M60 230 q6 12 12 0' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3Ccircle cx='160' cy='240' r='5' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3Crect x='240' y='225' width='12' height='9' rx='2' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3Cpath d='M15 280 l9 15 l-18 0z' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3Ccircle cx='100' cy='285' r='4.5' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3Crect x='180' y='278' width='9' height='13' rx='2' fill='none' stroke='%23a3c293' stroke-width='0.7'/%3E%3C/svg%3E")`,
+            backgroundSize: "300px 300px",
+          }}
+        >
+          <div className="max-w-3xl mx-auto px-4 py-4 space-y-1">
+            {messages.map((msg) => {
+              const isBot = msg.role === "bot";
+              return (
+                <div key={msg.id} className={`flex ${isBot ? "justify-start" : "justify-end"} mb-1`}>
+                  <div
+                    className="relative max-w-[65%] px-[10px] py-[6px] text-[15px] leading-[21px]"
+                    style={{
+                      ...(isBot
+                        ? { background: "#fff", color: "#000", borderRadius: "4px 12px 12px 12px", boxShadow: "0 1px 2px rgba(0,0,0,0.1)" }
+                        : { background: "#eeffde", color: "#000", borderRadius: "12px 4px 12px 12px", boxShadow: "0 1px 2px rgba(0,0,0,0.1)" }
+                      ),
+                    }}
+                  >
+                    <span>{msg.content}</span>
+                    <span
+                      className="inline-flex items-center float-right ml-2 mt-[4px] text-[11px] leading-none whitespace-nowrap"
+                      style={{ color: isBot ? "#a0adb6" : "#6eb969" }}
+                    >
+                      {msg.time}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Inline email input */}
+            {phase === 3 && emailStatus !== "success" && (
+              <div className="flex justify-start mb-1">
+                <div
+                  className="max-w-[65%] px-[10px] py-[6px]"
+                  style={{ background: "#fff", borderRadius: "4px 12px 12px 12px", boxShadow: "0 1px 2px rgba(0,0,0,0.1)" }}
+                >
+                  <form onSubmit={handleEmailSubmit} className="flex gap-2">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Enter your email"
+                      disabled={emailStatus === "loading"}
+                      autoFocus
+                      className="flex-1 px-3 py-2 rounded-lg text-[14px] outline-none"
+                      style={{ background: "#f0f2f5", color: "#000", border: "1px solid #d4dbe0" }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={emailStatus === "loading" || !email}
+                      className="px-3 py-2 rounded-lg text-[14px] flex items-center transition-all disabled:opacity-40 text-white"
+                      style={{ background: "#3390ec" }}
+                    >
+                      {emailStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
+                    </button>
+                  </form>
+                  <p className="text-[12px] mt-1.5" style={{ color: "#8a9aa5" }}>
+                    You'll get access to this site and join my AI newsletter.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div ref={bottomRef} />
+          </div>
+        </div>
+
+        {/* Bottom input bar */}
+        <div
+          className="flex items-center gap-1 px-2 py-1.5"
+          style={{ background: "#fff", borderTop: "1px solid #dadce0" }}
+        >
+          <button type="button" className="p-2 rounded-full hover:bg-black/5">
+            <Menu className="w-[24px] h-[24px]" style={{ color: "#707579" }} />
           </button>
-        ) : (
-          <button type="button" className="w-[48px] h-[48px] rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#517da2", color: "#fff" }}>
-            <Mic className="w-5 h-5" />
+          <button type="button" className="p-2 rounded-full hover:bg-black/5">
+            <Smile className="w-[26px] h-[26px]" style={{ color: "#707579" }} />
           </button>
-        )}
+          <form onSubmit={handleChatSubmit} className="flex-1 flex items-center">
+            <input
+              type="text"
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              placeholder="Message"
+              disabled={phase < 5}
+              className="w-full px-3 py-2 text-[15px] outline-none bg-transparent"
+              style={{ color: "#000" }}
+            />
+          </form>
+          <button type="button" className="p-2 rounded-full hover:bg-black/5">
+            <Paperclip className="w-[24px] h-[24px] rotate-[-45deg]" style={{ color: "#707579" }} />
+          </button>
+          {chatInput.trim() ? (
+            <button onClick={handleChatSubmit} className="w-[52px] h-[52px] rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#3390ec", color: "#fff" }}>
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          ) : (
+            <button type="button" className="w-[52px] h-[52px] rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#3390ec", color: "#fff" }}>
+              <Mic className="w-5 h-5" />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
