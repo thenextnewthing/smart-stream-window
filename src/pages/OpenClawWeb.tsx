@@ -32,7 +32,7 @@ const getTenMinAgo = () => {
 };
 
 const sidebarChatsData: SidebarChat[] = [
-  { name: "OpenClaw", avatar: "lobster", initials: "🦞", color: "#7bc862", lastMessage: "Enter your email to begin 👇", time: "now" },
+  { name: "OpenClaw", avatar: "lobster", initials: "🦞", color: "#7bc862", lastMessage: "Your friends are using OpenClaw and you feel left out?", time: "now" },
   { name: "Andrew Warner", avatar: "andrew", initials: "AW", color: "#3390ec", lastMessage: "Hi, I created this site.", time: "ago" },
 ];
 
