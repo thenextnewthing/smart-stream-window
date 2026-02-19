@@ -572,6 +572,21 @@ const Admin = () => {
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center gap-1 justify-end">
+                                <a
+                                  href={`/${page.slug}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  title="View live page"
+                                >
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-7 w-7"
+                                    asChild={false}
+                                  >
+                                    <ExternalLink className="h-3.5 w-3.5" />
+                                  </Button>
+                                </a>
                                 <Button
                                   variant="ghost"
                                   size="icon"
