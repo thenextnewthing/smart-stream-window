@@ -1,10 +1,17 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import {
   Table,
   TableBody,
@@ -46,6 +53,10 @@ import {
   EyeOff,
   Pencil,
   KeyRound,
+  Wand2,
+  Send,
+  Loader2,
+  Check,
 } from "lucide-react";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
@@ -71,6 +82,9 @@ interface LandingPage {
   description: string | null;
   cta_label: string | null;
   lead_magnet_type: string | null;
+  lead_magnet_value: string | null;
+  seo_title: string | null;
+  seo_description: string | null;
   is_published: boolean;
   view_count: number;
   submission_count: number;
@@ -245,6 +259,72 @@ const Admin = () => {
     });
     setResetSending(false);
     setResetStatus(error ? "error" : "sent");
+  };
+
+  // ── AI Editor ──────────────────────────────────────────────────────────────
+  const [editPage, setEditPage] = useState<LandingPage | null>(null);
+  const [editInstruction, setEditInstruction] = useState("");
+  const [editLoading, setEditLoading] = useState(false);
+  const [editDraft, setEditDraft] = useState<Partial<LandingPage> | null>(null);
+  const [editSummary, setEditSummary] = useState<string | null>(null);
+  const [editSaving, setEditSaving] = useState(false);
+  const [editSaved, setEditSaved] = useState(false);
+  const editTextareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const SUPABASE_FUNCTIONS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`;
+
+  const handleAIEdit = async () => {
+    if (!editPage || !editInstruction.trim() || editLoading) return;
+    setEditLoading(true);
+    setEditDraft(null);
+    setEditSummary(null);
+    setEditSaved(false);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch(`${SUPABASE_FUNCTIONS_URL}/edit-landing-page`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.access_token ?? ""}`,
+          apikey: SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify({ instruction: editInstruction.trim(), currentPage: editPage }),
+      });
+      const json = await res.json();
+      if (!res.ok || json.error) {
+        alert(json.error ?? "AI edit failed. Try again.");
+        return;
+      }
+      const { summary, ...fields } = json.updates;
+      setEditDraft({ ...editPage, ...fields });
+      setEditSummary(summary ?? null);
+      setEditInstruction("");
+    } catch {
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
+  const handleApplyDraft = async () => {
+    if (!editDraft || !editPage) return;
+    setEditSaving(true);
+    const { id, created_at, updated_at, view_count, submission_count, cloned_from, ...fields } = editDraft as LandingPage;
+    const { error } = await supabase
+      .from("landing_pages")
+      .update(fields)
+      .eq("id", editPage.id);
+    setEditSaving(false);
+    if (!error) {
+      setLandingPages((prev) =>
+        prev.map((p) => p.id === editPage.id ? { ...p, ...fields } : p)
+      );
+      setEditPage((prev) => prev ? { ...prev, ...fields } : prev);
+      setEditDraft(null);
+      setEditSummary(null);
+      setEditSaved(true);
+      setTimeout(() => setEditSaved(false), 2500);
+    }
   };
 
   // New / clone dialog
@@ -572,21 +652,34 @@ const Admin = () => {
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center gap-1 justify-end">
+                                {/* AI Edit */}
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-7 w-7 text-primary"
+                                  title="AI Edit"
+                                  onClick={() => {
+                                    setEditPage(page);
+                                    setEditDraft(null);
+                                    setEditSummary(null);
+                                    setEditInstruction("");
+                                    setEditSaved(false);
+                                  }}
+                                >
+                                  <Wand2 className="h-3.5 w-3.5" />
+                                </Button>
+                                {/* View live */}
                                 <a
                                   href={`/${page.slug}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   title="View live page"
                                 >
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-7 w-7"
-                                    asChild={false}
-                                  >
+                                  <Button variant="ghost" size="icon" className="h-7 w-7" asChild={false}>
                                     <ExternalLink className="h-3.5 w-3.5" />
                                   </Button>
                                 </a>
+                                {/* Clone */}
                                 <Button
                                   variant="ghost"
                                   size="icon"
@@ -832,6 +925,90 @@ const Admin = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {/* ── AI Landing Page Editor Sheet ────────────────────────────────── */}
+      <Sheet open={!!editPage} onOpenChange={(open) => { if (!open) { setEditPage(null); setEditDraft(null); setEditSummary(null); } }}>
+        <SheetContent side="right" className="w-full sm:max-w-xl flex flex-col gap-0 p-0 overflow-hidden">
+          <SheetHeader className="px-5 pt-5 pb-3 border-b shrink-0">
+            <SheetTitle className="flex items-center gap-2 text-base">
+              <Wand2 className="h-4 w-4 text-primary" />
+              AI Edit: {editPage?.title}
+            </SheetTitle>
+          </SheetHeader>
+
+          <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5">
+            {/* Current fields */}
+            <div className="space-y-3">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Current content</p>
+              {[
+                { label: "Headline", value: (editDraft ?? editPage)?.headline },
+                { label: "Subheadline", value: (editDraft ?? editPage)?.subheadline },
+                { label: "Description", value: (editDraft ?? editPage)?.description },
+                { label: "CTA", value: (editDraft ?? editPage)?.cta_label },
+                { label: "SEO title", value: (editDraft ?? editPage)?.seo_title },
+                { label: "SEO description", value: (editDraft ?? editPage)?.seo_description },
+              ].map(({ label, value }) =>
+                value ? (
+                  <div key={label} className="rounded-md border bg-muted/30 px-3 py-2 space-y-0.5">
+                    <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">{label}</p>
+                    <p className="text-sm leading-snug">{value}</p>
+                  </div>
+                ) : null
+              )}
+            </div>
+
+            {/* AI response summary */}
+            {editSummary && (
+              <div className="rounded-md border border-primary/30 bg-primary/5 px-3 py-2 flex items-start gap-2">
+                <Wand2 className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                <p className="text-sm text-primary">{editSummary}</p>
+              </div>
+            )}
+
+            {/* Apply / saved state */}
+            {editDraft && !editSaved && (
+              <Button className="w-full gap-2" onClick={handleApplyDraft} disabled={editSaving}>
+                {editSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+                {editSaving ? "Saving…" : "Apply changes"}
+              </Button>
+            )}
+            {editSaved && (
+              <div className="flex items-center gap-2 justify-center text-sm text-primary font-medium py-1">
+                <Check className="h-4 w-4" />
+                Changes saved!
+              </div>
+            )}
+          </div>
+
+          {/* Instruction input */}
+          <div className="border-t px-4 py-4 shrink-0 space-y-2 bg-background">
+            <p className="text-xs text-muted-foreground">Tell the AI what to change about this landing page…</p>
+            <div className="flex gap-2">
+              <Textarea
+                ref={editTextareaRef}
+                placeholder="Make the headline punchier. Add urgency to the CTA. Rewrite the description to focus on the outcome…"
+                value={editInstruction}
+                onChange={(e) => setEditInstruction(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleAIEdit();
+                  }
+                }}
+                className="min-h-[72px] resize-none text-sm"
+                disabled={editLoading}
+              />
+              <Button
+                size="icon"
+                className="h-auto w-10 shrink-0 self-end"
+                onClick={handleAIEdit}
+                disabled={editLoading || !editInstruction.trim()}
+              >
+                {editLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              </Button>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };
