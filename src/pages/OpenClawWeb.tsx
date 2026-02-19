@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { ArrowRight, ArrowLeft, Loader2, Mic, Search, MoreVertical, Menu, Smile, Paperclip, Pencil, Clock, Send } from "lucide-react";
+import { ArrowRight, ArrowLeft, Loader2, Mic, Search, MoreVertical, Menu, Smile, Paperclip, Pencil, Clock, Send, BellOff, Gift, Lock, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { supabase } from "@/integrations/supabase/client";
@@ -40,6 +40,7 @@ const OpenClawWeb = () => {
   const [email, setEmail] = useState("");
   const [emailStatus, setEmailStatus] = useState<"idle" | "loading" | "success">("idle");
   const [chatInput, setChatInput] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
   const [phase, setPhase] = useState(0);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -203,7 +204,39 @@ const OpenClawWeb = () => {
           </div>
           <div className="flex items-center gap-4">
             <Search className="w-[22px] h-[22px] cursor-pointer" style={{ color: "#707579" }} />
-            <MoreVertical className="w-[22px] h-[22px] cursor-pointer" style={{ color: "#707579" }} />
+            <div className="relative">
+              <MoreVertical
+                className="w-[22px] h-[22px] cursor-pointer"
+                style={{ color: "#707579" }}
+                onClick={() => setMenuOpen(!menuOpen)}
+              />
+              {menuOpen && (
+                <>
+                  <div className="fixed inset-0 z-20" onClick={() => setMenuOpen(false)} />
+                  <div
+                    className="absolute right-0 top-8 z-30 py-2 rounded-xl shadow-lg"
+                    style={{ background: "#fff", minWidth: 200 }}
+                  >
+                    {[
+                      { icon: BellOff, label: "Mute", color: "#000" },
+                      { icon: Gift, label: "Send a Gift", color: "#000" },
+                      { icon: Lock, label: "Block user", color: "#000" },
+                      { icon: Trash2, label: "Delete Chat", color: "#e53935" },
+                    ].map((item) => (
+                      <button
+                        key={item.label}
+                        className="flex items-center gap-4 w-full px-4 py-[10px] text-[15px] hover:bg-black/5 text-left"
+                        style={{ color: item.color }}
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        <item.icon className="w-[20px] h-[20px]" />
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </header>
 
