@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { ArrowRight, ArrowLeft, Loader2, Mic, Search, MoreVertical, Menu, Smile, Paperclip, Pencil, Clock } from "lucide-react";
+import { ArrowRight, ArrowLeft, Loader2, Mic, Search, MoreVertical, Menu, Smile, Paperclip, Pencil, Clock, Send } from "lucide-react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { supabase } from "@/integrations/supabase/client";
@@ -215,14 +215,14 @@ const OpenClawWeb = () => {
 
         {/* Messages area — green Telegram wallpaper */}
         <div
-          className="flex-1 overflow-y-auto"
+          className="flex-1 overflow-y-auto relative"
           style={{
             background: "#b5d1a4",
             backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' opacity='0.3'%3E%3Crect width='400' height='400' fill='%23b5d1a4'/%3E%3Cg fill='none' stroke='%23849e74' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'%3E%3C!-- paper plane --%3E%3Cpath d='M30 25 l18-8 -6 12 -3-2z M42 17 l-9 10'/%3E%3C!-- heart --%3E%3Cpath d='M110 20 c0-6 8-10 12-4 4-6 12-2 12 4 0 8-12 16-12 16s-12-8-12-16z'/%3E%3C!-- star --%3E%3Cpath d='M210 30 l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z'/%3E%3C!-- envelope --%3E%3Crect x='290' y='18' width='20' height='14' rx='2'/%3E%3Cpath d='M290 18 l10 8 10-8'/%3E%3C!-- cat face --%3E%3Ccircle cx='55' cy='90' r='9'/%3E%3Cpath d='M46 85 l3-8 5 5 M64 85 l-3-8-5 5'/%3E%3Ccircle cx='52' cy='89' r='1.2'/%3E%3Ccircle cx='58' cy='89' r='1.2'/%3E%3C!-- music note --%3E%3Cpath d='M140 75 v20'/%3E%3Ccircle cx='137' cy='95' r='4'/%3E%3Cpath d='M140 75 q10-4 8 6'/%3E%3C!-- cloud --%3E%3Cpath d='M230 90 a8 8 0 0 1 7-8 10 10 0 0 1 18 2 7 7 0 0 1 4 12z'/%3E%3C!-- camera --%3E%3Crect x='310' y='82' width='22' height='16' rx='3'/%3E%3Ccircle cx='321' cy='90' r='5'/%3E%3Crect x='317' y='79' width='8' height='3' rx='1'/%3E%3C!-- thumb up --%3E%3Cpath d='M35 160 v14 h10v-14z M45 164 h5 a3 3 0 0 0 0-6h-2 l1-4a2 2 0 0 0-2-2l-4 8v4'/%3E%3C!-- lightning --%3E%3Cpath d='M130 150 l-4 12h8l-4 12 10-15h-7l4-9z'/%3E%3C!-- phone --%3E%3Crect x='220' y='148' width='14' height='24' rx='3'/%3E%3Cline x1='225' y1='168' x2='230' y2='168'/%3E%3C!-- gift --%3E%3Crect x='305' y='158' width='20' height='14' rx='1'/%3E%3Crect x='305' y='153' width='20' height='6' rx='1'/%3E%3Cline x1='315' y1='153' x2='315' y2='172'/%3E%3Cpath d='M315 153 c-3-5-10-5-8 0 M315 153 c3-5 10-5 8 0'/%3E%3C!-- paper plane 2 --%3E%3Cpath d='M50 240 l18-8-6 12-3-2z M68 232 l-9 10'/%3E%3C!-- lock --%3E%3Crect x='135' y='235' width='14' height='12' rx='2'/%3E%3Cpath d='M138 235 v-5a4.5 4.5 0 0 1 9 0v5'/%3E%3C!-- globe --%3E%3Ccircle cx='235' cy='240' r='10'/%3E%3Cellipse cx='235' cy='240' rx='5' ry='10'/%3E%3Cline x1='225' y1='240' x2='245' y2='240'/%3E%3C!-- bell --%3E%3Cpath d='M320 248 a8 8 0 0 1 16 0v6h-16z'/%3E%3Cline x1='328' y1='254' x2='328' y2='258'/%3E%3Cpath d='M325 258 a3 3 0 0 0 6 0'/%3E%3C!-- sun --%3E%3Ccircle cx='60' cy='330' r='6'/%3E%3Cg stroke-width='1'%3E%3Cline x1='60' y1='320' x2='60' y2='323'/%3E%3Cline x1='60' y1='337' x2='60' y2='340'/%3E%3Cline x1='50' y1='330' x2='53' y2='330'/%3E%3Cline x1='67' y1='330' x2='70' y2='330'/%3E%3Cline x1='53' y1='323' x2='55' y2='325'/%3E%3Cline x1='65' y1='335' x2='67' y2='337'/%3E%3Cline x1='53' y1='337' x2='55' y2='335'/%3E%3Cline x1='65' y1='325' x2='67' y2='323'/%3E%3C/g%3E%3C!-- diamond --%3E%3Cpath d='M148 315 l8-6 8 6-8 14z'/%3E%3Cline x1='148' y1='315' x2='164' y2='315'/%3E%3C!-- cup --%3E%3Cpath d='M230 310 v18 M222 328 h16'/%3E%3Cpath d='M222 310 h16 l-2 14h-12z'/%3E%3Cpath d='M238 313 a5 5 0 0 1 0 8'/%3E%3C!-- flower --%3E%3Ccircle cx='325' cy='325' r='3'/%3E%3Ccircle cx='325' cy='318' r='3.5'/%3E%3Ccircle cx='331' cy='322' r='3.5'/%3E%3Ccircle cx='329' cy='329' r='3.5'/%3E%3Ccircle cx='321' cy='329' r='3.5'/%3E%3Ccircle cx='319' cy='322' r='3.5'/%3E%3Cline x1='325' y1='328' x2='325' y2='340'/%3E%3C/g%3E%3C/svg%3E")`,
             backgroundSize: "400px 400px",
           }}
         >
-          <div className="max-w-3xl mx-auto px-4 py-4 space-y-1">
+          <div className="max-w-3xl mx-auto px-4 py-4 pb-20 space-y-1">
             {messages.map((msg) => {
               const isBot = msg.role === "bot";
               return (
@@ -284,42 +284,43 @@ const OpenClawWeb = () => {
 
             <div ref={bottomRef} />
           </div>
-        </div>
 
-        {/* Desktop bottom input bar */}
-        <div
-          className="hidden md:flex items-center gap-1 px-2 py-1.5"
-          style={{ background: "#fff", borderTop: "1px solid #dadce0" }}
-        >
-          <button type="button" className="p-2 rounded-full hover:bg-black/5">
-            <Menu className="w-[24px] h-[24px]" style={{ color: "#707579" }} />
-          </button>
-          <button type="button" className="p-2 rounded-full hover:bg-black/5">
-            <Smile className="w-[26px] h-[26px]" style={{ color: "#707579" }} />
-          </button>
-          <form onSubmit={handleChatSubmit} className="flex-1 flex items-center">
-            <input
-              type="text"
-              value={chatInput}
-              onChange={(e) => setChatInput(e.target.value)}
-              placeholder="Message"
-              disabled={phase < 5}
-              className="w-full px-3 py-2 text-[15px] outline-none bg-transparent"
-              style={{ color: "#000" }}
-            />
-          </form>
-          <button type="button" className="p-2 rounded-full hover:bg-black/5">
-            <Paperclip className="w-[24px] h-[24px] rotate-[-45deg]" style={{ color: "#707579" }} />
-          </button>
+          {/* Desktop bottom input bar — floating over wallpaper */}
+          <div
+            className="hidden md:flex items-center gap-2 px-3 py-2 absolute bottom-0 left-0 right-0"
+          >
+          <div
+            className="flex-1 flex items-center rounded-xl px-2"
+            style={{ background: "#fff", boxShadow: "0 1px 4px rgba(0,0,0,0.12)", minHeight: 48 }}
+          >
+            <button type="button" className="p-2 rounded-full hover:bg-black/5 flex-shrink-0">
+              <Smile className="w-[24px] h-[24px]" style={{ color: "#707579" }} />
+            </button>
+            <form onSubmit={handleChatSubmit} className="flex-1 flex items-center">
+              <input
+                type="text"
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                placeholder="Message"
+                disabled={phase < 5}
+                className="w-full px-2 py-2 text-[15px] outline-none bg-transparent"
+                style={{ color: "#000" }}
+              />
+            </form>
+            <button type="button" className="p-2 rounded-full hover:bg-black/5 flex-shrink-0">
+              <Paperclip className="w-[22px] h-[22px] rotate-[-45deg]" style={{ color: "#707579" }} />
+            </button>
+          </div>
           {chatInput.trim() ? (
             <button onClick={handleChatSubmit} className="w-[52px] h-[52px] rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#3390ec", color: "#fff" }}>
-              <ArrowRight className="w-5 h-5" />
+              <Send className="w-5 h-5" style={{ transform: "rotate(-1deg)" }} />
             </button>
           ) : (
             <button type="button" className="w-[52px] h-[52px] rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#3390ec", color: "#fff" }}>
               <Mic className="w-5 h-5" />
             </button>
           )}
+          </div>
         </div>
 
         {/* Mobile bottom input bar — matches Telegram iOS style */}
