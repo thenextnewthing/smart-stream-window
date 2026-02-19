@@ -45,6 +45,7 @@ const OpenClawWeb = () => {
   const [activeChat, setActiveChat] = useState("OpenClaw");
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const [phase, setPhase] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -137,16 +138,17 @@ const OpenClawWeb = () => {
             <input
               type="text"
               placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-3 py-[7px] rounded-full text-[14px] outline-none"
               style={{ background: "#f0f2f5", color: "#000" }}
-              readOnly
             />
           </div>
         </div>
 
         {/* Chat list */}
         <div className="flex-1 overflow-y-auto">
-          {sidebarChatsData.map((chat, i) => (
+          {sidebarChatsData.filter(chat => chat.name.toLowerCase().includes(searchQuery.toLowerCase()) || chat.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())).map((chat, i) => (
             <div
               key={i}
               className="flex items-center gap-3 px-3 py-[9px] cursor-pointer"
