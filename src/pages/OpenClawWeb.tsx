@@ -46,6 +46,7 @@ const OpenClawWeb = () => {
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const [phase, setPhase] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -127,10 +128,10 @@ const OpenClawWeb = () => {
   return (
     <div className="flex h-screen" style={{ background: "#e6ebee" }}>
       {/* ===== LEFT SIDEBAR (hidden on mobile) ===== */}
-      <div className="hidden md:flex flex-col w-[300px] border-r" style={{ background: "#fff", borderColor: "#dadce0" }}>
+      <div className="hidden md:flex flex-col border-r transition-all duration-200" style={{ background: "#fff", borderColor: "#dadce0", width: sidebarCollapsed ? 0 : 300, minWidth: sidebarCollapsed ? 0 : 300, overflow: "hidden" }}>
         {/* Sidebar header */}
         <div className="flex items-center gap-2 px-4 py-2" style={{ minHeight: 56 }}>
-          <button className="p-2 rounded-full hover:bg-black/5">
+          <button className="p-2 rounded-full hover:bg-black/5" onClick={() => setSidebarCollapsed(true)}>
             <Menu className="w-[22px] h-[22px]" style={{ color: "#707579" }} />
           </button>
           <div className="flex-1 relative">
@@ -217,6 +218,11 @@ const OpenClawWeb = () => {
           style={{ background: "#fff", borderBottom: "1px solid #dadce0", minHeight: 56 }}
         >
           <div className="flex items-center gap-3">
+            {sidebarCollapsed && (
+              <button className="p-2 rounded-full hover:bg-black/5" onClick={() => setSidebarCollapsed(false)}>
+                <Menu className="w-[22px] h-[22px]" style={{ color: "#707579" }} />
+              </button>
+            )}
             <img src={activeChat === "OpenClaw" ? lobsterAvatar : andrewAvatar} alt={activeChat} className="w-[42px] h-[42px] rounded-full object-cover" />
             <div className="leading-tight">
               <h1 className="text-[16px] font-semibold" style={{ color: "#000" }}>{activeChat}</h1>
