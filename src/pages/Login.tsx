@@ -17,12 +17,14 @@ const Login = () => {
   const handleGoogleLogin = async () => {
     setError(null);
     setLoading(true);
-    const { error: oauthError } = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: `${window.location.origin}/admin`,
     });
-    if (oauthError) {
+    if (result.error) {
       setError("Google sign-in failed. Make sure your account has been added.");
       setLoading(false);
+    } else if (!result.redirected) {
+      navigate("/admin");
     }
   };
 
