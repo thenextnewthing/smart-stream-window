@@ -239,7 +239,6 @@ const OpenClawWeb = () => {
                       { icon: BellOff, label: "Mute", color: "#000" },
                       { icon: Gift, label: "Send a Gift", color: "#000" },
                       { icon: Lock, label: "Block user", color: "#000" },
-                      { icon: Trash2, label: "Delete Chat", color: "#e53935" },
                     ].map((item) => (
                       <button
                         key={item.label}
