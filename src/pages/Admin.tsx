@@ -452,6 +452,10 @@ const Admin = () => {
     if (!error && data) {
       setLandingPages((prev) => [data as LandingPage, ...prev]);
       setNewPageOpen(false);
+      // Navigate to the new creator page for vibe coding
+      if (!cloneSource) {
+        navigate(`/admin/create/${data.id}`);
+      }
     }
   };
 
