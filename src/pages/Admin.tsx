@@ -820,13 +820,13 @@ const Admin = () => {
 
       {/* ── New / Clone dialog ──────────────────────────────────────────────── */}
       <Dialog open={newPageOpen} onOpenChange={setNewPageOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md overflow-hidden">
           <DialogHeader>
             <DialogTitle>
               {cloneSource ? `Clone "${cloneSource.title}"` : "New landing page"}
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-2">
+          <div className="space-y-4 py-2 min-w-0 overflow-hidden">
             <div className="space-y-1.5">
               <Label htmlFor="lp-title">Page title</Label>
               <Input
