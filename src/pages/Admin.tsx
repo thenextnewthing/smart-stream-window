@@ -53,10 +53,11 @@ import {
   EyeOff,
   Pencil,
   KeyRound,
-  Wand2,
   Send,
   Loader2,
   Check,
+  Archive,
+  ArchiveRestore,
 } from "lucide-react";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
@@ -91,6 +92,7 @@ interface LandingPage {
   cloned_from: string | null;
   created_at: string;
   updated_at: string;
+  deleted_at: string | null;
 }
 
 interface StaticPage {
@@ -389,15 +391,18 @@ const Admin = () => {
   }, [redirects, redirectSearch]);
 
   // ── Landing page filtering ──────────────────────────────────────────────────
+  const activePages = useMemo(() => landingPages.filter((p) => !p.deleted_at), [landingPages]);
+  const archivedPages = useMemo(() => landingPages.filter((p) => !!p.deleted_at), [landingPages]);
+
   const filteredLandingPages = useMemo(() => {
     const q = lpSearch.toLowerCase().trim();
-    if (!q) return landingPages;
-    return landingPages.filter(
+    if (!q) return activePages;
+    return activePages.filter(
       (p) =>
         p.title.toLowerCase().includes(q) ||
         p.slug.toLowerCase().includes(q)
     );
-  }, [landingPages, lpSearch]);
+  }, [activePages, lpSearch]);
 
   // ── Create / Clone landing page ─────────────────────────────────────────────
   const openNewPage = () => {
@@ -477,11 +482,29 @@ const Admin = () => {
     }
   };
 
-  // ── Delete landing page ─────────────────────────────────────────────────────
+  // ── Soft-delete landing page ──────────────────────────────────────────────────
   const handleDeletePage = async (id: string) => {
-    const { error } = await supabase.from("landing_pages").delete().eq("id", id);
+    const { error } = await supabase
+      .from("landing_pages")
+      .update({ deleted_at: new Date().toISOString(), is_published: false } as any)
+      .eq("id", id);
     if (!error) {
-      setLandingPages((prev) => prev.filter((p) => p.id !== id));
+      setLandingPages((prev) =>
+        prev.map((p) => p.id === id ? { ...p, deleted_at: new Date().toISOString(), is_published: false } : p)
+      );
+    }
+  };
+
+  // ── Restore landing page ────────────────────────────────────────────────────
+  const handleRestorePage = async (id: string) => {
+    const { error } = await supabase
+      .from("landing_pages")
+      .update({ deleted_at: null } as any)
+      .eq("id", id);
+    if (!error) {
+      setLandingPages((prev) =>
+        prev.map((p) => p.id === id ? { ...p, deleted_at: null } : p)
+      );
     }
   };
 
@@ -518,9 +541,9 @@ const Admin = () => {
             <TabsTrigger value="landing" className="gap-2">
               <FileText className="h-4 w-4" />
               Landing Pages
-              {landingPages.length > 0 && (
+              {activePages.length > 0 && (
                 <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0">
-                  {landingPages.length}
+                  {activePages.length}
                 </Badge>
               )}
             </TabsTrigger>
@@ -566,7 +589,7 @@ const Admin = () => {
           <TabsContent value="landing" className="mt-4">
             <div className="space-y-4">
               <div className="flex items-center justify-between gap-4">
-                {!lpLoading && landingPages.length > 0 && (
+                {!lpLoading && activePages.length > 0 && (
                   <Input
                     placeholder="Search landing pages…"
                     value={lpSearch}
@@ -584,7 +607,7 @@ const Admin = () => {
                 <div className="flex items-center justify-center py-20">
                   <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                 </div>
-              ) : landingPages.length === 0 ? (
+              ) : activePages.length === 0 ? (
                 <div className="rounded-md border border-dashed flex flex-col items-center justify-center py-20 gap-4 text-center">
                   <FileText className="h-10 w-10 text-muted-foreground/40" />
                   <div>
@@ -668,7 +691,7 @@ const Admin = () => {
                                   title="Edit page"
                                   onClick={() => navigate(`/admin/create/${page.id}`)}
                                 >
-                                  <Wand2 className="h-3.5 w-3.5" />
+                                  <Pencil className="h-3.5 w-3.5" />
                                 </Button>
                                 {/* View live */}
                                 <a
@@ -696,26 +719,25 @@ const Admin = () => {
                                     <Button
                                       variant="ghost"
                                       size="icon"
-                                      className="h-7 w-7 text-destructive hover:text-destructive"
-                                      title="Delete"
+                                      className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                                      title="Archive"
                                     >
-                                      <Trash2 className="h-3.5 w-3.5" />
+                                      <Archive className="h-3.5 w-3.5" />
                                     </Button>
                                   </AlertDialogTrigger>
                                   <AlertDialogContent>
                                     <AlertDialogHeader>
-                                      <AlertDialogTitle>Delete "{page.title}"?</AlertDialogTitle>
+                                      <AlertDialogTitle>Archive "{page.title}"?</AlertDialogTitle>
                                       <AlertDialogDescription>
-                                        This will permanently delete the landing page and all its data. This cannot be undone.
+                                        This will unpublish the page and move it to the archive. You can restore it anytime.
                                       </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
                                       <AlertDialogCancel>Cancel</AlertDialogCancel>
                                       <AlertDialogAction
-                                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                                         onClick={() => handleDeletePage(page.id)}
                                       >
-                                        Delete
+                                        Archive
                                       </AlertDialogAction>
                                     </AlertDialogFooter>
                                   </AlertDialogContent>
@@ -728,6 +750,50 @@ const Admin = () => {
                     </TableBody>
                   </Table>
                 </div>
+              )}
+
+              {/* ── Archived pages ────────────────────────────────────────── */}
+              {archivedPages.length > 0 && (
+                <details className="mt-6">
+                  <summary className="cursor-pointer text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
+                    <Archive className="h-4 w-4" />
+                    Archived ({archivedPages.length})
+                  </summary>
+                  <div className="rounded-md border mt-3">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Title</TableHead>
+                          <TableHead>Slug</TableHead>
+                          <TableHead>Archived</TableHead>
+                          <TableHead />
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {archivedPages.map((page) => (
+                          <TableRow key={page.id} className="text-muted-foreground">
+                            <TableCell className="text-sm">{page.title}</TableCell>
+                            <TableCell className="font-mono text-sm">/{page.slug}</TableCell>
+                            <TableCell className="text-sm">
+                              {new Date(page.deleted_at!).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 gap-1.5 text-xs"
+                                onClick={() => handleRestorePage(page.id)}
+                              >
+                                <ArchiveRestore className="h-3.5 w-3.5" />
+                                Restore
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </details>
               )}
             </div>
           </TabsContent>
@@ -931,7 +997,7 @@ const Admin = () => {
         <SheetContent side="right" className="w-full sm:max-w-xl flex flex-col gap-0 p-0 overflow-hidden">
           <SheetHeader className="px-5 pt-5 pb-3 border-b shrink-0">
             <SheetTitle className="flex items-center gap-2 text-base">
-              <Wand2 className="h-4 w-4 text-primary" />
+              <Pencil className="h-4 w-4 text-primary" />
               AI Edit: {editPage?.title}
             </SheetTitle>
           </SheetHeader>
@@ -960,7 +1026,7 @@ const Admin = () => {
             {/* AI response summary */}
             {editSummary && (
               <div className="rounded-md border border-primary/30 bg-primary/5 px-3 py-2 flex items-start gap-2">
-                <Wand2 className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                <Pencil className="h-4 w-4 text-primary mt-0.5 shrink-0" />
                 <p className="text-sm text-primary">{editSummary}</p>
               </div>
             )}
