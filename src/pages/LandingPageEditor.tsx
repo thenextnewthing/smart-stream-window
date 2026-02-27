@@ -16,6 +16,7 @@ import {
   EyeOff,
   X,
   Upload,
+  RotateCcw,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -129,6 +130,9 @@ export default function LandingPageEditor() {
   // Image upload
   const [imageUploading, setImageUploading] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
+
+  // Preview refresh key
+  const [previewKey, setPreviewKey] = useState(0);
 
   // Publish toggle
   const [publishing, setPublishing] = useState(false);
@@ -453,19 +457,30 @@ export default function LandingPageEditor() {
       <div className="flex-1 overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-4 py-2 border-b shrink-0 bg-muted/30">
           <p className="text-xs text-muted-foreground font-medium">Live preview</p>
-          {page.is_published && (
-            <a
-              href={`/${page.slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-primary underline underline-offset-2 hover:opacity-70"
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-6 gap-1 text-[11px] text-muted-foreground hover:text-foreground"
+              onClick={() => setPreviewKey((k) => k + 1)}
             >
-              Open published page ↗
-            </a>
-          )}
+              <RotateCcw className="h-3 w-3" />
+              Restart
+            </Button>
+            {page.is_published && (
+              <a
+                href={`/${page.slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-primary underline underline-offset-2 hover:opacity-70"
+              >
+                Open published page ↗
+              </a>
+            )}
+          </div>
         </div>
         <div className="flex-1 overflow-y-auto">
-          <PagePreview page={page} />
+          <PagePreview key={previewKey} page={page} />
         </div>
       </div>
     </div>
