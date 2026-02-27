@@ -253,7 +253,9 @@ export default function LandingPageCreator() {
               <ChevronDown className={`h-3.5 w-3.5 transition-transform ${detailsOpen ? "rotate-180" : ""}`} />
             </button>
             {detailsOpen && (
-              <div className="px-4 pb-3 space-y-3 max-h-[50vh] overflow-y-auto">
+              <div className="relative">
+                <div className="px-4 pb-3 space-y-3 max-h-[50vh] overflow-y-auto" id="details-scroll">
+
                 {/* Page title */}
                 <DetailField label="Page title">
                   <input
@@ -423,6 +425,9 @@ export default function LandingPageCreator() {
                   <span>{page.view_count} views</span>
                   <span>{page.submission_count} submissions</span>
                 </div>
+                </div>
+                {/* Bottom fade to hint scrollability */}
+                <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent" />
               </div>
             )}
           </div>
