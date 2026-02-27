@@ -157,11 +157,23 @@ export default function LandingPageCreator() {
         return;
       }
       const { summary, ...fields } = json.updates;
-      setAiSummary(summary ?? null);
       setInstruction("");
       const updatedFields = Object.fromEntries(
         Object.entries(fields).filter(([, v]) => v !== undefined && v !== null)
       ) as Partial<LandingPage>;
+
+      // Check if any "Details" fields were changed — if so, open the panel
+      const detailKeys = ["title", "seo_title", "seo_description", "lead_magnet_type", "lead_magnet_value"];
+      const touchedDetailKeys = Object.keys(updatedFields).filter((k) => detailKeys.includes(k));
+      if (touchedDetailKeys.length > 0) {
+        setDetailsOpen(true);
+      }
+
+      const detailSuffix = touchedDetailKeys.length > 0
+        ? ` (Updated in Details: ${touchedDetailKeys.map(k => k.replace(/_/g, " ")).join(", ")})`
+        : "";
+      setAiSummary((summary ?? "Done.") + detailSuffix);
+
       if (Object.keys(updatedFields).length > 0) {
         setPage((p) => p ? { ...p, ...updatedFields } : p);
         await saveFields(updatedFields);
