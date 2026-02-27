@@ -28,13 +28,16 @@ export function LandingPageChatLayout({
   const isEmpty = !headline && !subheadline && !description && !hero_image_url;
 
   return (
-    <div className="max-w-2xl w-full mx-auto px-4 py-12 space-y-0">
-      {/* Site header */}
-      <div className="text-center mb-10">
-        <h2 className="text-lg font-semibold tracking-tight">
-          🚀 The Next New Thing
-        </h2>
-        <p className="text-sm text-muted-foreground">
+    <div className="max-w-2xl w-full mx-auto px-6 py-12 space-y-0">
+      {/* Site header — left-aligned to match homepage */}
+      <div className="mb-10">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">🚀</span>
+          <h2 className="text-lg font-semibold tracking-tight text-foreground">
+            The Next New Thing
+          </h2>
+        </div>
+        <p className="text-sm text-muted-foreground mt-0.5">
           The Podcast for AI Creators by the Ultra-Pushy Interviewer Andrew Warner
         </p>
       </div>
