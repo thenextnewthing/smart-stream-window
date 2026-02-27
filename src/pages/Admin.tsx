@@ -458,10 +458,18 @@ const Admin = () => {
 
     setNewPageSaving(false);
 
-    if (!error && data) {
+    if (error) {
+      if (error.code === "23505") {
+        alert(`A page with the slug "${newPageSlug.trim()}" already exists. Please choose a different URL.`);
+      } else {
+        alert(`Error creating page: ${error.message}`);
+      }
+      return;
+    }
+
+    if (data) {
       setLandingPages((prev) => [data as LandingPage, ...prev]);
       setNewPageOpen(false);
-      // Navigate to the new creator page for vibe coding
       if (!cloneSource) {
         navigate(`/admin/create/${data.id}`);
       }
