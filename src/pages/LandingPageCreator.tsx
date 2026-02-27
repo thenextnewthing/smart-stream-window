@@ -427,7 +427,7 @@ export default function LandingPageCreator() {
                 </div>
                 </div>
                 {/* Bottom fade to hint scrollability */}
-                <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent" />
+                <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-muted via-muted/60 to-transparent" />
               </div>
             )}
           </div>
