@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 interface LandingPageChatLayoutProps {
   slug?: string;
   headline: string | null;
@@ -26,6 +28,8 @@ export function LandingPageChatLayout({
 }: LandingPageChatLayoutProps) {
   const isEmpty = !headline && !subheadline && !description && !hero_image_url;
   const hasContent = headline || description || hero_image_url;
+  const [emailValue, setEmailValue] = useState("");
+  const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
 
   const displayUrl = slug
     ? `thenextnew.thing/${slug}`
@@ -124,25 +128,45 @@ export function LandingPageChatLayout({
                 </div>
               )}
 
-              {/* Email capture — as a chat bubble */}
-              {hasContent && (
+              {/* Email capture — as a chat bubble, or submitted email as user message */}
+              {hasContent && !submittedEmail && (
                 <div className="flex justify-start">
                   <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-4 max-w-lg w-full space-y-3">
-                    <div className="flex gap-3">
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        if (emailValue.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue.trim())) {
+                          setSubmittedEmail(emailValue.trim());
+                        }
+                      }}
+                      className="flex gap-3"
+                    >
                       <input
                         type="email"
                         placeholder="Enter your email"
+                        value={emailValue}
+                        onChange={(e) => setEmailValue(e.target.value)}
                         className="flex-1 px-4 py-3.5 rounded-xl bg-background border border-border text-sm text-foreground placeholder:text-muted-foreground"
                       />
                       <button
+                        type="submit"
                         className="px-6 py-3.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold whitespace-nowrap hover:bg-primary/90 transition-colors"
                       >
                         {cta_label ?? "Get Access"} →
                       </button>
-                    </div>
+                    </form>
                     {subheadline && (
                       <p className="text-xs text-muted-foreground">{subheadline}</p>
                     )}
+                  </div>
+                </div>
+              )}
+
+              {/* Submitted email — shown as a user message (right-aligned) */}
+              {submittedEmail && (
+                <div className="flex justify-end">
+                  <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-md px-5 py-3 max-w-md">
+                    <p className="text-base">{submittedEmail}</p>
                   </div>
                 </div>
               )}
