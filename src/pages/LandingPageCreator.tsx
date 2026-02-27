@@ -173,9 +173,9 @@ export default function LandingPageCreator() {
   const isEmpty = !page.headline && !page.subheadline && !page.description && !page.hero_image_url;
 
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground">
-      {/* Top bar */}
-      <div className="flex items-center gap-3 px-4 py-2 border-b shrink-0 bg-background/80 backdrop-blur-sm z-10">
+    <div className="flex flex-col h-screen bg-muted/50 text-foreground">
+      {/* Top bar — editor chrome */}
+      <div className="flex items-center gap-3 px-4 py-2 border-b shrink-0 bg-muted z-10">
         <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate("/admin")}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
@@ -194,8 +194,8 @@ export default function LandingPageCreator() {
         </div>
       </div>
 
-      {/* Preview area */}
-      <div className="flex-1 overflow-y-auto">
+      {/* Preview area — page rendered inside a card to distinguish from editor */}
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6">
         {isEmpty ? (
           <div className="flex flex-col items-center justify-center h-full text-muted-foreground/40 space-y-3">
             <Wand2 className="h-12 w-12" />
@@ -203,7 +203,7 @@ export default function LandingPageCreator() {
             <p className="text-sm">Type what you want below and the AI will build your page.</p>
           </div>
         ) : (
-          <div className="flex justify-center">
+          <div className="max-w-3xl mx-auto bg-background rounded-2xl border border-border shadow-sm">
             <LandingPageChatLayout
               headline={page.headline}
               subheadline={page.subheadline}
@@ -232,7 +232,7 @@ export default function LandingPageCreator() {
       </div>
 
       {/* Floating vibe-coding input */}
-      <div className="shrink-0 border-t bg-background/80 backdrop-blur-sm">
+      <div className="shrink-0 border-t bg-muted">
         <div className="max-w-2xl mx-auto px-4 py-4 space-y-2">
           {aiSummary && (
             <div className="rounded-lg border border-primary/30 bg-primary/5 px-3 py-2 flex items-start gap-2 text-sm text-primary">
