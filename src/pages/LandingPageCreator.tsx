@@ -326,7 +326,7 @@ export default function LandingPageCreator() {
                     }}
                     className="w-full bg-background border border-border rounded-lg text-sm px-2.5 py-1.5 outline-none focus:border-primary transition-colors"
                   >
-                    <option value="email">Email only (no deliverable)</option>
+                    <option value="email">None (collect email only)</option>
                     <option value="url">URL / Link</option>
                     <option value="file">File upload</option>
                     <option value="content">Text content</option>
