@@ -124,26 +124,28 @@ export function LandingPageChatLayout({
                 </div>
               )}
 
-              {/* Email capture */}
+              {/* Email capture — as a chat bubble */}
               {hasContent && (
-                <div className="border-t border-border pt-5 mt-2">
-                  <div className="flex gap-3">
-                    <input
-                      type="email"
-                      placeholder="Enter your email"
-                      disabled={editable}
-                      className="flex-1 px-4 py-3.5 rounded-xl bg-muted border border-border text-sm text-foreground placeholder:text-muted-foreground"
-                    />
-                    <button
-                      disabled={editable}
-                      className="px-6 py-3.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold whitespace-nowrap hover:bg-primary/90 transition-colors"
-                    >
-                      {cta_label ?? "Get Access"} →
-                    </button>
+                <div className="flex justify-start">
+                  <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-4 max-w-lg w-full space-y-3">
+                    <div className="flex gap-3">
+                      <input
+                        type="email"
+                        placeholder="Enter your email"
+                        disabled={editable}
+                        className="flex-1 px-4 py-3.5 rounded-xl bg-background border border-border text-sm text-foreground placeholder:text-muted-foreground"
+                      />
+                      <button
+                        disabled={editable}
+                        className="px-6 py-3.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold whitespace-nowrap hover:bg-primary/90 transition-colors"
+                      >
+                        {cta_label ?? "Get Access"} →
+                      </button>
+                    </div>
+                    {subheadline && (
+                      <p className="text-xs text-muted-foreground">{subheadline}</p>
+                    )}
                   </div>
-                  {subheadline && (
-                    <p className="text-xs text-muted-foreground mt-3">{subheadline}</p>
-                  )}
                 </div>
               )}
             </div>
