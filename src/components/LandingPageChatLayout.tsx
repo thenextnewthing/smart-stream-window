@@ -7,6 +7,7 @@ interface LandingPageChatLayoutProps {
   description: string | null;
   cta_label: string | null;
   hero_image_url: string | null;
+  lead_magnet_type: string | null;
   lead_magnet_value: string | null;
   editable?: boolean;
   onImageUploadClick?: () => void;
@@ -21,6 +22,8 @@ export function LandingPageChatLayout({
   description,
   cta_label,
   hero_image_url,
+  lead_magnet_type,
+  lead_magnet_value,
   editable = false,
   onImageUploadClick,
   onImageRemove,
@@ -164,11 +167,50 @@ export function LandingPageChatLayout({
 
               {/* Submitted email — shown as a user message (right-aligned) */}
               {submittedEmail && (
-                <div className="flex justify-end">
-                  <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-md px-5 py-3 max-w-md">
-                    <p className="text-base">{submittedEmail}</p>
+                <>
+                  <div className="flex justify-end">
+                    <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-md px-5 py-3 max-w-md">
+                      <p className="text-base">{submittedEmail}</p>
+                    </div>
                   </div>
-                </div>
+
+                  {/* Response based on lead magnet type */}
+                  <div className="flex justify-start">
+                    <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-3 max-w-lg">
+                      {(!lead_magnet_type || lead_magnet_type === "email") && (
+                        <p className="text-base text-foreground">Thanks! You're on the list. 🎉</p>
+                      )}
+                      {lead_magnet_type === "url" && lead_magnet_value && (
+                        <p className="text-base text-foreground">
+                          Here you go! 👉{" "}
+                          <a href={lead_magnet_value} target="_blank" rel="noopener noreferrer" className="text-primary underline">
+                            Open your link
+                          </a>
+                        </p>
+                      )}
+                      {lead_magnet_type === "url" && !lead_magnet_value && (
+                        <p className="text-base text-foreground">Thanks! You're on the list. 🎉</p>
+                      )}
+                      {lead_magnet_type === "file" && lead_magnet_value && (
+                        <p className="text-base text-foreground">
+                          Here's your download! 📄{" "}
+                          <a href={lead_magnet_value} target="_blank" rel="noopener noreferrer" className="text-primary underline">
+                            Download file
+                          </a>
+                        </p>
+                      )}
+                      {lead_magnet_type === "file" && !lead_magnet_value && (
+                        <p className="text-base text-foreground">Thanks! You're on the list. 🎉</p>
+                      )}
+                      {lead_magnet_type === "content" && lead_magnet_value && (
+                        <p className="text-base text-foreground whitespace-pre-line">{lead_magnet_value}</p>
+                      )}
+                      {lead_magnet_type === "content" && !lead_magnet_value && (
+                        <p className="text-base text-foreground">Thanks! You're on the list. 🎉</p>
+                      )}
+                    </div>
+                  </div>
+                </>
               )}
             </div>
           </div>

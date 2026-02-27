@@ -518,6 +518,7 @@ export default function LandingPageCreator() {
               description={page.description}
               cta_label={page.cta_label}
               hero_image_url={page.hero_image_url}
+              lead_magnet_type={page.lead_magnet_type}
               lead_magnet_value={page.lead_magnet_value}
               editable
               onImageUploadClick={() => imageInputRef.current?.click()}
