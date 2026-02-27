@@ -16,6 +16,8 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Link as LinkIcon,
+  ChevronDown,
+  Settings,
 } from "lucide-react";
 
 interface LandingPage {
@@ -55,6 +57,7 @@ export default function LandingPageCreator() {
   const [saved, setSaved] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const [slugValue, setSlugValue] = useState("");
   const [slugSaving, setSlugSaving] = useState(false);
@@ -232,26 +235,48 @@ export default function LandingPageCreator() {
             </div>
           </div>
 
-          {/* Slug editor */}
-          <div className="px-4 py-3 border-b border-border space-y-2">
-            <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-              <LinkIcon className="h-3 w-3" />
-              Page URL
-            </label>
-            <div className="flex gap-1.5">
-              <div className="flex-1 flex items-center bg-background border border-border rounded-lg overflow-hidden">
-                <span className="text-[11px] text-muted-foreground pl-2.5 shrink-0 select-none">/</span>
-                <input
-                  type="text"
-                  value={slugValue}
-                  onChange={(e) => setSlugValue(e.target.value)}
-                  onBlur={handleSlugSave}
-                  onKeyDown={(e) => { if (e.key === "Enter") handleSlugSave(); }}
-                  className="flex-1 bg-transparent text-sm px-1 py-1.5 outline-none"
-                />
+          {/* Details collapsible */}
+          <div className="border-b border-border">
+            <button
+              onClick={() => setDetailsOpen((v) => !v)}
+              className="w-full flex items-center justify-between px-4 py-2.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <span className="flex items-center gap-1.5">
+                <Settings className="h-3 w-3" />
+                Details
+              </span>
+              <ChevronDown className={`h-3.5 w-3.5 transition-transform ${detailsOpen ? "rotate-180" : ""}`} />
+            </button>
+            {detailsOpen && (
+              <div className="px-4 pb-3 space-y-3">
+                {/* Slug */}
+                <div className="space-y-1">
+                  <label className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
+                    <LinkIcon className="h-3 w-3" />
+                    Page URL
+                  </label>
+                  <div className="flex gap-1.5">
+                    <div className="flex-1 flex items-center bg-background border border-border rounded-lg overflow-hidden">
+                      <span className="text-[11px] text-muted-foreground pl-2.5 shrink-0 select-none">/</span>
+                      <input
+                        type="text"
+                        value={slugValue}
+                        onChange={(e) => setSlugValue(e.target.value)}
+                        onBlur={handleSlugSave}
+                        onKeyDown={(e) => { if (e.key === "Enter") handleSlugSave(); }}
+                        className="flex-1 bg-transparent text-sm px-1 py-1.5 outline-none"
+                      />
+                    </div>
+                    {slugSaving && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground self-center" />}
+                  </div>
+                </div>
+                {/* Stats */}
+                <div className="flex gap-4 text-[11px] text-muted-foreground">
+                  <span>{page.view_count} views</span>
+                  <span>{page.submission_count} submissions</span>
+                </div>
               </div>
-              {slugSaving && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground self-center" />}
-            </div>
+            )}
           </div>
 
           {/* AI chat area — fills remaining space */}
