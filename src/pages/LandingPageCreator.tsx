@@ -341,6 +341,7 @@ export default function LandingPageCreator() {
                       value={page.lead_magnet_value ?? ""}
                       onChange={(e) => setPage((p) => p ? { ...p, lead_magnet_value: e.target.value || null } : p)}
                       onBlur={() => saveFields({ lead_magnet_value: page.lead_magnet_value })}
+                      onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); saveFields({ lead_magnet_value: page.lead_magnet_value }); } }}
                       placeholder="https://…"
                       className="w-full bg-background border border-border rounded-lg text-sm px-2.5 py-1.5 outline-none focus:border-primary transition-colors placeholder:text-muted-foreground"
                     />
