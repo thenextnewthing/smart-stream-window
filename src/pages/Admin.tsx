@@ -897,7 +897,7 @@ const Admin = () => {
               <Label htmlFor="lp-title">Page title</Label>
               <Input
                 id="lp-title"
-                placeholder="My Awesome Page"
+                placeholder=""
                 value={newPageTitle}
                 onChange={(e) => {
                   setNewPageTitle(e.target.value);
@@ -912,10 +912,10 @@ const Admin = () => {
             <div className="space-y-1.5">
               <Label htmlFor="lp-slug">URL</Label>
               <div className="flex items-center rounded-md border border-input bg-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 ring-offset-background">
-                <span className="pl-3 pr-1 text-sm text-muted-foreground whitespace-nowrap select-none">TheNextNewThing.ai/l/</span>
+                <span className="pl-3 pr-1 text-sm font-medium text-foreground whitespace-nowrap select-none">TheNextNewThing.ai/l/</span>
                 <input
                   id="lp-slug"
-                  className="flex h-10 w-full bg-transparent py-2 pr-3 text-sm placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex h-10 w-full bg-transparent py-2 pr-3 text-sm text-foreground/40 placeholder:text-foreground/25 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                   placeholder="my-page"
                   value={newPageSlug}
                   onChange={(e) =>
