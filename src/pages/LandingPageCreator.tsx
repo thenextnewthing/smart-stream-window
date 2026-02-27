@@ -353,7 +353,7 @@ export default function LandingPageCreator() {
                     {page.lead_magnet_value ? (
                       <div className="flex items-center gap-2">
                         <a
-                          href={page.lead_magnet_value}
+                          href={page.lead_magnet_value.match(/^https?:\/\//) ? page.lead_magnet_value : `https://${page.lead_magnet_value}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-xs text-primary underline truncate flex-1"

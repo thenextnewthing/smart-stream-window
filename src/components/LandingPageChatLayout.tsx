@@ -183,7 +183,7 @@ export function LandingPageChatLayout({
                       {lead_magnet_type === "url" && lead_magnet_value && (
                         <p className="text-base text-foreground">
                           Here you go! 👉{" "}
-                          <a href={lead_magnet_value} target="_blank" rel="noopener noreferrer" className="text-primary underline">
+                          <a href={lead_magnet_value.match(/^https?:\/\//) ? lead_magnet_value : `https://${lead_magnet_value}`} target="_blank" rel="noopener noreferrer" className="text-primary underline">
                             Open your link
                           </a>
                         </p>
@@ -194,7 +194,7 @@ export function LandingPageChatLayout({
                       {lead_magnet_type === "file" && lead_magnet_value && (
                         <p className="text-base text-foreground">
                           Here's your download! 📄{" "}
-                          <a href={lead_magnet_value} target="_blank" rel="noopener noreferrer" className="text-primary underline">
+                          <a href={lead_magnet_value.match(/^https?:\/\//) ? lead_magnet_value : `https://${lead_magnet_value}`} target="_blank" rel="noopener noreferrer" className="text-primary underline">
                             Download file
                           </a>
                         </p>
