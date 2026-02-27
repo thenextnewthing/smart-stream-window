@@ -434,6 +434,10 @@ const Admin = () => {
       : {
           title: newPageTitle.trim(),
           slug: newPageSlug.trim().toLowerCase().replace(/\s+/g, "-"),
+          headline: "You asked for this video",
+          description: "It'll show you how my friends are saving money on OpenClaw usage.",
+          cta_label: "See the video",
+          subheadline: "Of course you'll also join my newsletter, but I'll never spam you.",
         };
 
     // Remove undefined keys

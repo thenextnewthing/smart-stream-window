@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { NewsletterForm } from "@/components/NewsletterForm";
+import { LandingPageChatLayout } from "@/components/LandingPageChatLayout";
 
 interface LandingPage {
   id: string;
@@ -42,7 +42,6 @@ const LandingPageView = () => {
         setNotFound(true);
       } else {
         setPage(data as LandingPage);
-        // Increment view count (fire & forget)
         supabase
           .from("landing_pages")
           .update({ view_count: (data.view_count ?? 0) + 1 })
@@ -74,44 +73,20 @@ const LandingPageView = () => {
 
   return (
     <>
-      {/* SEO */}
       <title>{page.seo_title ?? page.title}</title>
       {page.seo_description && (
         <meta name="description" content={page.seo_description} />
       )}
 
-      <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center px-4 py-16">
-      <div className="max-w-2xl w-full mx-auto space-y-8 text-center">
-          {/* Hero image */}
-          {page.hero_image_url && (
-            <img
-              src={page.hero_image_url}
-              alt="Hero"
-              className="w-full rounded-2xl object-cover max-h-72 mx-auto"
-            />
-          )}
-
-          {page.headline && (
-            <h1 className="text-3xl sm:text-4xl font-bold leading-tight tracking-tight">
-              {page.headline}
-            </h1>
-          )}
-          {page.subheadline && (
-            <p className="text-lg sm:text-xl text-muted-foreground">
-              {page.subheadline}
-            </p>
-          )}
-          {page.description && (
-            <p className="text-base text-muted-foreground whitespace-pre-line">
-              {page.description}
-            </p>
-          )}
-
-          {/* Lead capture */}
-          <div className="flex justify-center">
-            <NewsletterForm />
-          </div>
-        </div>
+      <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center">
+        <LandingPageChatLayout
+          headline={page.headline}
+          subheadline={page.subheadline}
+          description={page.description}
+          cta_label={page.cta_label}
+          hero_image_url={page.hero_image_url}
+          lead_magnet_value={page.lead_magnet_value}
+        />
       </main>
     </>
   );

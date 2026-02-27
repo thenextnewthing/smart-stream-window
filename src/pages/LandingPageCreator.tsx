@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
+import { LandingPageChatLayout } from "@/components/LandingPageChatLayout";
 import {
   ArrowLeft,
   Loader2,
@@ -11,9 +12,6 @@ import {
   Wand2,
   Eye,
   EyeOff,
-  Upload,
-  X,
-  ImagePlus,
   Check,
 } from "lucide-react";
 
@@ -54,10 +52,8 @@ export default function LandingPageCreator() {
   const [saved, setSaved] = useState(false);
   const [publishing, setPublishing] = useState(false);
 
-  // Image upload
   const [imageUploading, setImageUploading] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
-
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -178,8 +174,7 @@ export default function LandingPageCreator() {
 
   return (
     <div className="flex flex-col h-screen bg-background text-foreground">
-
-      {/* ── Minimal top bar ──────────────────────────────────────────────────── */}
+      {/* Top bar */}
       <div className="flex items-center gap-3 px-4 py-2 border-b shrink-0 bg-background/80 backdrop-blur-sm z-10">
         <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate("/admin")}>
           <ArrowLeft className="h-4 w-4" />
@@ -193,118 +188,50 @@ export default function LandingPageCreator() {
           {saving && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
           <div className="flex items-center gap-2">
             {page.is_published ? <Eye className="h-3.5 w-3.5 text-primary" /> : <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />}
-            <Switch
-              checked={page.is_published}
-              onCheckedChange={handleTogglePublish}
-              disabled={publishing}
-            />
+            <Switch checked={page.is_published} onCheckedChange={handleTogglePublish} disabled={publishing} />
             <span className="text-xs text-muted-foreground">{page.is_published ? "Live" : "Draft"}</span>
           </div>
         </div>
       </div>
 
-      {/* ── Full-screen preview ──────────────────────────────────────────────── */}
+      {/* Preview area */}
       <div className="flex-1 overflow-y-auto">
-        <main className="min-h-full flex flex-col items-center justify-center px-4 py-16">
-          <div className="max-w-2xl w-full mx-auto space-y-8 text-center">
-
-            {/* Hero image */}
-            {page.hero_image_url ? (
-              <div className="relative group">
-                <img
-                  src={page.hero_image_url}
-                  alt="Hero"
-                  className="w-full rounded-2xl object-cover max-h-72 mx-auto"
-                />
-                <div className="absolute top-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button
-                    onClick={() => imageInputRef.current?.click()}
-                    className="bg-background/80 hover:bg-background border rounded-full p-1.5"
-                  >
-                    <ImagePlus className="h-3.5 w-3.5" />
-                  </button>
-                  <button
-                    onClick={() => saveFields({ hero_image_url: null })}
-                    className="bg-background/80 hover:bg-background border rounded-full p-1.5"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <button
-                onClick={() => imageInputRef.current?.click()}
-                disabled={imageUploading}
-                className="w-full max-w-sm mx-auto border-2 border-dashed rounded-2xl p-8 flex flex-col items-center gap-2 text-muted-foreground hover:border-primary hover:text-primary transition-colors"
-              >
-                {imageUploading ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                ) : (
-                  <><Upload className="h-5 w-5" /><span className="text-xs">Upload hero image</span></>
-                )}
-              </button>
-            )}
-            <input
-              ref={imageInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) handleImageUpload(file);
-                e.target.value = "";
-              }}
-            />
-
-            {page.headline && (
-              <h1 className="text-3xl sm:text-4xl font-bold leading-tight tracking-tight">
-                {page.headline}
-              </h1>
-            )}
-            {page.subheadline && (
-              <p className="text-lg sm:text-xl text-muted-foreground">
-                {page.subheadline}
-              </p>
-            )}
-            {page.description && (
-              <p className="text-base text-muted-foreground whitespace-pre-line">
-                {page.description}
-              </p>
-            )}
-
-            {/* CTA preview */}
-            {(page.headline || page.subheadline || page.description) && (
-              <div className="flex justify-center">
-                <div className="flex gap-3 w-full max-w-sm">
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    disabled
-                    className="flex-1 px-4 py-3 rounded-xl bg-muted border border-border text-sm text-muted-foreground"
-                  />
-                  <button
-                    disabled
-                    className="px-5 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-medium opacity-80"
-                  >
-                    {page.cta_label ?? "Get Access"}
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Empty state */}
-            {isEmpty && (
-              <div className="py-20 text-muted-foreground/40 space-y-3">
-                <Wand2 className="h-12 w-12 mx-auto" />
-                <p className="text-lg font-medium">Start creating</p>
-                <p className="text-sm">Type what you want below and the AI will build your page.</p>
-              </div>
-            )}
+        {isEmpty ? (
+          <div className="flex flex-col items-center justify-center h-full text-muted-foreground/40 space-y-3">
+            <Wand2 className="h-12 w-12" />
+            <p className="text-lg font-medium">Start creating</p>
+            <p className="text-sm">Type what you want below and the AI will build your page.</p>
           </div>
-        </main>
+        ) : (
+          <div className="flex justify-center">
+            <LandingPageChatLayout
+              headline={page.headline}
+              subheadline={page.subheadline}
+              description={page.description}
+              cta_label={page.cta_label}
+              hero_image_url={page.hero_image_url}
+              lead_magnet_value={page.lead_magnet_value}
+              editable
+              onImageUploadClick={() => imageInputRef.current?.click()}
+              onImageRemove={() => saveFields({ hero_image_url: null })}
+              imageUploading={imageUploading}
+            />
+          </div>
+        )}
+        <input
+          ref={imageInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) handleImageUpload(file);
+            e.target.value = "";
+          }}
+        />
       </div>
 
-      {/* ── Floating vibe-coding input ────────────────────────────────────────── */}
+      {/* Floating vibe-coding input */}
       <div className="shrink-0 border-t bg-background/80 backdrop-blur-sm">
         <div className="max-w-2xl mx-auto px-4 py-4 space-y-2">
           {aiSummary && (
