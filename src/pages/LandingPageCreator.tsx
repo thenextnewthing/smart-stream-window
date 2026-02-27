@@ -13,6 +13,9 @@ import {
   Eye,
   EyeOff,
   Check,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Link as LinkIcon,
 } from "lucide-react";
 
 interface LandingPage {
@@ -51,10 +54,14 @@ export default function LandingPageCreator() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [publishing, setPublishing] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const [slugValue, setSlugValue] = useState("");
+  const [slugSaving, setSlugSaving] = useState(false);
 
   const [imageUploading, setImageUploading] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     const init = async () => {
@@ -69,6 +76,7 @@ export default function LandingPageCreator() {
 
       if (error || !data) { navigate("/admin"); return; }
       setPage(data as LandingPage);
+      setSlugValue(data.slug);
       setLoading(false);
     };
     init();
@@ -89,6 +97,25 @@ export default function LandingPageCreator() {
     setPage((p) => p ? { ...p, ...fields } : p);
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
+  };
+
+  const handleSlugSave = async () => {
+    if (!page || !slugValue.trim() || slugValue === page.slug) return;
+    const clean = slugValue.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+    if (!clean) { toast.error("Invalid slug"); return; }
+    setSlugSaving(true);
+    const { error } = await supabase
+      .from("landing_pages")
+      .update({ slug: clean })
+      .eq("id", page.id);
+    setSlugSaving(false);
+    if (error) {
+      toast.error("Slug update failed", { description: error.message });
+      return;
+    }
+    setPage((p) => p ? { ...p, slug: clean } : p);
+    setSlugValue(clean);
+    toast.success("Slug updated");
   };
 
   const handleAIEdit = async () => {
@@ -173,37 +200,136 @@ export default function LandingPageCreator() {
   const isEmpty = !page.headline && !page.subheadline && !page.description && !page.hero_image_url;
 
   return (
-    <div className="flex flex-col h-screen bg-muted/50 text-foreground">
-      {/* Top bar — editor chrome */}
-      <div className="flex items-center gap-3 px-4 py-2 border-b shrink-0 bg-muted z-10">
-        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate("/admin")}>
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold truncate">{page.title}</p>
-          <p className="text-[11px] text-muted-foreground font-mono truncate">/{page.slug}</p>
-        </div>
-        <div className="flex items-center gap-3">
-          {saved && <Check className="h-4 w-4 text-primary" />}
-          {saving && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
-          <div className="flex items-center gap-2">
-            {page.is_published ? <Eye className="h-3.5 w-3.5 text-primary" /> : <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />}
-            <Switch checked={page.is_published} onCheckedChange={handleTogglePublish} disabled={publishing} />
-            <span className="text-xs text-muted-foreground">{page.is_published ? "Live" : "Draft"}</span>
+    <div className="flex h-screen bg-background text-foreground overflow-hidden">
+      {/* Left sidebar */}
+      {sidebarOpen && (
+        <div className="w-80 shrink-0 border-r border-border bg-muted/50 flex flex-col h-full">
+          {/* Sidebar header */}
+          <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
+            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => navigate("/admin")}>
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold truncate">{page.title}</p>
+            </div>
+            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setSidebarOpen(false)}>
+              <PanelLeftClose className="h-4 w-4" />
+            </Button>
           </div>
-        </div>
-      </div>
 
-      {/* Preview area — page rendered inside a card to distinguish from editor */}
-      <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-        {isEmpty ? (
-          <div className="flex flex-col items-center justify-center h-full text-muted-foreground/40 space-y-3">
-            <Wand2 className="h-12 w-12" />
-            <p className="text-lg font-medium">Start creating</p>
-            <p className="text-sm">Type what you want below and the AI will build your page.</p>
+          {/* Publish toggle */}
+          <div className="px-4 py-3 border-b border-border space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                {page.is_published ? <Eye className="h-4 w-4 text-primary" /> : <EyeOff className="h-4 w-4 text-muted-foreground" />}
+                <span className="text-sm font-medium">{page.is_published ? "Published" : "Draft"}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                {saving && <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />}
+                {saved && <Check className="h-3.5 w-3.5 text-primary" />}
+                <Switch checked={page.is_published} onCheckedChange={handleTogglePublish} disabled={publishing} />
+              </div>
+            </div>
           </div>
-        ) : (
-          <LandingPageChatLayout
+
+          {/* Slug editor */}
+          <div className="px-4 py-3 border-b border-border space-y-2">
+            <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+              <LinkIcon className="h-3 w-3" />
+              Page URL
+            </label>
+            <div className="flex gap-1.5">
+              <div className="flex-1 flex items-center bg-background border border-border rounded-lg overflow-hidden">
+                <span className="text-[11px] text-muted-foreground pl-2.5 shrink-0 select-none">/</span>
+                <input
+                  type="text"
+                  value={slugValue}
+                  onChange={(e) => setSlugValue(e.target.value)}
+                  onBlur={handleSlugSave}
+                  onKeyDown={(e) => { if (e.key === "Enter") handleSlugSave(); }}
+                  className="flex-1 bg-transparent text-sm px-1 py-1.5 outline-none"
+                />
+              </div>
+              {slugSaving && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground self-center" />}
+            </div>
+          </div>
+
+          {/* AI chat area — fills remaining space */}
+          <div className="flex-1 flex flex-col min-h-0">
+            <div className="px-4 pt-3 pb-1">
+              <p className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                <Wand2 className="h-3 w-3" />
+                AI Editor
+              </p>
+            </div>
+
+            {/* Messages area */}
+            <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2">
+              {isEmpty && !aiSummary && (
+                <div className="flex flex-col items-center justify-center h-full text-muted-foreground/40 space-y-2 py-8">
+                  <Wand2 className="h-8 w-8" />
+                  <p className="text-xs text-center">Describe what you want and AI will build it.</p>
+                </div>
+              )}
+              {aiSummary && (
+                <div className="rounded-lg border border-primary/30 bg-primary/5 px-3 py-2 flex items-start gap-2 text-xs text-primary">
+                  <Wand2 className="h-3 w-3 mt-0.5 shrink-0" />
+                  <span>{aiSummary}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Input */}
+            <div className="px-4 pb-4 pt-2">
+              <div className="relative">
+                <textarea
+                  ref={inputRef}
+                  value={instruction}
+                  onChange={(e) => setInstruction(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleAIEdit();
+                    }
+                  }}
+                  placeholder="Describe what you want…"
+                  disabled={aiLoading}
+                  rows={3}
+                  className="w-full px-3 py-2.5 pr-10 rounded-xl bg-background border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm placeholder:text-muted-foreground resize-none"
+                />
+                <button
+                  onClick={handleAIEdit}
+                  disabled={aiLoading || !instruction.trim()}
+                  className="absolute right-2 bottom-2 w-7 h-7 rounded-lg bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors disabled:opacity-40"
+                >
+                  {aiLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Main preview area */}
+      <div className="flex-1 flex flex-col min-w-0 h-full">
+        {/* Collapse toggle when sidebar is closed */}
+        {!sidebarOpen && (
+          <div className="absolute top-3 left-3 z-20">
+            <Button variant="outline" size="icon" className="h-8 w-8 bg-background" onClick={() => setSidebarOpen(true)}>
+              <PanelLeftOpen className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+
+        <div className="flex-1 overflow-y-auto">
+          {isEmpty ? (
+            <div className="flex flex-col items-center justify-center h-full text-muted-foreground/40 space-y-3">
+              <Wand2 className="h-12 w-12" />
+              <p className="text-lg font-medium">Start creating</p>
+              <p className="text-sm">Use the AI editor on the left to build your page.</p>
+            </div>
+          ) : (
+            <LandingPageChatLayout
               slug={page.slug}
               headline={page.headline}
               subheadline={page.subheadline}
@@ -216,53 +342,18 @@ export default function LandingPageCreator() {
               onImageRemove={() => saveFields({ hero_image_url: null })}
               imageUploading={imageUploading}
             />
-        )}
-        <input
-          ref={imageInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) handleImageUpload(file);
-            e.target.value = "";
-          }}
-        />
-      </div>
-
-      {/* Floating vibe-coding input */}
-      <div className="shrink-0 border-t bg-muted">
-        <div className="max-w-2xl mx-auto px-4 py-4 space-y-2">
-          {aiSummary && (
-            <div className="rounded-lg border border-primary/30 bg-primary/5 px-3 py-2 flex items-start gap-2 text-sm text-primary">
-              <Wand2 className="h-3.5 w-3.5 mt-0.5 shrink-0" />
-              <span>{aiSummary}</span>
-            </div>
           )}
-          <div className="relative">
-            <input
-              ref={inputRef}
-              type="text"
-              value={instruction}
-              onChange={(e) => setInstruction(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleAIEdit();
-                }
-              }}
-              placeholder="Describe what you want on this page…"
-              disabled={aiLoading}
-              className="w-full px-4 py-3 pr-12 rounded-xl bg-muted border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm placeholder:text-muted-foreground"
-            />
-            <button
-              onClick={handleAIEdit}
-              disabled={aiLoading || !instruction.trim()}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors disabled:opacity-40"
-            >
-              {aiLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-            </button>
-          </div>
+          <input
+            ref={imageInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) handleImageUpload(file);
+              e.target.value = "";
+            }}
+          />
         </div>
       </div>
     </div>
