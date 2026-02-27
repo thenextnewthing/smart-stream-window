@@ -203,8 +203,7 @@ export default function LandingPageCreator() {
             <p className="text-sm">Type what you want below and the AI will build your page.</p>
           </div>
         ) : (
-          <div className="max-w-3xl mx-auto bg-background rounded-2xl border border-border shadow-sm">
-            <LandingPageChatLayout
+          <LandingPageChatLayout
               headline={page.headline}
               subheadline={page.subheadline}
               description={page.description}
@@ -216,7 +215,6 @@ export default function LandingPageCreator() {
               onImageRemove={() => saveFields({ hero_image_url: null })}
               imageUploading={imageUploading}
             />
-          </div>
         )}
         <input
           ref={imageInputRef}
