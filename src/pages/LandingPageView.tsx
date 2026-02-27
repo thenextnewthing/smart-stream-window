@@ -80,6 +80,7 @@ const LandingPageView = () => {
 
       <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center">
         <LandingPageChatLayout
+          slug={page.slug}
           headline={page.headline}
           subheadline={page.subheadline}
           description={page.description}
