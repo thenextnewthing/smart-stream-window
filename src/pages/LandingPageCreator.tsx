@@ -40,6 +40,18 @@ interface LandingPage {
   updated_at: string;
 }
 
+function DetailField({ label, icon, children }: { label: string; icon?: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <div className="space-y-1">
+      <label className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
+        {icon}
+        {label}
+      </label>
+      {children}
+    </div>
+  );
+}
+
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
@@ -249,12 +261,20 @@ export default function LandingPageCreator() {
             </button>
             {detailsOpen && (
               <div className="px-4 pb-3 space-y-3">
+                {/* Page title */}
+                <DetailField label="Page title">
+                  <input
+                    type="text"
+                    value={page.title}
+                    onChange={(e) => setPage((p) => p ? { ...p, title: e.target.value } : p)}
+                    onBlur={() => saveFields({ title: page.title })}
+                    onKeyDown={(e) => { if (e.key === "Enter") saveFields({ title: page.title }); }}
+                    className="w-full bg-background border border-border rounded-lg text-sm px-2.5 py-1.5 outline-none focus:border-primary transition-colors"
+                  />
+                </DetailField>
+
                 {/* Slug */}
-                <div className="space-y-1">
-                  <label className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
-                    <LinkIcon className="h-3 w-3" />
-                    Page URL
-                  </label>
+                <DetailField label="Page URL" icon={<LinkIcon className="h-3 w-3" />}>
                   <div className="flex gap-1.5">
                     <div className="flex-1 flex items-center bg-background border border-border rounded-lg overflow-hidden">
                       <span className="text-[11px] text-muted-foreground pl-2.5 shrink-0 select-none">/</span>
@@ -269,9 +289,44 @@ export default function LandingPageCreator() {
                     </div>
                     {slugSaving && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground self-center" />}
                   </div>
-                </div>
+                </DetailField>
+
+                {/* SEO */}
+                <DetailField label="SEO title">
+                  <input
+                    type="text"
+                    value={page.seo_title ?? ""}
+                    onChange={(e) => setPage((p) => p ? { ...p, seo_title: e.target.value || null } : p)}
+                    onBlur={() => saveFields({ seo_title: page.seo_title })}
+                    placeholder="Page title for search engines"
+                    className="w-full bg-background border border-border rounded-lg text-sm px-2.5 py-1.5 outline-none focus:border-primary transition-colors placeholder:text-muted-foreground"
+                  />
+                </DetailField>
+                <DetailField label="SEO description">
+                  <textarea
+                    value={page.seo_description ?? ""}
+                    onChange={(e) => setPage((p) => p ? { ...p, seo_description: e.target.value || null } : p)}
+                    onBlur={() => saveFields({ seo_description: page.seo_description })}
+                    placeholder="Short description for search results"
+                    rows={2}
+                    className="w-full bg-background border border-border rounded-lg text-sm px-2.5 py-1.5 outline-none focus:border-primary transition-colors placeholder:text-muted-foreground resize-none"
+                  />
+                </DetailField>
+
+                {/* Lead magnet */}
+                <DetailField label="Lead magnet URL">
+                  <input
+                    type="text"
+                    value={page.lead_magnet_value ?? ""}
+                    onChange={(e) => setPage((p) => p ? { ...p, lead_magnet_value: e.target.value || null } : p)}
+                    onBlur={() => saveFields({ lead_magnet_value: page.lead_magnet_value })}
+                    placeholder="https://…"
+                    className="w-full bg-background border border-border rounded-lg text-sm px-2.5 py-1.5 outline-none focus:border-primary transition-colors placeholder:text-muted-foreground"
+                  />
+                </DetailField>
+
                 {/* Stats */}
-                <div className="flex gap-4 text-[11px] text-muted-foreground">
+                <div className="flex gap-4 text-[11px] text-muted-foreground pt-1">
                   <span>{page.view_count} views</span>
                   <span>{page.submission_count} submissions</span>
                 </div>
