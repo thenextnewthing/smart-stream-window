@@ -39,41 +39,23 @@ export function LandingPageChatLayout({
         </p>
       )}
 
-      {/* Fake browser chrome */}
       {(hasContent || editable) && (
-        <div className="rounded-xl border border-border shadow-lg overflow-hidden bg-card">
-          {/* Browser title bar */}
-          <div className="bg-muted border-b border-border px-4 py-2.5 flex items-center gap-3">
-            {/* Traffic lights */}
-            <div className="flex items-center gap-1.5 shrink-0">
-              <div className="w-3 h-3 rounded-full bg-[hsl(0_70%_65%)]" />
-              <div className="w-3 h-3 rounded-full bg-[hsl(45_70%_60%)]" />
-              <div className="w-3 h-3 rounded-full bg-[hsl(120_50%_55%)]" />
+        <>
+          {/* Site header — outside the card, on the page background */}
+          <div className="mb-8">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">🧨</span>
+              <h2 className="text-base font-semibold tracking-tight text-foreground">
+                The Next New Thing
+              </h2>
             </div>
-            {/* Address bar */}
-            <div className="flex-1 flex justify-center">
-              <div className="bg-background border border-border rounded-md px-3 py-1 text-xs text-muted-foreground font-mono max-w-sm w-full text-center truncate">
-                {displayUrl}
-              </div>
-            </div>
-            {/* Spacer to balance traffic lights */}
-            <div className="w-[54px] shrink-0" />
+            <p className="text-sm text-muted-foreground mt-0.5">
+              The Podcast for AI Creators by the Ultra-Pushy Interviewer Andrew Warner
+            </p>
           </div>
 
-          {/* Browser content area */}
-          <div className="bg-card">
-            {/* Site header inside browser */}
-            <div className="px-8 pt-8 pb-2">
-              <div className="flex items-center gap-2">
-                <span className="text-lg">🚀</span>
-                <h2 className="text-base font-semibold tracking-tight text-foreground">
-                  The Next New Thing
-                </h2>
-              </div>
-              <p className="text-sm text-muted-foreground mt-0.5">
-                The Podcast for AI Creators by the Ultra-Pushy Interviewer Andrew Warner
-              </p>
-            </div>
+          {/* Content card */}
+          <div className="rounded-2xl border border-border shadow-sm overflow-hidden bg-card">
 
             {/* Chat content */}
             <div className="px-8 py-6 space-y-5">
@@ -166,7 +148,7 @@ export function LandingPageChatLayout({
               )}
             </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
