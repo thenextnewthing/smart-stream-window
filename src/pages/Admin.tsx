@@ -666,7 +666,7 @@ const Admin = () => {
                                   size="icon"
                                   className="h-7 w-7 text-primary"
                                   title="Edit page"
-                                  onClick={() => navigate(`/admin/edit/${page.id}`)}
+                                  onClick={() => navigate(`/admin/create/${page.id}`)}
                                 >
                                   <Wand2 className="h-3.5 w-3.5" />
                                 </Button>
