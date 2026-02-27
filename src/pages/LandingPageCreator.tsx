@@ -39,6 +39,7 @@ interface LandingPage {
   submission_count: number;
   created_at: string;
   updated_at: string;
+  utm_medium: string | null;
 }
 
 function DetailField({ label, icon, children }: { label: string; icon?: React.ReactNode; children: React.ReactNode }) {
@@ -413,6 +414,18 @@ export default function LandingPageCreator() {
                     />
                   </DetailField>
                 )}
+
+                {/* UTM medium */}
+                <DetailField label="UTM medium">
+                  <input
+                    type="text"
+                    value={page.utm_medium ?? ""}
+                    onChange={(e) => setPage((p) => p ? { ...p, utm_medium: e.target.value || null } : p)}
+                    onBlur={() => saveFields({ utm_medium: page.utm_medium })}
+                    placeholder="e.g. landing-page"
+                    className="w-full bg-background border border-border rounded-lg text-sm px-2.5 py-1.5 outline-none focus:border-primary transition-colors placeholder:text-muted-foreground"
+                  />
+                </DetailField>
 
                 {/* Stats */}
                 <div className="flex gap-4 text-[11px] text-muted-foreground pt-1">

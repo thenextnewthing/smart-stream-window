@@ -1,0 +1,1 @@
+ALTER TABLE public.landing_pages ADD COLUMN utm_medium text DEFAULT NULL;
