@@ -18,6 +18,7 @@ import {
   Link as LinkIcon,
   ChevronDown,
   Settings,
+  Upload,
 } from "lucide-react";
 
 interface LandingPage {
@@ -70,6 +71,7 @@ export default function LandingPageCreator() {
   const [publishing, setPublishing] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [leadMagnetUploading, setLeadMagnetUploading] = useState(false);
 
   const [slugValue, setSlugValue] = useState("");
   const [slugSaving, setSlugSaving] = useState(false);
@@ -314,16 +316,103 @@ export default function LandingPageCreator() {
                 </DetailField>
 
                 {/* Lead magnet */}
-                <DetailField label="Lead magnet URL">
-                  <input
-                    type="text"
-                    value={page.lead_magnet_value ?? ""}
-                    onChange={(e) => setPage((p) => p ? { ...p, lead_magnet_value: e.target.value || null } : p)}
-                    onBlur={() => saveFields({ lead_magnet_value: page.lead_magnet_value })}
-                    placeholder="https://…"
-                    className="w-full bg-background border border-border rounded-lg text-sm px-2.5 py-1.5 outline-none focus:border-primary transition-colors placeholder:text-muted-foreground"
-                  />
+                <DetailField label="Lead magnet">
+                  <select
+                    value={page.lead_magnet_type ?? "email"}
+                    onChange={(e) => {
+                      const type = e.target.value;
+                      setPage((p) => p ? { ...p, lead_magnet_type: type, lead_magnet_value: null } : p);
+                      saveFields({ lead_magnet_type: type, lead_magnet_value: null });
+                    }}
+                    className="w-full bg-background border border-border rounded-lg text-sm px-2.5 py-1.5 outline-none focus:border-primary transition-colors"
+                  >
+                    <option value="email">Email only (no deliverable)</option>
+                    <option value="url">URL / Link</option>
+                    <option value="file">File upload</option>
+                    <option value="content">Text content</option>
+                  </select>
                 </DetailField>
+
+                {page.lead_magnet_type === "url" && (
+                  <DetailField label="Redirect URL">
+                    <input
+                      type="text"
+                      value={page.lead_magnet_value ?? ""}
+                      onChange={(e) => setPage((p) => p ? { ...p, lead_magnet_value: e.target.value || null } : p)}
+                      onBlur={() => saveFields({ lead_magnet_value: page.lead_magnet_value })}
+                      placeholder="https://…"
+                      className="w-full bg-background border border-border rounded-lg text-sm px-2.5 py-1.5 outline-none focus:border-primary transition-colors placeholder:text-muted-foreground"
+                    />
+                  </DetailField>
+                )}
+
+                {page.lead_magnet_type === "file" && (
+                  <DetailField label="File">
+                    {page.lead_magnet_value ? (
+                      <div className="flex items-center gap-2">
+                        <a
+                          href={page.lead_magnet_value}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-primary underline truncate flex-1"
+                        >
+                          {page.lead_magnet_value.split("/").pop()}
+                        </a>
+                        <button
+                          onClick={() => { setPage((p) => p ? { ...p, lead_magnet_value: null } : p); saveFields({ lead_magnet_value: null }); }}
+                          className="text-[11px] text-destructive hover:underline shrink-0"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="flex items-center gap-2 cursor-pointer border border-dashed border-border rounded-lg px-3 py-2 text-xs text-muted-foreground hover:border-primary hover:text-primary transition-colors">
+                        {leadMagnetUploading ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <Upload className="h-3.5 w-3.5" />
+                        )}
+                        <span>{leadMagnetUploading ? "Uploading…" : "Choose file"}</span>
+                        <input
+                          type="file"
+                          className="hidden"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (!file || !page) return;
+                            setLeadMagnetUploading(true);
+                            try {
+                              const ext = file.name.split(".").pop() ?? "bin";
+                              const path = `${page.id}/${Date.now()}-${file.name}`;
+                              const { error } = await supabase.storage.from("lead-magnet-files").upload(path, file, { upsert: true });
+                              if (error) throw error;
+                              const { data: { publicUrl } } = supabase.storage.from("lead-magnet-files").getPublicUrl(path);
+                              await saveFields({ lead_magnet_value: publicUrl });
+                              toast.success("File uploaded");
+                            } catch (err: unknown) {
+                              toast.error("Upload failed", { description: (err as Error).message });
+                            } finally {
+                              setLeadMagnetUploading(false);
+                              e.target.value = "";
+                            }
+                          }}
+                        />
+                      </label>
+                    )}
+                  </DetailField>
+                )}
+
+                {page.lead_magnet_type === "content" && (
+                  <DetailField label="Content delivered after signup">
+                    <textarea
+                      value={page.lead_magnet_value ?? ""}
+                      onChange={(e) => setPage((p) => p ? { ...p, lead_magnet_value: e.target.value || null } : p)}
+                      onBlur={() => saveFields({ lead_magnet_value: page.lead_magnet_value })}
+                      placeholder="The content subscribers will receive…"
+                      rows={4}
+                      className="w-full bg-background border border-border rounded-lg text-sm px-2.5 py-1.5 outline-none focus:border-primary transition-colors placeholder:text-muted-foreground resize-none"
+                    />
+                  </DetailField>
+                )}
 
                 {/* Stats */}
                 <div className="flex gap-4 text-[11px] text-muted-foreground pt-1">
