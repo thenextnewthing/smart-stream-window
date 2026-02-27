@@ -204,6 +204,7 @@ export default function LandingPageCreator() {
           </div>
         ) : (
           <LandingPageChatLayout
+              slug={page.slug}
               headline={page.headline}
               subheadline={page.subheadline}
               description={page.description}
