@@ -132,11 +132,9 @@ export function LandingPageChatLayout({
                       <input
                         type="email"
                         placeholder="Enter your email"
-                        disabled={editable}
                         className="flex-1 px-4 py-3.5 rounded-xl bg-background border border-border text-sm text-foreground placeholder:text-muted-foreground"
                       />
                       <button
-                        disabled={editable}
                         className="px-6 py-3.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold whitespace-nowrap hover:bg-primary/90 transition-colors"
                       >
                         {cta_label ?? "Get Access"} →
