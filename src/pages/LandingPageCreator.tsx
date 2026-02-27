@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { LandingPageChatLayout } from "@/components/LandingPageChatLayout";
 import {
@@ -10,8 +9,6 @@ import {
   Loader2,
   Send,
   Wand2,
-  Eye,
-  EyeOff,
   Check,
   PanelLeftClose,
   PanelLeftOpen,
@@ -237,19 +234,10 @@ export default function LandingPageCreator() {
             </Button>
           </div>
 
-          {/* Publish toggle */}
-          <div className="px-4 py-3 border-b border-border space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                {page.is_published ? <Eye className="h-4 w-4 text-primary" /> : <EyeOff className="h-4 w-4 text-muted-foreground" />}
-                <span className="text-sm font-medium">{page.is_published ? "Published" : "Draft"}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                {saving && <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />}
-                {saved && <Check className="h-3.5 w-3.5 text-primary" />}
-                <Switch checked={page.is_published} onCheckedChange={handleTogglePublish} disabled={publishing} />
-              </div>
-            </div>
+          {/* Save indicator */}
+          <div className="px-4 py-2 border-b border-border flex items-center gap-2 justify-end">
+            {saving && <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />}
+            {saved && <><Check className="h-3.5 w-3.5 text-primary" /><span className="text-xs text-muted-foreground">Saved</span></>}
           </div>
 
           {/* Details collapsible */}
@@ -519,9 +507,9 @@ export default function LandingPageCreator() {
           </div>
         )}
 
-        {/* Restart preview button */}
+        {/* Preview toolbar */}
         {!isEmpty && (
-          <div className="flex items-center justify-end px-4 py-1.5 border-b border-border bg-muted/30 shrink-0">
+          <div className="flex items-center justify-between px-4 py-1.5 border-b border-border bg-muted/30 shrink-0">
             <Button
               variant="ghost"
               size="sm"
@@ -529,8 +517,28 @@ export default function LandingPageCreator() {
               onClick={() => setPreviewKey((k) => k + 1)}
             >
               <RotateCcw className="h-3 w-3" />
-              Restart
+              Refresh
             </Button>
+            <button
+              onClick={handleTogglePublish}
+              disabled={publishing}
+              className="relative flex items-center h-7 rounded-full border border-border bg-muted p-0.5 text-[11px] font-medium transition-colors disabled:opacity-50"
+            >
+              <span
+                className={`relative z-10 px-3 py-0.5 rounded-full transition-all ${
+                  !page.is_published ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
+                }`}
+              >
+                Draft
+              </span>
+              <span
+                className={`relative z-10 px-3 py-0.5 rounded-full transition-all ${
+                  page.is_published ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground"
+                }`}
+              >
+                Published
+              </span>
+            </button>
           </div>
         )}
 
