@@ -1,0 +1,2 @@
+ALTER TABLE public.landing_pages DROP CONSTRAINT landing_pages_lead_magnet_type_check;
+ALTER TABLE public.landing_pages ADD CONSTRAINT landing_pages_lead_magnet_type_check CHECK (lead_magnet_type = ANY (ARRAY['email'::text, 'url'::text, 'file'::text, 'content'::text, 'download'::text, 'redirect'::text]));
