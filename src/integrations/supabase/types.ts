@@ -19,6 +19,7 @@ export type Database = {
           cloned_from: string | null
           created_at: string
           cta_label: string | null
+          deleted_at: string | null
           description: string | null
           headline: string | null
           hero_image_url: string | null
@@ -40,6 +41,7 @@ export type Database = {
           cloned_from?: string | null
           created_at?: string
           cta_label?: string | null
+          deleted_at?: string | null
           description?: string | null
           headline?: string | null
           hero_image_url?: string | null
@@ -61,6 +63,7 @@ export type Database = {
           cloned_from?: string | null
           created_at?: string
           cta_label?: string | null
+          deleted_at?: string | null
           description?: string | null
           headline?: string | null
           hero_image_url?: string | null
