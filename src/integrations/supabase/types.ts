@@ -33,6 +33,7 @@ export type Database = {
           submission_count: number
           title: string
           updated_at: string
+          utm_medium: string | null
           view_count: number
         }
         Insert: {
@@ -53,6 +54,7 @@ export type Database = {
           submission_count?: number
           title: string
           updated_at?: string
+          utm_medium?: string | null
           view_count?: number
         }
         Update: {
@@ -73,6 +75,7 @@ export type Database = {
           submission_count?: number
           title?: string
           updated_at?: string
+          utm_medium?: string | null
           view_count?: number
         }
         Relationships: [
