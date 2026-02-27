@@ -845,21 +845,21 @@ const Admin = () => {
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="lp-slug">URL slug</Label>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground whitespace-nowrap">
-                  {window.location.origin}/
-                </span>
-                <Input
-                  id="lp-slug"
-                  placeholder="my-awesome-page"
-                  value={newPageSlug}
-                  onChange={(e) =>
-                    setNewPageSlug(
-                      e.target.value.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")
-                    )
-                  }
-                />
-              </div>
+              <Input
+                id="lp-slug"
+                placeholder="my-awesome-page"
+                value={newPageSlug}
+                onChange={(e) =>
+                  setNewPageSlug(
+                    e.target.value.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")
+                  )
+                }
+              />
+              {newPageSlug && (
+                <p className="text-xs text-muted-foreground truncate">
+                  {window.location.origin}/{newPageSlug}
+                </p>
+              )}
             </div>
             {cloneSource && (
               <p className="text-xs text-muted-foreground bg-muted rounded-md px-3 py-2">
