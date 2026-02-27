@@ -19,6 +19,7 @@ import {
   ChevronDown,
   Settings,
   Upload,
+  RotateCcw,
 } from "lucide-react";
 
 interface LandingPage {
@@ -78,6 +79,7 @@ export default function LandingPageCreator() {
   const [slugSaving, setSlugSaving] = useState(false);
 
   const [imageUploading, setImageUploading] = useState(false);
+  const [previewKey, setPreviewKey] = useState(0);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -448,16 +450,29 @@ export default function LandingPageCreator() {
 
             {/* Messages area */}
             <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2">
-              {isEmpty && !aiSummary && (
-                <div className="flex flex-col items-center justify-center h-full text-muted-foreground/40 space-y-2 py-8">
-                  <Wand2 className="h-8 w-8" />
-                  <p className="text-xs text-center">Describe what you want and AI will build it.</p>
+              {/* Starter messages */}
+              <div className="flex justify-start">
+                <div className="max-w-[85%] px-3 py-2 rounded-2xl bg-chat-assistant border border-chat-border text-foreground text-xs">
+                  I am a marketing expert.
                 </div>
-              )}
+              </div>
+              <div className="flex justify-start">
+                <div className="max-w-[85%] px-3 py-2 rounded-2xl bg-chat-assistant border border-chat-border text-foreground text-xs">
+                  I built you this landing page.
+                </div>
+              </div>
+              <div className="flex justify-start">
+                <div className="max-w-[85%] px-3 py-2 rounded-2xl bg-chat-assistant border border-chat-border text-foreground text-xs">
+                  Just tell me how you'd like me to customize it.
+                </div>
+              </div>
+
               {aiSummary && (
-                <div className="rounded-lg border border-primary/30 bg-primary/5 px-3 py-2 flex items-start gap-2 text-xs text-primary">
-                  <Wand2 className="h-3 w-3 mt-0.5 shrink-0" />
-                  <span>{aiSummary}</span>
+                <div className="flex justify-start">
+                  <div className="max-w-[85%] px-3 py-2 rounded-2xl bg-chat-assistant border border-chat-border text-foreground text-xs flex items-start gap-2">
+                    <Wand2 className="h-3 w-3 mt-0.5 shrink-0 text-primary" />
+                    <span>{aiSummary}</span>
+                  </div>
                 </div>
               )}
             </div>
@@ -504,6 +519,21 @@ export default function LandingPageCreator() {
           </div>
         )}
 
+        {/* Restart preview button */}
+        {!isEmpty && (
+          <div className="flex items-center justify-end px-4 py-1.5 border-b border-border bg-muted/30 shrink-0">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-6 gap-1 text-[11px] text-muted-foreground hover:text-foreground"
+              onClick={() => setPreviewKey((k) => k + 1)}
+            >
+              <RotateCcw className="h-3 w-3" />
+              Restart
+            </Button>
+          </div>
+        )}
+
         <div className="flex-1 overflow-y-auto">
           {isEmpty ? (
             <div className="flex flex-col items-center justify-center h-full text-muted-foreground/40 space-y-3">
@@ -513,6 +543,7 @@ export default function LandingPageCreator() {
             </div>
           ) : (
             <LandingPageChatLayout
+              key={previewKey}
               slug={page.slug}
               headline={page.headline}
               subheadline={page.subheadline}
