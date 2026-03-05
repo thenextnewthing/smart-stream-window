@@ -1156,6 +1156,148 @@ const Admin = () => {
           </div>
         </SheetContent>
       </Sheet>
+
+      {/* ── New Redirect dialog ─────────────────────────────────────────── */}
+      <Dialog open={newRedirectOpen} onOpenChange={setNewRedirectOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>New redirect</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="redir-slug">Link path</Label>
+              <div className="flex items-center rounded-md border border-input bg-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 ring-offset-background">
+                <span className="pl-3 pr-1 text-sm font-medium text-foreground whitespace-nowrap select-none">TheNextNewThing.ai/l/</span>
+                <input
+                  id="redir-slug"
+                  className="flex h-10 w-full bg-transparent py-2 pr-3 text-sm text-foreground placeholder:text-foreground/25 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                  placeholder="youtube"
+                  value={newRedirectSlug}
+                  onChange={(e) =>
+                    setNewRedirectSlug(
+                      e.target.value.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")
+                    )
+                  }
+                />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="redir-dest">Destination URL</Label>
+              <Input
+                id="redir-dest"
+                placeholder="https://example.com/page"
+                value={newRedirectDest}
+                onChange={(e) => setNewRedirectDest(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setNewRedirectOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={async () => {
+                if (!newRedirectSlug.trim() || !newRedirectDest.trim()) return;
+                setNewRedirectSaving(true);
+                const { data, error } = await supabase
+                  .from("link_redirects")
+                  .insert({
+                    path: newRedirectSlug.trim(),
+                    destination: newRedirectDest.trim(),
+                    visit_count: 0,
+                  })
+                  .select()
+                  .single();
+                setNewRedirectSaving(false);
+                if (error) {
+                  if (error.code === "23505") {
+                    alert(`A redirect with the slug "${newRedirectSlug.trim()}" already exists.`);
+                  } else {
+                    alert(`Error: ${error.message}`);
+                  }
+                  return;
+                }
+                if (data) {
+                  setRedirects((prev) => [data as Redirect, ...prev]);
+                  setNewRedirectOpen(false);
+                }
+              }}
+              disabled={!newRedirectSlug.trim() || !newRedirectDest.trim() || newRedirectSaving}
+            >
+              {newRedirectSaving ? "Creating…" : "Create redirect"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* ── Edit Redirect dialog ────────────────────────────────────────── */}
+      <Dialog open={!!editRedirect} onOpenChange={(v) => { if (!v) setEditRedirect(null); }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit redirect</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="edit-redir-slug">Link path</Label>
+              <div className="flex items-center rounded-md border border-input bg-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 ring-offset-background">
+                <span className="pl-3 pr-1 text-sm font-medium text-foreground whitespace-nowrap select-none">TheNextNewThing.ai/l/</span>
+                <input
+                  id="edit-redir-slug"
+                  className="flex h-10 w-full bg-transparent py-2 pr-3 text-sm text-foreground placeholder:text-foreground/25 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                  value={editRedirectSlug}
+                  onChange={(e) =>
+                    setEditRedirectSlug(
+                      e.target.value.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")
+                    )
+                  }
+                />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="edit-redir-dest">Destination URL</Label>
+              <Input
+                id="edit-redir-dest"
+                value={editRedirectDest}
+                onChange={(e) => setEditRedirectDest(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditRedirect(null)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={async () => {
+                if (!editRedirect || !editRedirectSlug.trim() || !editRedirectDest.trim()) return;
+                setEditRedirectSaving(true);
+                const { error } = await supabase
+                  .from("link_redirects")
+                  .update({
+                    path: editRedirectSlug.trim(),
+                    destination: editRedirectDest.trim(),
+                  })
+                  .eq("id", editRedirect.id);
+                setEditRedirectSaving(false);
+                if (error) {
+                  alert(`Error: ${error.message}`);
+                  return;
+                }
+                setRedirects((prev) =>
+                  prev.map((r) =>
+                    r.id === editRedirect.id
+                      ? { ...r, path: editRedirectSlug.trim(), destination: editRedirectDest.trim() }
+                      : r
+                  )
+                );
+                setEditRedirect(null);
+              }}
+              disabled={!editRedirectSlug.trim() || !editRedirectDest.trim() || editRedirectSaving}
+            >
+              {editRedirectSaving ? "Saving…" : "Save changes"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
