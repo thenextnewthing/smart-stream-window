@@ -247,6 +247,18 @@ const Admin = () => {
   const [lpLoading, setLpLoading] = useState(true);
   const [lpSearch, setLpSearch] = useState("");
 
+  // New redirect state
+  const [newRedirectOpen, setNewRedirectOpen] = useState(false);
+  const [newRedirectSlug, setNewRedirectSlug] = useState("");
+  const [newRedirectDest, setNewRedirectDest] = useState("");
+  const [newRedirectSaving, setNewRedirectSaving] = useState(false);
+
+  // Edit redirect state
+  const [editRedirect, setEditRedirect] = useState<Redirect | null>(null);
+  const [editRedirectSlug, setEditRedirectSlug] = useState("");
+  const [editRedirectDest, setEditRedirectDest] = useState("");
+  const [editRedirectSaving, setEditRedirectSaving] = useState(false);
+
   // Reset password dialog
   const [resetOpen, setResetOpen] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
