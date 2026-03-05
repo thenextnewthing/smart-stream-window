@@ -822,14 +822,20 @@ const Admin = () => {
           {/* ── Tracked Links ──────────────────────────────────────────────── */}
           <TabsContent value="links" className="mt-4">
             <div className="space-y-4">
-              {!redirectsLoading && !redirectsError && redirects.length > 0 && (
-                <Input
-                  placeholder="Search by path or destination…"
-                  value={redirectSearch}
-                  onChange={(e) => setRedirectSearch(e.target.value)}
-                  className="max-w-sm"
-                />
-              )}
+              <div className="flex items-center justify-between gap-4">
+                {!redirectsLoading && !redirectsError && redirects.length > 0 && (
+                  <Input
+                    placeholder="Search by path or destination…"
+                    value={redirectSearch}
+                    onChange={(e) => setRedirectSearch(e.target.value)}
+                    className="max-w-sm"
+                  />
+                )}
+                <Button size="sm" className="gap-1.5 ml-auto" onClick={() => { setNewRedirectSlug(""); setNewRedirectDest(""); setNewRedirectOpen(true); }}>
+                  <Plus className="h-4 w-4" />
+                  New redirect
+                </Button>
+              </div>
 
               {redirectsLoading ? (
                 <div className="flex items-center justify-center py-20">
@@ -840,14 +846,18 @@ const Admin = () => {
                   <p className="text-destructive">{redirectsError}</p>
                 </div>
               ) : redirects.length === 0 ? (
-                <div className="text-center py-20">
-                  <p className="text-muted-foreground text-sm">
-                    No tracked links yet. Share a link like{" "}
-                    <code className="bg-muted px-1 rounded text-xs">
-                      {window.location.origin}/l/youtube
-                    </code>{" "}
-                    to get started.
-                  </p>
+                <div className="rounded-md border border-dashed flex flex-col items-center justify-center py-20 gap-4 text-center">
+                  <Link2 className="h-10 w-10 text-muted-foreground/40" />
+                  <div>
+                    <p className="font-medium">No redirects yet</p>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Create your first redirect to start tracking link visits.
+                    </p>
+                  </div>
+                  <Button size="sm" onClick={() => { setNewRedirectSlug(""); setNewRedirectDest(""); setNewRedirectOpen(true); }}>
+                    <Plus className="h-4 w-4 mr-1.5" />
+                    Create first redirect
+                  </Button>
                 </div>
               ) : (
                 <div className="rounded-md border">
@@ -859,12 +869,13 @@ const Admin = () => {
                         <TableHead className="text-right">Visits</TableHead>
                         <TableHead>Last visited</TableHead>
                         <TableHead>Created</TableHead>
+                        <TableHead />
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {filteredRedirects.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={5} className="text-center text-muted-foreground text-sm py-10">
+                          <TableCell colSpan={6} className="text-center text-muted-foreground text-sm py-10">
                             No results for "{redirectSearch}"
                           </TableCell>
                         </TableRow>
@@ -881,7 +892,7 @@ const Admin = () => {
                                 /l/{r.path}
                               </a>
                             </TableCell>
-                            <TableCell className="font-mono text-sm text-muted-foreground">
+                            <TableCell className="font-mono text-sm text-muted-foreground max-w-[300px] truncate">
                               {r.destination}
                             </TableCell>
                             <TableCell className="text-right font-semibold tabular-nums">
@@ -892,6 +903,54 @@ const Admin = () => {
                             </TableCell>
                             <TableCell className="text-sm text-muted-foreground">
                               {formatDate(r.created_at)}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-1 justify-end">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-7 w-7 text-primary"
+                                  title="Edit redirect"
+                                  onClick={() => {
+                                    setEditRedirect(r);
+                                    setEditRedirectSlug(r.path);
+                                    setEditRedirectDest(r.destination);
+                                  }}
+                                >
+                                  <Pencil className="h-3.5 w-3.5" />
+                                </Button>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                                      title="Delete redirect"
+                                    >
+                                      <Trash2 className="h-3.5 w-3.5" />
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>Delete redirect "/l/{r.path}"?</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        This will permanently remove this redirect. Anyone visiting this link will see a "not found" page.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={async () => {
+                                          const { error } = await supabase.from("link_redirects").delete().eq("id", r.id);
+                                          if (!error) setRedirects((prev) => prev.filter((x) => x.id !== r.id));
+                                        }}
+                                      >
+                                        Delete
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </div>
                             </TableCell>
                           </TableRow>
                         ))
