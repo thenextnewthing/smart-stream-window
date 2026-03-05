@@ -14,7 +14,6 @@ Deno.serve(async (req) => {
   try {
     const { path } = await req.json();
 
-    // Validate: path must be a non-empty string
     if (!path || typeof path !== "string") {
       return new Response(JSON.stringify({ error: "Invalid path" }), {
         status: 400,
@@ -22,8 +21,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Sanitize: strip leading slashes from the incoming path segment
-    // e.g. "youtube" or "/youtube" -> "youtube"
     const cleanPath = path.replace(/^\/+/, "").toLowerCase().trim();
 
     if (!cleanPath || cleanPath.length > 200) {
@@ -33,53 +30,44 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Block any attempt to embed an absolute URL
-    // e.g. "https://evil.com", "//evil.com"
-    if (/^(https?:)?\/\//i.test(cleanPath) || cleanPath.includes("..")) {
-      return new Response(JSON.stringify({ error: "External URLs are not allowed" }), {
-        status: 403,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    // The destination is always on the target domain
-    const destination = `https://your-doc-quest.lovable.app/${cleanPath}`;
-
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Check if record already exists
+    // Look up existing redirect
     const { data: existing } = await supabase
       .from("link_redirects")
-      .select("id, visit_count")
+      .select("id, visit_count, destination, redirect_type")
       .eq("path", cleanPath)
       .maybeSingle();
 
-    if (existing) {
-      // Increment visit count
-      await supabase
-        .from("link_redirects")
-        .update({
-          visit_count: existing.visit_count + 1,
-          last_visited_at: new Date().toISOString(),
-        })
-        .eq("id", existing.id);
-    } else {
-      // Create new record on first visit
-      await supabase.from("link_redirects").insert({
-        path: cleanPath,
-        destination,
-        visit_count: 1,
-        last_visited_at: new Date().toISOString(),
+    if (!existing) {
+      return new Response(JSON.stringify({ error: "Link not found" }), {
+        status: 404,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    return new Response(JSON.stringify({ destination }), {
-      status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    // Increment visit count
+    await supabase
+      .from("link_redirects")
+      .update({
+        visit_count: existing.visit_count + 1,
+        last_visited_at: new Date().toISOString(),
+      })
+      .eq("id", existing.id);
+
+    return new Response(
+      JSON.stringify({
+        destination: existing.destination,
+        redirect_type: existing.redirect_type,
+      }),
+      {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
   } catch (err) {
     console.error("track-redirect error:", err);
     return new Response(JSON.stringify({ error: "Internal server error" }), {
