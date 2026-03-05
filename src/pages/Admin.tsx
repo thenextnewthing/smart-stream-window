@@ -72,6 +72,7 @@ interface Redirect {
   visit_count: number;
   created_at: string;
   last_visited_at: string | null;
+  redirect_type: string;
 }
 
 interface LandingPage {
