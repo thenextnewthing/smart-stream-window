@@ -98,6 +98,7 @@ export type Database = {
           id: string
           last_visited_at: string | null
           path: string
+          redirect_type: string
           visit_count: number
         }
         Insert: {
@@ -106,6 +107,7 @@ export type Database = {
           id?: string
           last_visited_at?: string | null
           path: string
+          redirect_type?: string
           visit_count?: number
         }
         Update: {
@@ -114,6 +116,7 @@ export type Database = {
           id?: string
           last_visited_at?: string | null
           path?: string
+          redirect_type?: string
           visit_count?: number
         }
         Relationships: []

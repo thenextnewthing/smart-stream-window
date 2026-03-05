@@ -1,60 +1,34 @@
 
 
-## Plan: Switch to 302 Redirects + Add Redirect Creator in Admin
+# Simplified Landing Page Creator with Inline Vibe Coding
 
-### 1. Add `redirect_type` column to `link_redirects` table
-- Add column `redirect_type text not null default '302'` to support future flexibility
-- Add `destination` as a user-editable field (currently auto-generated from path)
+## What You'll Get
 
-### 2. Update the `track-redirect` edge function
-- Instead of always constructing destination from path, look up the existing record first
-- If found, use the stored destination; increment visit count
-- If not found, return 404 (redirects are now explicitly created, not auto-created)
-- Return `redirect_type` alongside `destination`
+A streamlined landing page creation experience: when you click "New Page" from the admin dashboard, you'll see the full landing page preview taking up the whole screen, with a floating text box at the bottom where you describe what you want. Type something like "Create a page about AI tools for startups with a bold headline" and watch the page update right in front of you.
 
-### 3. Update `LinkRedirect.tsx` (the `/l/*` handler)
-- Replace the iframe approach with a **302 redirect**: when the edge function returns a destination, do `window.location.replace(destination)` instead of rendering an iframe
-- Remove the `ALLOWED_ORIGIN` restriction since destinations can now be any URL
+## How It Works
 
-### 4. Add "New Redirect" form in Admin Tracked Links tab
-- Add a "New redirect" button (matching the Landing Pages pattern)
-- Form fields:
-  - **Base URL** (read-only, non-editable): `yourdomain.com/l/`
-  - **Slug** (editable input): the path segment
-  - **Destination URL** (editable input): full URL to redirect to
-- On save, insert into `link_redirects` table via Supabase client
-- Add RLS policy allowing authenticated users to insert/update/delete `link_redirects`
+1. **New Page Flow**: Clicking "New Page" on the admin creates a blank landing page in the database and immediately opens the new simplified editor.
 
-### 5. Make existing redirects editable
-- Add edit/delete actions to each row in the tracked links table so destination can be changed later
+2. **Full-Screen Preview + Floating Input**: Instead of the current split-panel editor with form fields on the left, the entire screen shows the live landing page preview. A compact floating bar sits at the bottom (like a chat input) where you type your instructions.
 
-### Database migration
-```sql
-ALTER TABLE public.link_redirects 
-  ADD COLUMN redirect_type text NOT NULL DEFAULT '302';
+3. **Vibe Code It**: Type what you want, hit enter, and the AI updates the page content. The preview refreshes instantly so you see exactly what visitors will see.
 
--- RLS policies for authenticated management
-CREATE POLICY "Authenticated users can insert redirects"
-  ON public.link_redirects FOR INSERT TO authenticated
-  WITH CHECK (true);
+4. **Minimal Chrome**: Just a small top bar with the page title, a back button, and publish/draft toggle. Everything else is the preview.
 
-CREATE POLICY "Authenticated users can update redirects"
-  ON public.link_redirects FOR UPDATE TO authenticated
-  USING (true);
+## What Changes
 
-CREATE POLICY "Authenticated users can delete redirects"
-  ON public.link_redirects FOR DELETE TO authenticated
-  USING (true);
+- **New file: `src/pages/LandingPageCreator.tsx`** -- A new simplified page that shows the landing page preview full-screen with a floating vibe-coding input at the bottom. Includes a minimal header (back button, title, publish toggle). Uses the same `edit-landing-page` edge function that already exists.
 
-CREATE POLICY "Anyone can read redirects"
-  ON public.link_redirects FOR SELECT
-  USING (true);
+- **`src/pages/Admin.tsx`** -- Update the "New Page" button flow: after creating the blank page in the database, navigate to the new creator page instead of just adding it to the list.
 
-ALTER TABLE public.link_redirects ENABLE ROW LEVEL SECURITY;
-```
+- **`src/App.tsx`** -- Add a route for the new creator page (e.g., `/admin/create/:id`).
 
-### Files changed
-- `supabase/functions/track-redirect/index.ts` — lookup existing record, return destination + type, no auto-create
-- `src/pages/LinkRedirect.tsx` — replace iframe with `window.location.replace()`
-- `src/pages/Admin.tsx` — add create/edit/delete UI for redirects in Tracked Links tab
+## Technical Details
+
+- The creator page reuses the existing `edit-landing-page` edge function for AI edits -- no backend changes needed.
+- The preview component renders the same layout as `LandingPageView` (headline, subheadline, description, hero image, CTA) so what you see is what visitors get.
+- The floating input uses the same AI flow as the current editor: send instruction + current page data to the edge function, get back field updates, apply them to the preview and save to the database.
+- The existing `LandingPageEditor` (split-panel with form fields) remains available for fine-grained manual editing -- accessible from the admin table's edit button.
+- A simple title/slug dialog still appears first when creating, then you land on the full-screen creator.
 
