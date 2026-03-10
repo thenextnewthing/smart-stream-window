@@ -1,4 +1,5 @@
-import { CheckCircle, Calendar, Clock, MapPin, ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { CheckCircle, Calendar, Clock, MapPin, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -7,11 +8,28 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import speakerImg from "@/assets/adam-brakhane.jpg";
 
-const STRIPE_URL = "#"; // Replace with actual Stripe checkout URL
-
 const EventClaudeCode = () => {
+  const [loading, setLoading] = useState(false);
+
+  const handleCheckout = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-event-checkout");
+      if (error) throw error;
+      if (data?.url) {
+        window.open(data.url, "_blank");
+      }
+    } catch (err) {
+      console.error("Checkout error:", err);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
       <title>Live with Claude Code — 2-Day Training</title>
