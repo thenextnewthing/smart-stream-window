@@ -16,6 +16,8 @@ import LandingPageView from "./pages/LandingPageView";
 import LandingPageEditor from "./pages/LandingPageEditor";
 import LandingPageCreator from "./pages/LandingPageCreator";
 import OpenClawWeb from "./pages/OpenClawWeb";
+import EventsRedirect from "./pages/EventsRedirect";
+import EventLandingPageView from "./pages/EventLandingPageView";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,6 +41,8 @@ const App = () => (
           <Route path="/admin/edit/:id" element={<LandingPageEditor />} />
           <Route path="/admin/create/:id" element={<LandingPageCreator />} />
           <Route path="/OpenClaw-web" element={<OpenClawWeb />} />
+          <Route path="/events" element={<EventsRedirect />} />
+          <Route path="/events/:slug" element={<EventLandingPageView />} />
           <Route path="/:slug" element={<LandingPageView />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
