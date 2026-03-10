@@ -45,6 +45,8 @@ const App = () => (
           <Route path="/OpenClaw-web" element={<OpenClawWeb />} />
           <Route path="/events" element={<EventsRedirect />} />
           <Route path="/events/claude-code" element={<EventClaudeCode />} />
+          <Route path="/events/claude-code/confirmation" element={<EventClaudeCodeConfirmation />} />
+          <Route path="/events/:slug" element={<EventLandingPageView />} />
           <Route path="/events/:slug" element={<EventLandingPageView />} />
           <Route path="/:slug" element={<LandingPageView />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
