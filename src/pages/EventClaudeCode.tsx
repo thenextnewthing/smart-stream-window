@@ -189,9 +189,7 @@ const EventClaudeCode = () => {
                 and executives to build high-performance companies powered by
                 AI. He specializes in training leadership teams to move past
                 the hype and apply practical AI tools that solve real business
-                problems. With a background in scaling engineering at Tovala,
-                he now focuses on making complex technology simple and
-                actionable for business growth.
+                problems.
               </p>
             </div>
           </div>
