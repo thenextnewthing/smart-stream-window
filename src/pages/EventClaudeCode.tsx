@@ -206,8 +206,9 @@ const EventClaudeCode = () => {
             <p className="text-4xl font-serif font-semibold text-foreground mb-6">
               $129
             </p>
-            <Button asChild size="lg" className="text-base px-10 py-6 rounded-xl shadow-lg">
-              <a href={STRIPE_URL}>Buy Now</a>
+            <Button size="lg" className="text-base px-10 py-6 rounded-xl shadow-lg" onClick={handleCheckout} disabled={loading}>
+              {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
+              Buy Now
             </Button>
           </div>
         </section>
