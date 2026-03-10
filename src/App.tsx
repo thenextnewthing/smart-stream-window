@@ -41,6 +41,8 @@ const App = () => (
           <Route path="/admin/edit/:id" element={<LandingPageEditor />} />
           <Route path="/admin/create/:id" element={<LandingPageCreator />} />
           <Route path="/OpenClaw-web" element={<OpenClawWeb />} />
+          <Route path="/events" element={<EventsRedirect />} />
+          <Route path="/events/:slug" element={<EventLandingPageView />} />
           <Route path="/:slug" element={<LandingPageView />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
