@@ -2,8 +2,7 @@ import { CheckCircle, Calendar, Clock, MapPin, Video, Download } from "lucide-re
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-const ZOOM_LINK_DAY1 = "#"; // Replace with actual Zoom link
-const ZOOM_LINK_DAY2 = "#"; // Replace with actual Zoom link
+const ZOOM_LINK = "http://link.bootstrappedgiants.com/live";
 
 const sessions = [
   {
@@ -11,7 +10,7 @@ const sessions = [
     title: "Lovable",
     date: "April 2, 2025",
     time: "12:00 – 1:00 PM CT",
-    zoomLink: ZOOM_LINK_DAY1,
+    zoomLink: ZOOM_LINK,
     gcalStart: "20250402T170000Z", // 12 PM CT = 5 PM UTC
     gcalEnd: "20250402T180000Z",
     icsStart: "20250402T170000Z",
@@ -22,7 +21,7 @@ const sessions = [
     title: "Claude Code",
     date: "April 3, 2025",
     time: "12:00 – 1:00 PM CT",
-    zoomLink: ZOOM_LINK_DAY2,
+    zoomLink: ZOOM_LINK,
     gcalStart: "20250403T170000Z",
     gcalEnd: "20250403T180000Z",
     icsStart: "20250403T170000Z",
