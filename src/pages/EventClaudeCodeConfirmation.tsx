@@ -2,8 +2,7 @@ import { CheckCircle, Calendar, Clock, MapPin, Video, Download } from "lucide-re
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-const ZOOM_LINK_DAY1 = "#"; // Replace with actual Zoom link
-const ZOOM_LINK_DAY2 = "#"; // Replace with actual Zoom link
+const ZOOM_LINK = "http://link.bootstrappedgiants.com/live";
 
 const sessions = [
   {
