@@ -16,6 +16,8 @@ import LandingPageView from "./pages/LandingPageView";
 import LandingPageEditor from "./pages/LandingPageEditor";
 import LandingPageCreator from "./pages/LandingPageCreator";
 import OpenClawWeb from "./pages/OpenClawWeb";
+import EventsRedirect from "./pages/EventsRedirect";
+import EventLandingPageView from "./pages/EventLandingPageView";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
