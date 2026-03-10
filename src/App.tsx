@@ -19,6 +19,7 @@ import OpenClawWeb from "./pages/OpenClawWeb";
 import EventsRedirect from "./pages/EventsRedirect";
 import EventLandingPageView from "./pages/EventLandingPageView";
 import EventClaudeCode from "./pages/EventClaudeCode";
+import EventClaudeCodeConfirmation from "./pages/EventClaudeCodeConfirmation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +45,8 @@ const App = () => (
           <Route path="/OpenClaw-web" element={<OpenClawWeb />} />
           <Route path="/events" element={<EventsRedirect />} />
           <Route path="/events/claude-code" element={<EventClaudeCode />} />
+          <Route path="/events/claude-code/confirmation" element={<EventClaudeCodeConfirmation />} />
+          <Route path="/events/:slug" element={<EventLandingPageView />} />
           <Route path="/events/:slug" element={<EventLandingPageView />} />
           <Route path="/:slug" element={<LandingPageView />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

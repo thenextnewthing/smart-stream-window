@@ -27,7 +27,7 @@ serve(async (req) => {
         },
       ],
       mode: "payment",
-      success_url: `${origin}/events/claude-code?payment=success`,
+      success_url: `${origin}/events/claude-code/confirmation`,
       cancel_url: `${origin}/events/claude-code`,
     });
 
