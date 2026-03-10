@@ -10,7 +10,7 @@ const sessions = [
     title: "Lovable",
     date: "April 2, 2025",
     time: "12:00 – 1:00 PM CT",
-    zoomLink: ZOOM_LINK_DAY1,
+    zoomLink: ZOOM_LINK,
     gcalStart: "20250402T170000Z", // 12 PM CT = 5 PM UTC
     gcalEnd: "20250402T180000Z",
     icsStart: "20250402T170000Z",
