@@ -21,7 +21,7 @@ const sessions = [
     title: "Claude Code",
     date: "April 3, 2025",
     time: "12:00 – 1:00 PM CT",
-    zoomLink: ZOOM_LINK_DAY2,
+    zoomLink: ZOOM_LINK,
     gcalStart: "20250403T170000Z",
     gcalEnd: "20250403T180000Z",
     icsStart: "20250403T170000Z",
