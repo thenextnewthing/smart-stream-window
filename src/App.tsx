@@ -19,6 +19,7 @@ import OpenClawWeb from "./pages/OpenClawWeb";
 import EventsRedirect from "./pages/EventsRedirect";
 import EventLandingPageView from "./pages/EventLandingPageView";
 import EventClaudeCode from "./pages/EventClaudeCode";
+import EventClaudeCodeConfirmation from "./pages/EventClaudeCodeConfirmation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
