@@ -35,8 +35,10 @@ const EventClaudeCode = () => {
       <title>Live with Claude Code — 2-Day Training</title>
       <meta
         name="description"
-        content="A hands-on 2-day live training series covering Lovable and Claude Code. Learn to build, automate, and ship real projects. April 2–3, 2025."
+        content="Learn about the most interesting things in AI"
       />
+      <meta property="og:title" content="Explore our events" />
+      <meta property="og:description" content="Learn about the most interesting things in AI" />
 
       <div className="min-h-screen bg-background text-foreground">
         {/* ─── Hero ─── */}
