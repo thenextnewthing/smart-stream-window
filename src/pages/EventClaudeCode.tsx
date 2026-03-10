@@ -56,8 +56,9 @@ const EventClaudeCode = () => {
               <span className="text-foreground font-medium">Claude Code</span>.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button asChild size="lg" className="text-base px-8 py-6 rounded-xl shadow-lg">
-                <a href={STRIPE_URL}>Get Your Seat — $129</a>
+              <Button size="lg" className="text-base px-8 py-6 rounded-xl shadow-lg" onClick={handleCheckout} disabled={loading}>
+                {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
+                Get Your Seat — $129
               </Button>
               <p className="text-sm text-muted-foreground">Both days included</p>
             </div>
