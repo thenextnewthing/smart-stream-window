@@ -185,10 +185,10 @@ const EventClaudeCode = () => {
                 CTO at Gateway X
               </p>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                Adam builds AI-powered products at Gateway X and has trained
-                hundreds of developers on modern tooling. He brings a practical,
-                no-fluff approach to every session — focused on what actually
-                works in production.
+                As the CTO of Gateway X, Adam Brakhane builds new companies by
+                showing them how to use AI to work faster and smarter. He is an
+                expert at teaching business leaders how to actually use AI tools
+                in their daily jobs to get better results.
               </p>
             </div>
           </div>
