@@ -145,9 +145,11 @@ const EventClaudeCode = () => {
               You'll build your first apps or get a full refund. No questions.
             </p>
             <p className="text-4xl font-serif font-semibold text-foreground mb-1">$129</p>
-            <p className="text-sm text-muted-foreground mb-6">
-              Both sessions · 20 students · Lifetime replays
-            </p>
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
+              <span className="inline-flex items-center text-xs font-medium tracking-wide uppercase bg-primary/10 text-primary rounded-full px-3 py-1">Both sessions</span>
+              <span className="inline-flex items-center text-xs font-medium tracking-wide uppercase bg-primary/10 text-primary rounded-full px-3 py-1">20 students</span>
+              <span className="inline-flex items-center text-xs font-medium tracking-wide uppercase bg-primary/10 text-primary rounded-full px-3 py-1">Lifetime replays</span>
+            </div>
             <Button size="lg" className="text-base px-10 py-6 rounded-xl shadow-lg" onClick={handleCheckout} disabled={loading}>
               {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
               Get Your Seat
