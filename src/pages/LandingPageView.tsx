@@ -18,6 +18,7 @@ interface LandingPage {
   seo_title: string | null;
   seo_description: string | null;
   view_count: number;
+  utm_medium: string | null;
 }
 
 const LandingPageView = () => {
@@ -88,6 +89,7 @@ const LandingPageView = () => {
           hero_image_url={page.hero_image_url}
           lead_magnet_type={page.lead_magnet_type}
           lead_magnet_value={page.lead_magnet_value}
+          utm_medium={page.utm_medium}
         />
       </main>
     </>

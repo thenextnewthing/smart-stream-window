@@ -8,6 +8,8 @@ const corsHeaders = {
 
 interface SubscribeRequest {
   email: string;
+  utm_source?: string;
+  utm_medium?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -17,9 +19,11 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email: rawEmail }: SubscribeRequest = await req.json();
+    const { email: rawEmail, utm_source: reqUtmSource, utm_medium: reqUtmMedium }: SubscribeRequest = await req.json();
     
     const email = typeof rawEmail === "string" ? rawEmail.trim().toLowerCase() : "";
+    const utmSource = reqUtmSource || "website";
+    const utmMedium = reqUtmMedium || "homepage";
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!email || !emailRegex.test(email) || email.length > 255) {
@@ -48,7 +52,7 @@ const handler = async (req: Request): Promise<Response> => {
     const { error: dbError } = await supabase
       .from("newsletter_subscribers")
       .upsert(
-        { email, utm_source: "website", utm_medium: "homepage" },
+        { email, utm_source: utmSource, utm_medium: utmMedium },
         { onConflict: "email" }
       );
 
@@ -72,8 +76,8 @@ const handler = async (req: Request): Promise<Response> => {
           email: email,
           reactivate_existing: true,
           send_welcome_email: true,
-          utm_source: "website",
-          utm_medium: "homepage",
+          utm_source: utmSource,
+          utm_medium: utmMedium,
         }),
       }
     );
