@@ -20,7 +20,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email: rawEmail, utm_source: reqUtmSource, utm_medium: reqUtmMedium }: SubscribeRequest = await req.json();
+    const { email: rawEmail, utm_source: reqUtmSource, utm_medium: reqUtmMedium, send_welcome_email: reqSendWelcome }: SubscribeRequest = await req.json();
     
     const email = typeof rawEmail === "string" ? rawEmail.trim().toLowerCase() : "";
     const utmSource = reqUtmSource || "website";
