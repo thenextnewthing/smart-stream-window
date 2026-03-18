@@ -1,6 +1,9 @@
+import { useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { CheckCircle, Calendar, Clock, MapPin, Video, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
 
 const ZOOM_LINK = "http://link.bootstrappedgiants.com/live";
 
@@ -65,6 +68,22 @@ const generateIcsFile = (session: (typeof sessions)[0]) => {
 };
 
 const EventClaudeCodeConfirmation = () => {
+  const [searchParams] = useSearchParams();
+  const syncedRef = useRef(false);
+
+  useEffect(() => {
+    const sessionId = searchParams.get("session_id");
+    if (!sessionId || syncedRef.current) return;
+    syncedRef.current = true;
+
+    supabase.functions
+      .invoke("sync-purchaser-to-beehiiv", { body: { session_id: sessionId } })
+      .then(({ error }) => {
+        if (error) console.error("Beehiiv sync error:", error);
+        else console.log("Purchaser synced to Beehiiv");
+      });
+  }, [searchParams]);
+
   return (
     <>
       <title>You're In — Live with Claude Code</title>

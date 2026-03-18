@@ -40,7 +40,7 @@ serve(async (req) => {
           type: "text",
         },
       ],
-      success_url: `${origin}/events/claude-code/confirmation`,
+      success_url: `${origin}/events/claude-code/confirmation?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/events/claude-code`,
     });
 
