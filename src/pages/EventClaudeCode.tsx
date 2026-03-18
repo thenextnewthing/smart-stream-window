@@ -47,7 +47,7 @@ const EventClaudeCode = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none" />
           <div className="max-w-4xl mx-auto px-6 pt-20 pb-16 text-center relative z-10">
             <p className="inline-block text-sm font-semibold tracking-wide uppercase text-primary mb-4">
-              Live Training · April 2–3 · Only 20 Seats
+              Live Training · March 31 &amp; April 7 · Only 20 Seats
             </p>
             <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-semibold leading-tight mb-6">
               Stop Watching. Start Building.
@@ -84,10 +84,10 @@ const EventClaudeCode = () => {
                 <h3 className="font-serif text-xl font-semibold">Build an interactive dashboard from a spreadsheet</h3>
                 <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4" /> April 2, 2025
+                    <Calendar className="w-4 h-4" /> Tuesday, March 31, 2025
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <Clock className="w-4 h-4" /> 12–1 PM CT
+                    <Clock className="w-4 h-4" /> 12–2 PM ET
                   </span>
                   <span className="flex items-center gap-1.5">
                     <MapPin className="w-4 h-4" /> Live on Zoom
@@ -108,10 +108,10 @@ const EventClaudeCode = () => {
                 <h3 className="font-serif text-xl font-semibold">Build a Trello-clone you'll actually use</h3>
                 <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4" /> April 3, 2025
+                    <Calendar className="w-4 h-4" /> Tuesday, April 7, 2025
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <Clock className="w-4 h-4" /> 12–1 PM CT
+                    <Clock className="w-4 h-4" /> 12–2 PM ET
                   </span>
                   <span className="flex items-center gap-1.5">
                     <MapPin className="w-4 h-4" /> Live on Zoom
