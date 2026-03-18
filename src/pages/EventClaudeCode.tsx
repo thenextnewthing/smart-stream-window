@@ -46,9 +46,17 @@ const EventClaudeCode = () => {
         <section className="relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none" />
           <div className="max-w-4xl mx-auto px-6 pt-20 pb-14 text-center relative z-10">
-            <p className="inline-block text-sm font-semibold tracking-wide uppercase text-primary mb-4">
-              Live on Zoom · March 31 &amp; April 7 · 20 Seats
-            </p>
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
+              <span className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase bg-primary/10 text-primary rounded-full px-3 py-1">
+                <MapPin className="w-3 h-3" /> Zoom
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase bg-primary/10 text-primary rounded-full px-3 py-1">
+                <Calendar className="w-3 h-3" /> March 31 & April 7
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase bg-primary/10 text-primary rounded-full px-3 py-1">
+                Only 20 seats
+              </span>
+            </div>
             <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-semibold leading-tight mb-5">
               Stop Watching. Start Building.
             </h1>
