@@ -214,7 +214,17 @@ export function LandingPageChatLayout({
                         <p className="text-base text-foreground">Thanks! You're on the list. 🎉</p>
                       )}
                       {lead_magnet_type === "content" && lead_magnet_value && (
-                        <p className="text-base text-foreground whitespace-pre-line">{lead_magnet_value}</p>
+                        <div className="text-base text-foreground whitespace-pre-line">
+                          {lead_magnet_value.split(/(https?:\/\/[^\s]+)/g).map((part, i) =>
+                            /^https?:\/\//.test(part) ? (
+                              <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="text-primary underline break-all">
+                                {part}
+                              </a>
+                            ) : (
+                              <span key={i}>{part}</span>
+                            )
+                          )}
+                        </div>
                       )}
                       {lead_magnet_type === "content" && !lead_magnet_value && (
                         <p className="text-base text-foreground">Thanks! You're on the list. 🎉</p>
