@@ -1,6 +1,9 @@
+import { useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { CheckCircle, Calendar, Clock, MapPin, Video, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
 
 const ZOOM_LINK = "http://link.bootstrappedgiants.com/live";
 
