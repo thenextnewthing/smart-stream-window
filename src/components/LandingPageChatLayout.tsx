@@ -26,6 +26,7 @@ export function LandingPageChatLayout({
   hero_image_url,
   lead_magnet_type,
   lead_magnet_value,
+  utm_medium,
   editable = false,
   onImageUploadClick,
   onImageRemove,
