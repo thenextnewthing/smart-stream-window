@@ -144,11 +144,6 @@ const EventClaudeCodeConfirmation = () => {
               </Card>
             ))}
           </div>
-
-          {/* Footer note */}
-          <p className="text-center text-sm text-muted-foreground mt-10">
-            We'll also email you a reminder before each session. See you there! 🎉
-          </p>
         </div>
       </div>
     </>
