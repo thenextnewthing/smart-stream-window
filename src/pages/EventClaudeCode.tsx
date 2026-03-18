@@ -139,7 +139,7 @@ const EventClaudeCode = () => {
         <section className="bg-primary/5">
           <div className="max-w-2xl mx-auto px-6 py-14 text-center">
             <h2 className="font-serif text-3xl font-semibold mb-3">
-              Zero Risk. 100% Money-Back Guarantee.
+              100% Money-Back Guarantee
             </h2>
             <p className="text-muted-foreground mb-2 leading-relaxed">
               If you attend both sessions and can't build on your own afterward, you get every penny back. No forms. No hoops. Just email us.
