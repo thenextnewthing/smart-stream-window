@@ -47,7 +47,7 @@ const EventClaudeCode = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none" />
           <div className="max-w-4xl mx-auto px-6 pt-20 pb-16 text-center relative z-10">
             <p className="inline-block text-sm font-semibold tracking-wide uppercase text-primary mb-4">
-              Live Training · April 2–3 · Only 20 Seats
+              Live Training · March 31 &amp; April 7 · Only 20 Seats
             </p>
             <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-semibold leading-tight mb-6">
               Stop Watching. Start Building.
