@@ -18,6 +18,7 @@ interface LandingPage {
   seo_title: string | null;
   seo_description: string | null;
   view_count: number;
+  utm_medium: string | null;
 }
 
 const LandingPageView = () => {
