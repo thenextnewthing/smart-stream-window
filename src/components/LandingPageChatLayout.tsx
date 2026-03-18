@@ -57,7 +57,7 @@ export function LandingPageChatLayout({
               </h2>
             </div>
             <p className="text-sm text-muted-foreground mt-0.5">
-              The Podcast for AI Creators by the Ultra-Pushy Interviewer Andrew Warner
+              Want it?
             </p>
           </div>
 
