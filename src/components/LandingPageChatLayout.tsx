@@ -139,10 +139,18 @@ export function LandingPageChatLayout({
                 <div className="flex justify-start">
                   <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-4 max-w-lg w-full space-y-3">
                     <form
-                      onSubmit={(e) => {
+                      onSubmit={async (e) => {
                         e.preventDefault();
-                        if (emailValue.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue.trim())) {
-                          setSubmittedEmail(emailValue.trim());
+                        const trimmed = emailValue.trim();
+                        if (trimmed && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+                          setSubmittedEmail(trimmed);
+                          try {
+                            await supabase.functions.invoke('subscribe-beehiiv', {
+                              body: { email: trimmed, utm_source: 'landing-page', utm_medium: utm_medium || 'landing-page' },
+                            });
+                          } catch (err) {
+                            console.error('Failed to subscribe:', err);
+                          }
                         }
                       }}
                       className="flex flex-col gap-3 lg:flex-row"
