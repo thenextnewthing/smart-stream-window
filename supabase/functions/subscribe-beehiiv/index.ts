@@ -8,6 +8,8 @@ const corsHeaders = {
 
 interface SubscribeRequest {
   email: string;
+  utm_source?: string;
+  utm_medium?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
