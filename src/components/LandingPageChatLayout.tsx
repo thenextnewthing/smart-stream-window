@@ -80,12 +80,12 @@ export function LandingPageChatLayout({
 
               {/* Hero image */}
               {hero_image_url && (
-                <div className="flex justify-start">
+                <div>
                   <div className="relative group">
                     <img
                       src={hero_image_url}
                       alt="Content"
-                      className="rounded-2xl object-cover max-w-lg w-full"
+                      className="rounded-2xl object-cover w-full"
                     />
                     {editable && (
                       <div className="absolute top-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
