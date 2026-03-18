@@ -142,18 +142,18 @@ export function LandingPageChatLayout({
                           setSubmittedEmail(emailValue.trim());
                         }
                       }}
-                      className="flex flex-col sm:flex-row gap-3"
+                      className="flex flex-col gap-3 lg:flex-row"
                     >
                       <input
                         type="email"
                         placeholder="Enter your email"
                         value={emailValue}
                         onChange={(e) => setEmailValue(e.target.value)}
-                        className="flex-1 px-4 py-3.5 rounded-xl bg-background border border-border text-sm text-foreground placeholder:text-muted-foreground"
+                        className="min-w-0 flex-1 px-4 py-3.5 rounded-xl bg-background border border-border text-sm text-foreground placeholder:text-muted-foreground"
                       />
                       <button
                         type="submit"
-                        className="px-6 py-3.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold whitespace-nowrap hover:bg-primary/90 transition-colors"
+                        className="w-full justify-center px-6 py-3.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold whitespace-nowrap hover:bg-primary/90 transition-colors lg:w-auto"
                       >
                         {cta_label ?? "Get Access"} →
                       </button>
