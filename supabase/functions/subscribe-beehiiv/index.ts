@@ -52,7 +52,7 @@ const handler = async (req: Request): Promise<Response> => {
     const { error: dbError } = await supabase
       .from("newsletter_subscribers")
       .upsert(
-        { email, utm_source: "website", utm_medium: "homepage" },
+        { email, utm_source: utmSource, utm_medium: utmMedium },
         { onConflict: "email" }
       );
 
