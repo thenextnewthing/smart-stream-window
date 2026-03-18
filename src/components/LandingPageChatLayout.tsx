@@ -129,7 +129,7 @@ export function LandingPageChatLayout({
               {description &&
             <div className="flex justify-start">
                   <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-3 max-w-lg">
-                    <p className="text-base text-foreground whitespace-pre-line">Want to get Larry plus the video that shows you how to use it?</p>
+                    <p className="text-base text-foreground whitespace-pre-line">Want Larry? I'll throw in the video walkthrough too.</p>
                   </div>
                 </div>
             }
