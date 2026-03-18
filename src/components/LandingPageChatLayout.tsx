@@ -10,6 +10,7 @@ interface LandingPageChatLayoutProps {
   hero_image_url: string | null;
   lead_magnet_type: string | null;
   lead_magnet_value: string | null;
+  utm_medium?: string | null;
   editable?: boolean;
   onImageUploadClick?: () => void;
   onImageRemove?: () => void;
