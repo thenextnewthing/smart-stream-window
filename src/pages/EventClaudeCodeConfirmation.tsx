@@ -6,26 +6,26 @@ const ZOOM_LINK = "http://link.bootstrappedgiants.com/live";
 
 const sessions = [
   {
-    day: "Day 1",
-    title: "Lovable",
-    date: "April 2, 2025",
-    time: "12:00 – 1:00 PM CT",
+    day: "Session 1",
+    title: "Build a Dashboard with Lovable",
+    date: "Tuesday, March 31",
+    time: "12:00 – 2:00 PM ET",
     zoomLink: ZOOM_LINK,
-    gcalStart: "20250402T170000Z", // 12 PM CT = 5 PM UTC
-    gcalEnd: "20250402T180000Z",
-    icsStart: "20250402T170000Z",
-    icsEnd: "20250402T180000Z",
+    gcalStart: "20250331T160000Z", // 12 PM ET = 4 PM UTC
+    gcalEnd: "20250331T180000Z",
+    icsStart: "20250331T160000Z",
+    icsEnd: "20250331T180000Z",
   },
   {
-    day: "Day 2",
-    title: "Claude Code",
-    date: "April 3, 2025",
-    time: "12:00 – 1:00 PM CT",
+    day: "Session 2",
+    title: "Build a Trello-Clone with Claude Code",
+    date: "Tuesday, April 7",
+    time: "12:00 – 2:00 PM ET",
     zoomLink: ZOOM_LINK,
-    gcalStart: "20250403T170000Z",
-    gcalEnd: "20250403T180000Z",
-    icsStart: "20250403T170000Z",
-    icsEnd: "20250403T180000Z",
+    gcalStart: "20250407T160000Z",
+    gcalEnd: "20250407T180000Z",
+    icsStart: "20250407T160000Z",
+    icsEnd: "20250407T180000Z",
   },
 ];
 
