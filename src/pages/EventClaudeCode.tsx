@@ -135,21 +135,19 @@ const EventClaudeCode = () => {
           </div>
         </section>
 
-        {/* ─── CTA ─── */}
+        {/* ─── Guarantee ─── */}
         <section className="bg-primary/5">
-          <div className="max-w-4xl mx-auto px-6 py-14 text-center">
-            <h2 className="font-serif text-3xl font-semibold mb-2">
-              100% Money-Back Guarantee
+          <div className="max-w-2xl mx-auto px-6 py-14 text-center">
+            <h2 className="font-serif text-3xl font-semibold mb-3">
+              Zero Risk
             </h2>
-            <p className="text-muted-foreground mb-6">
-              You'll build your first apps or get a full refund. No questions.
+            <p className="text-muted-foreground mb-2 leading-relaxed">
+              If you attend both sessions and can't build on your own afterward, you get every penny back. No forms. No hoops. Just email us.
             </p>
-            <p className="text-4xl font-serif font-semibold text-foreground mb-1">$129</p>
-            <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
-              <span className="inline-flex items-center text-xs font-medium tracking-wide uppercase bg-primary/10 text-primary rounded-full px-3 py-1">Both sessions</span>
-              <span className="inline-flex items-center text-xs font-medium tracking-wide uppercase bg-primary/10 text-primary rounded-full px-3 py-1">20 students</span>
-              <span className="inline-flex items-center text-xs font-medium tracking-wide uppercase bg-primary/10 text-primary rounded-full px-3 py-1">Lifetime replays</span>
-            </div>
+            <p className="text-sm text-muted-foreground mb-8">
+              We'd rather refund you than have you feel stuck.
+            </p>
+            <p className="text-4xl font-serif font-semibold text-foreground mb-6">$129</p>
             <Button size="lg" className="text-base px-10 py-6 rounded-xl shadow-lg" onClick={handleCheckout} disabled={loading}>
               {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
               Get Your Seat
