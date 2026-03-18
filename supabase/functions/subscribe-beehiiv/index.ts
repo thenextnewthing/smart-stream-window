@@ -10,6 +10,7 @@ interface SubscribeRequest {
   email: string;
   utm_source?: string;
   utm_medium?: string;
+  send_welcome_email?: boolean;
 }
 
 const handler = async (req: Request): Promise<Response> => {
