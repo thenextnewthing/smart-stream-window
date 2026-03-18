@@ -84,10 +84,10 @@ const EventClaudeCode = () => {
                 <h3 className="font-serif text-xl font-semibold">Build an interactive dashboard from a spreadsheet</h3>
                 <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4" /> April 2, 2025
+                    <Calendar className="w-4 h-4" /> Tuesday, March 31, 2025
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <Clock className="w-4 h-4" /> 12–1 PM CT
+                    <Clock className="w-4 h-4" /> 12–2 PM ET
                   </span>
                   <span className="flex items-center gap-1.5">
                     <MapPin className="w-4 h-4" /> Live on Zoom
