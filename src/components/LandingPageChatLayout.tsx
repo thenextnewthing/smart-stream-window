@@ -142,7 +142,7 @@ export function LandingPageChatLayout({
                           setSubmittedEmail(emailValue.trim());
                         }
                       }}
-                      className="flex gap-3"
+                      className="flex flex-col sm:flex-row gap-3"
                     >
                       <input
                         type="email"
