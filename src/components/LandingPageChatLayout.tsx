@@ -85,7 +85,7 @@ export function LandingPageChatLayout({
                     <img
                       src={hero_image_url}
                       alt="Content"
-                      className="rounded-2xl object-cover max-w-[180px]"
+                      className="rounded-2xl object-cover max-w-lg w-full"
                     />
                     {editable && (
                       <div className="absolute top-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
