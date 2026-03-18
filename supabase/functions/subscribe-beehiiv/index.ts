@@ -19,9 +19,11 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email: rawEmail }: SubscribeRequest = await req.json();
+    const { email: rawEmail, utm_source: reqUtmSource, utm_medium: reqUtmMedium }: SubscribeRequest = await req.json();
     
     const email = typeof rawEmail === "string" ? rawEmail.trim().toLowerCase() : "";
+    const utmSource = reqUtmSource || "website";
+    const utmMedium = reqUtmMedium || "homepage";
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!email || !emailRegex.test(email) || email.length > 255) {
