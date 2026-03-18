@@ -76,7 +76,7 @@ const handler = async (req: Request): Promise<Response> => {
         body: JSON.stringify({
           email: email,
           reactivate_existing: true,
-          send_welcome_email: true,
+          send_welcome_email: reqSendWelcome ?? true,
           utm_source: utmSource,
           utm_medium: utmMedium,
         }),
