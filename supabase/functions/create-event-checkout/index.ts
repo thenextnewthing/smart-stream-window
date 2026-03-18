@@ -28,6 +28,18 @@ serve(async (req) => {
         },
       ],
       mode: "payment",
+      custom_fields: [
+        {
+          key: "first_name",
+          label: { type: "custom", custom: "First name" },
+          type: "text",
+        },
+        {
+          key: "last_name",
+          label: { type: "custom", custom: "Last name" },
+          type: "text",
+        },
+      ],
       success_url: `${origin}/events/claude-code/confirmation`,
       cancel_url: `${origin}/events/claude-code`,
     });
