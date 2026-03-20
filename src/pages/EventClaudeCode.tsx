@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CheckCircle, Calendar, Clock, MapPin, Loader2 } from "lucide-react";
+import { CheckCircle, Calendar, Clock, MapPin, Loader2, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -14,6 +14,7 @@ import speakerImg from "@/assets/adam-brakhane.jpg";
 
 const EventClaudeCode = () => {
   const [loading, setLoading] = useState(false);
+  const [videoPlaying, setVideoPlaying] = useState(false);
 
   const handleCheckout = async () => {
     setLoading(true);
@@ -72,14 +73,33 @@ const EventClaudeCode = () => {
             </div>
 
             {/* Video */}
-            <div className="mt-10 w-full max-w-2xl mx-auto aspect-video rounded-xl overflow-hidden shadow-lg border border-border/60">
-              <iframe
-                src="https://drive.google.com/file/d/14QA8Cs-gQQTRAR_gFheUS3hQQkafHmn-/preview"
-                className="w-full h-full"
-                allow="autoplay"
-                allowFullScreen
-                title="Event promo video"
-              />
+            <div className="mt-10 w-full max-w-2xl mx-auto aspect-video rounded-xl overflow-hidden shadow-lg border border-border/60 relative">
+              {videoPlaying ? (
+                <iframe
+                  src="https://drive.google.com/file/d/14QA8Cs-gQQTRAR_gFheUS3hQQkafHmn-/preview?autoplay=1"
+                  className="w-full h-full"
+                  allow="autoplay"
+                  allowFullScreen
+                  title="Event promo video"
+                />
+              ) : (
+                <button
+                  onClick={() => setVideoPlaying(true)}
+                  className="w-full h-full relative group cursor-pointer"
+                  aria-label="Play video"
+                >
+                  <img
+                    src="https://drive.google.com/thumbnail?id=14QA8Cs-gQQTRAR_gFheUS3hQQkafHmn-&sz=w1920"
+                    alt="Video thumbnail"
+                    className="w-full h-full object-cover brightness-50"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-20 h-20 rounded-full bg-primary/90 flex items-center justify-center group-hover:bg-primary group-hover:scale-105 group-active:scale-95 transition-all shadow-xl">
+                      <Play className="w-9 h-9 text-primary-foreground ml-1" fill="currentColor" />
+                    </div>
+                  </div>
+                </button>
+              )}
             </div>
           </div>
         </section>
