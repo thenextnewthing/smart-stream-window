@@ -88,7 +88,7 @@ const EventClaudeCode = () => {
                 </div>
                 <ul className="text-sm text-muted-foreground space-y-1.5 pt-1">
                   <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" /> Learn how AI builders think &amp; plan</li>
-                  <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" /> Ship a working app using Lovable</li>
+                  <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" /> Ship a working dashboard using Lovable</li>
                   <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" /> No setup — build right in your browser</li>
                 </ul>
               </CardContent>
