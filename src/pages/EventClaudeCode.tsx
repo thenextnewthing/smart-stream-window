@@ -166,6 +166,20 @@ const EventClaudeCode = () => {
                 </p>
               </div>
             </div>
+            <div className="flex flex-col sm:flex-row items-center gap-6 mt-8">
+              <img
+                src={andrewImg}
+                alt="Andrew Warner"
+                className="w-24 h-24 rounded-full object-cover border-4 border-primary/20 shrink-0"
+              />
+              <div>
+                <h3 className="font-serif text-lg font-semibold">Andrew Warner</h3>
+                <p className="text-sm text-primary font-medium mb-1.5">Founder, The Next New Thing</p>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  Interviews founders about how they built their businesses, and we'll be guiding this session live to help you get the most out of it.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
