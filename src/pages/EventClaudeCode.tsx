@@ -151,8 +151,9 @@ const EventClaudeCode = () => {
             <p className="text-4xl font-serif font-semibold text-foreground mb-6">$129</p>
             <Button size="lg" className="text-base px-10 py-6 rounded-xl shadow-lg" onClick={handleCheckout} disabled={loading}>
               {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
-              Get Your Seat
+              Early Registrant Price — $129
             </Button>
+            <p className="text-xs text-muted-foreground mt-2">Price going up soon</p>
           </div>
         </section>
 
