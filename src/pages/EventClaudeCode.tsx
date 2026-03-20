@@ -46,7 +46,7 @@ const EventClaudeCode = () => {
         {/* ─── Hero ─── */}
         <section className="relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none" />
-          <div className="max-w-4xl mx-auto px-6 pt-20 pb-14 text-center relative z-10">
+          <div className="max-w-4xl mx-auto px-6 pt-6 sm:pt-20 pb-14 text-center relative z-10">
             <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
               <span className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase bg-primary/10 text-primary rounded-full px-3 py-1">
                 <MapPin className="w-3 h-3" /> Zoom
