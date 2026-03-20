@@ -1,0 +1,1 @@
+UPDATE landing_pages SET headline = 'Get Eric''s video creation SOP', description = 'Enter your email below and I''ll send it to you.', subheadline = 'Of course you''ll also join my newsletter, but I''ll never spam you.' WHERE slug = 'eric-siu-video-creation-sop';
