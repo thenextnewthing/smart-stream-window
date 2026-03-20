@@ -14,6 +14,7 @@ import speakerImg from "@/assets/adam-brakhane.jpg";
 
 const EventClaudeCode = () => {
   const [loading, setLoading] = useState(false);
+  const [videoPlaying, setVideoPlaying] = useState(false);
 
   const handleCheckout = async () => {
     setLoading(true);
