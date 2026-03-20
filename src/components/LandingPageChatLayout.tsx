@@ -145,7 +145,7 @@ export function LandingPageChatLayout({
                       setSubmittedEmail(trimmed);
                       try {
                         await supabase.functions.invoke('subscribe-beehiiv', {
-                          body: { email: trimmed, utm_source: 'lovable-landing', utm_medium: utm_medium || 'landing-page', send_welcome_email: false }
+                          body: { email: trimmed, utm_source: 'lovable-landing', utm_medium: utm_medium || 'landing-page', send_welcome_email: true }
                         });
                       } catch (err) {
                         console.error('Failed to subscribe:', err);
