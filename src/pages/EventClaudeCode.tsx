@@ -70,7 +70,19 @@ const EventClaudeCode = () => {
               </Button>
               <p className="text-xs text-muted-foreground">Price going up soon</p>
             </div>
+
+            {/* Video */}
+            <div className="mt-10 w-full max-w-2xl mx-auto aspect-video rounded-xl overflow-hidden shadow-lg border border-border/60">
+              <iframe
+                src="https://drive.google.com/file/d/14QA8Cs-gQQTRAR_gFheUS3hQQkafHmn-/preview"
+                className="w-full h-full"
+                allow="autoplay"
+                allowFullScreen
+                title="Event promo video"
+              />
+            </div>
           </div>
+        </section>
         </section>
 
         {/* ─── Sessions ─── */}
