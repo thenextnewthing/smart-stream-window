@@ -83,7 +83,6 @@ const EventClaudeCode = () => {
             </div>
           </div>
         </section>
-        </section>
 
         {/* ─── Sessions ─── */}
         <section className="max-w-4xl mx-auto px-6 py-14">
