@@ -58,7 +58,7 @@ const EventClaudeCode = () => {
               </span>
             </div>
             <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-semibold leading-tight mb-5">
-              Stop Watching. Start Building.
+              Stop Watching.<br />Start Building.
             </h1>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-8">
               Two sessions. You build real apps. Or your money back.
