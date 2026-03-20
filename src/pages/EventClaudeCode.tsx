@@ -77,9 +77,9 @@ const EventClaudeCode = () => {
             <div className="mt-10 w-full max-w-2xl mx-auto aspect-video rounded-xl overflow-hidden shadow-lg border border-border/60 relative">
               {videoPlaying ? (
                 <iframe
-                  src="https://drive.google.com/file/d/14QA8Cs-gQQTRAR_gFheUS3hQQkafHmn-/preview?autoplay=1"
+                  src="https://www.youtube-nocookie.com/embed/0pma_hjoczQ?autoplay=1&rel=0&modestbranding=1&showinfo=0"
                   className="w-full h-full"
-                  allow="autoplay"
+                  allow="autoplay; encrypted-media"
                   allowFullScreen
                   title="Event promo video"
                 />
@@ -90,7 +90,7 @@ const EventClaudeCode = () => {
                   aria-label="Play video"
                 >
                   <img
-                    src="https://drive.google.com/thumbnail?id=14QA8Cs-gQQTRAR_gFheUS3hQQkafHmn-&sz=w1920"
+                    src="https://img.youtube.com/vi/0pma_hjoczQ/maxresdefault.jpg"
                     alt="Video thumbnail"
                     className="w-full h-full object-cover brightness-[0.3]"
                   />
