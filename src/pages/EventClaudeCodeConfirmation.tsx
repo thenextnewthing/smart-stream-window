@@ -14,10 +14,10 @@ const sessions = [
     date: "Tuesday, March 31",
     time: "12:00 – 2:00 PM ET",
     zoomLink: ZOOM_LINK,
-    gcalStart: "20250331T160000Z", // 12 PM ET = 4 PM UTC
-    gcalEnd: "20250331T180000Z",
-    icsStart: "20250331T160000Z",
-    icsEnd: "20250331T180000Z",
+    gcalStart: "20260331T160000Z", // 12 PM ET = 4 PM UTC
+    gcalEnd: "20260331T180000Z",
+    icsStart: "20260331T160000Z",
+    icsEnd: "20260331T180000Z",
   },
   {
     day: "Session 2",
@@ -25,10 +25,10 @@ const sessions = [
     date: "Tuesday, April 7",
     time: "12:00 – 2:00 PM ET",
     zoomLink: ZOOM_LINK,
-    gcalStart: "20250407T160000Z",
-    gcalEnd: "20250407T180000Z",
-    icsStart: "20250407T160000Z",
-    icsEnd: "20250407T180000Z",
+    gcalStart: "20260407T160000Z",
+    gcalEnd: "20260407T180000Z",
+    icsStart: "20260407T160000Z",
+    icsEnd: "20260407T180000Z",
   },
 ];
 
