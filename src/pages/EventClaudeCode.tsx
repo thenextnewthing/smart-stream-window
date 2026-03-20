@@ -90,7 +90,7 @@ const EventClaudeCode = () => {
                 <ul className="text-sm text-muted-foreground space-y-1.5 pt-1">
                   <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" /> Learn how AI builders think &amp; plan</li>
                   <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" /> Ship a working dashboard using Lovable</li>
-                  <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" /> No setup — build right in your browser</li>
+                  <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" /> Requirement: a free Lovable account</li>
                 </ul>
               </CardContent>
             </Card>
@@ -110,6 +110,7 @@ const EventClaudeCode = () => {
                   <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" /> Understand how code actually works</li>
                   <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" /> Guide Claude Code to build for you</li>
                   <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" /> Full control via VS Code — we'll set it up together</li>
+                  <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" /> Requirement: a paid Claude account</li>
                 </ul>
               </CardContent>
             </Card>
