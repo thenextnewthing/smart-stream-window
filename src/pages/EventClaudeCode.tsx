@@ -63,7 +63,7 @@ const EventClaudeCode = () => {
             <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-8">
               Two sessions. You build real apps. Or your money back.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex flex-col items-center justify-center gap-2">
               <Button size="lg" className="text-base px-8 py-6 rounded-xl shadow-lg" onClick={handleCheckout} disabled={loading}>
                 {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
                 Early Registrant Price — $129
