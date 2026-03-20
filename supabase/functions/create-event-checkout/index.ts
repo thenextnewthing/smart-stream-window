@@ -22,8 +22,7 @@ serve(async (req) => {
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
-          // TODO: REVERT TO LIVE PRICE before publishing! Live price: price_1T9W0OEVrgzha8Ry9J2LEC94
-          price: "price_1TCLxuEVrgzha8RyzgDL03Ud",
+          price: "price_1T9W0OEVrgzha8Ry9J2LEC94",
           quantity: 1,
         },
       ],
