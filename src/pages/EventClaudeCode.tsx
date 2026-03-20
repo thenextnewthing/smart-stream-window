@@ -11,6 +11,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import speakerImg from "@/assets/adam-brakhane.jpg";
+import andrewImg from "@/assets/andrew-warner.jpg";
 
 const EventClaudeCode = () => {
   const [loading, setLoading] = useState(false);
