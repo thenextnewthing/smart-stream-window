@@ -94,8 +94,8 @@ const EventClaudeCode = () => {
                     className="w-full h-full object-cover brightness-50"
                   />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-20 rounded-full bg-primary/90 flex items-center justify-center group-hover:bg-primary group-hover:scale-105 group-active:scale-95 transition-all shadow-xl">
-                      <Play className="w-9 h-9 text-primary-foreground ml-1" fill="currentColor" />
+                    <div className="w-28 h-28 rounded-full bg-primary/90 flex items-center justify-center group-hover:bg-primary group-hover:scale-105 group-active:scale-95 transition-all shadow-xl">
+                      <Play className="w-14 h-14 text-primary-foreground ml-1.5" fill="currentColor" />
                     </div>
                   </div>
                 </button>
