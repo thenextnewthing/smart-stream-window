@@ -56,7 +56,7 @@ const EventClaudeCode = () => {
                 <Calendar className="w-3 h-3" /> March 31 & April 7
               </span>
               <span className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase bg-primary/10 text-primary rounded-full px-3 py-1">
-                Only <span className="line-through opacity-60">20</span> 14 seats
+                Only <span className="line-through opacity-60">20</span> 7 seats
               </span>
             </div>
             <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-semibold leading-tight mb-5">
