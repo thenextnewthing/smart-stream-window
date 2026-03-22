@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { CheckCircle, Calendar, Clock, MapPin, Loader2, Play } from "lucide-react";
+import { CheckCircle, Calendar, Clock, MapPin, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Accordion,
@@ -10,98 +8,18 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import speakerImg from "@/assets/adam-brakhane.jpg";
 import andrewImg from "@/assets/andrew-warner.jpg";
 
-const WaitlistForm = () => {
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [goals, setGoals] = useState("");
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || !email.trim()) return;
-    setLoading(true);
-    try {
-      const { error } = await supabase.from("event_waitlist").insert({
-        name: name.trim(),
-        email: email.trim(),
-        goals: goals.trim() || null,
-        event_slug: "claude-code",
-      });
-      if (error) throw error;
-      setSubmitted(true);
-      toast.success("You're on the waitlist!");
-    } catch (err) {
-      console.error("Waitlist error:", err);
-      toast.error("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (submitted) {
-    return (
-      <div className="text-center py-4">
-        <CheckCircle className="w-10 h-10 text-primary mx-auto mb-3" />
-        <p className="font-serif text-xl font-semibold">You're on the list!</p>
-        <p className="text-muted-foreground text-sm mt-1">We'll reach out when spots open up.</p>
-      </div>
-    );
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto space-y-4 text-left">
-      <div>
-        <Input
-          placeholder="Your name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          maxLength={100}
-        />
-      </div>
-      <div>
-        <Input
-          type="email"
-          placeholder="Your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          maxLength={255}
-        />
-      </div>
-      <div>
-        <Textarea
-          placeholder="What are you hoping to get out of this course?"
-          value={goals}
-          onChange={(e) => setGoals(e.target.value)}
-          maxLength={1000}
-          rows={3}
-        />
-      </div>
-      <Button type="submit" size="lg" className="w-full text-base py-6 rounded-xl shadow-lg" disabled={loading}>
-        {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
-        Join the Waitlist
-      </Button>
-    </form>
-  );
-};
-
 const EventClaudeCode = () => {
   const [videoPlaying, setVideoPlaying] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
       <title>Learn to Build with Claude Code — Guaranteed</title>
-      <meta
-        name="description"
-        content="Two live sessions. Build real apps on Zoom. Only 20 seats. 100% money-back guarantee."
-      />
+      <meta name="description" content="Two live sessions. Build real apps on Zoom. Only 20 seats. 100% money-back guarantee." />
       <meta property="og:title" content="Learn to Build with Claude Code — Guaranteed" />
       <meta property="og:description" content="Two live sessions. Build real apps on Zoom. Only 20 seats. Money-back guarantee." />
 
@@ -117,8 +35,8 @@ const EventClaudeCode = () => {
               <span className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase bg-primary/10 text-primary rounded-full px-3 py-1">
                 <Calendar className="w-3 h-3" /> March 31 & April 7
               </span>
-              <span className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase bg-destructive/10 text-destructive rounded-full px-3 py-1 font-semibold">
-                Sold Out — Waitlist Open
+              <span className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase bg-primary/10 text-primary rounded-full px-3 py-1">
+                Only <span className="line-through opacity-60">20</span> 7 seats
               </span>
             </div>
             <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-semibold leading-tight mb-5">
@@ -127,7 +45,11 @@ const EventClaudeCode = () => {
             <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-8">
               Two sessions. You build real apps. Or your money back.
             </p>
-            <WaitlistForm />
+            <div className="flex flex-col items-center justify-center gap-2">
+              <Button size="lg" className="text-base px-8 py-6 rounded-xl shadow-lg" onClick={() => navigate("/events/claude-code/waitlist")}>
+                Join the Waitlist
+              </Button>
+            </div>
 
             {/* Video */}
             <div className="mt-10 w-full max-w-2xl mx-auto aspect-video rounded-xl overflow-hidden shadow-lg border border-border/60 relative">
@@ -166,9 +88,7 @@ const EventClaudeCode = () => {
           <div className="grid md:grid-cols-2 gap-6">
             <Card className="border-border/60">
               <CardContent className="p-6 space-y-3">
-                <span className="inline-block text-xs font-semibold tracking-wide uppercase text-primary">
-                  Session 1 — Vibe Coding
-                </span>
+                <span className="inline-block text-xs font-semibold tracking-wide uppercase text-primary">Session 1 — Vibe Coding</span>
                 <h3 className="font-serif text-lg font-semibold">Build a dashboard from a spreadsheet</h3>
                 <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4" /> Tue, March 31</span>
@@ -185,9 +105,7 @@ const EventClaudeCode = () => {
 
             <Card className="border-border/60">
               <CardContent className="p-6 space-y-3">
-                <span className="inline-block text-xs font-semibold tracking-wide uppercase text-primary">
-                  Session 2 — Going Deeper
-                </span>
+                <span className="inline-block text-xs font-semibold tracking-wide uppercase text-primary">Session 2 — Going Deeper</span>
                 <h3 className="font-serif text-lg font-semibold">Build a Trello-clone you'll actually use</h3>
                 <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4" /> Tue, April 7</span>
@@ -209,46 +127,34 @@ const EventClaudeCode = () => {
         <section className="bg-muted/40">
           <div className="max-w-3xl mx-auto px-6 py-14">
             <div className="flex flex-col sm:flex-row items-center gap-6">
-              <img
-                src={speakerImg}
-                alt="Adam Brakhane"
-                className="w-24 h-24 rounded-full object-cover border-4 border-primary/20 shrink-0"
-              />
+              <img src={speakerImg} alt="Adam Brakhane" className="w-24 h-24 rounded-full object-cover border-4 border-primary/20 shrink-0" />
               <div>
                 <h3 className="font-serif text-lg font-semibold">Adam Brakhane</h3>
                 <p className="text-sm text-primary font-medium mb-1.5">CTO at Gateway X</p>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  The CTO who taught Andrew to build. He trains founders and executives at Gateway X to stop talking about AI and start shipping with it.
-                </p>
+                <p className="text-muted-foreground text-sm leading-relaxed">The CTO who taught Andrew to build. He trains founders and executives at Gateway X to stop talking about AI and start shipping with it.</p>
               </div>
             </div>
             <div className="flex flex-col sm:flex-row items-center gap-6 mt-8">
-              <img
-                src={andrewImg}
-                alt="Andrew Warner"
-                className="w-24 h-24 rounded-full object-cover border-4 border-primary/20 shrink-0"
-              />
+              <img src={andrewImg} alt="Andrew Warner" className="w-24 h-24 rounded-full object-cover border-4 border-primary/20 shrink-0" />
               <div>
                 <h3 className="font-serif text-lg font-semibold">Andrew Warner</h3>
                 <p className="text-sm text-primary font-medium mb-1.5">Founder, The Next New Thing</p>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  Interviews founders about how they built their businesses, and we'll be guiding this session live to help you get the most out of it.
-                </p>
+                <p className="text-muted-foreground text-sm leading-relaxed">Interviews founders about how they built their businesses, and we'll be guiding this session live to help you get the most out of it.</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ─── Guarantee / Waitlist ─── */}
+        {/* ─── Guarantee ─── */}
         <section className="bg-primary/5">
           <div className="max-w-2xl mx-auto px-6 py-14 text-center">
-            <h2 className="font-serif text-3xl font-semibold mb-3">
-              Don't Miss the Next One
-            </h2>
-            <p className="text-muted-foreground mb-8 leading-relaxed">
-              This round sold out fast. Join the waitlist and we'll let you know as soon as new spots open up.
-            </p>
-            <WaitlistForm />
+            <h2 className="font-serif text-3xl font-semibold mb-3">100% Money-Back Guarantee</h2>
+            <p className="text-muted-foreground mb-2 leading-relaxed">If you attend both sessions and can't build on your own afterward, you get every penny back. No forms. No hoops. Just email us.</p>
+            <p className="text-sm text-muted-foreground mb-8">We'd rather refund you than have you feel stuck.</p>
+            <p className="text-4xl font-serif font-semibold text-foreground mb-6">$199</p>
+            <Button size="lg" className="text-base px-10 py-6 rounded-xl shadow-lg" onClick={() => navigate("/events/claude-code/waitlist")}>
+              Join the Waitlist
+            </Button>
           </div>
         </section>
 

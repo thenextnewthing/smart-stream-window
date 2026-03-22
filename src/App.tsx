@@ -20,6 +20,7 @@ import EventsRedirect from "./pages/EventsRedirect";
 import EventLandingPageView from "./pages/EventLandingPageView";
 import EventClaudeCode from "./pages/EventClaudeCode";
 import EventClaudeCodeConfirmation from "./pages/EventClaudeCodeConfirmation";
+import EventClaudeCodeWaitlist from "./pages/EventClaudeCodeWaitlist";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/events" element={<EventsRedirect />} />
           <Route path="/events/claude-code" element={<EventClaudeCode />} />
           <Route path="/events/claude-code/confirmation" element={<EventClaudeCodeConfirmation />} />
+          <Route path="/events/claude-code/waitlist" element={<EventClaudeCodeWaitlist />} />
           <Route path="/events/:slug" element={<EventLandingPageView />} />
           <Route path="/events/:slug" element={<EventLandingPageView />} />
           <Route path="/:slug" element={<LandingPageView />} />
