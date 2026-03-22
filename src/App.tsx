@@ -47,6 +47,7 @@ const App = () => (
           <Route path="/events" element={<EventsRedirect />} />
           <Route path="/events/claude-code" element={<EventClaudeCode />} />
           <Route path="/events/claude-code/confirmation" element={<EventClaudeCodeConfirmation />} />
+          <Route path="/events/claude-code/waitlist" element={<EventClaudeCodeWaitlist />} />
           <Route path="/events/:slug" element={<EventLandingPageView />} />
           <Route path="/events/:slug" element={<EventLandingPageView />} />
           <Route path="/:slug" element={<LandingPageView />} />
