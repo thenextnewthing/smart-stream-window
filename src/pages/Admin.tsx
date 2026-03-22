@@ -58,6 +58,7 @@ import {
   Check,
   Archive,
   ArchiveRestore,
+  Users,
 } from "lucide-react";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
@@ -247,6 +248,18 @@ const Admin = () => {
   const [lpLoading, setLpLoading] = useState(true);
   const [lpSearch, setLpSearch] = useState("");
 
+  // Waitlist state
+  interface WaitlistEntry {
+    id: string;
+    name: string;
+    email: string;
+    goals: string | null;
+    event_slug: string;
+    created_at: string;
+  }
+  const [waitlist, setWaitlist] = useState<WaitlistEntry[]>([]);
+  const [waitlistLoading, setWaitlistLoading] = useState(true);
+
   // New redirect state
   const [newRedirectOpen, setNewRedirectOpen] = useState(false);
   const [newRedirectSlug, setNewRedirectSlug] = useState("");
@@ -382,6 +395,14 @@ const Admin = () => {
 
       if (!pagesErr && pages) setLandingPages(pages as LandingPage[]);
       setLpLoading(false);
+
+      // Load waitlist
+      const { data: wl } = await supabase
+        .from("event_waitlist")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (wl) setWaitlist(wl);
+      setWaitlistLoading(false);
     };
 
     init();
@@ -574,6 +595,15 @@ const Admin = () => {
               {redirects.length > 0 && (
                 <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0">
                   {redirects.length}
+                </Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="waitlist" className="gap-2">
+              <Users className="h-4 w-4" />
+              Waitlist
+              {waitlist.length > 0 && (
+                <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0">
+                  {waitlist.length}
                 </Badge>
               )}
             </TabsTrigger>
@@ -955,6 +985,53 @@ const Admin = () => {
                           </TableRow>
                         ))
                       )}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          {/* ── Waitlist ───────────────────────────────────────────────────── */}
+          <TabsContent value="waitlist" className="mt-4">
+            <div className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                People who signed up for the waitlist across your events.
+              </p>
+              {waitlistLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                </div>
+              ) : waitlist.length === 0 ? (
+                <p className="text-sm text-muted-foreground py-8 text-center">No waitlist entries yet.</p>
+              ) : (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Event</TableHead>
+                        <TableHead>Goals</TableHead>
+                        <TableHead>Signed Up</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {waitlist.map((entry) => (
+                        <TableRow key={entry.id}>
+                          <TableCell className="font-medium text-sm">{entry.name}</TableCell>
+                          <TableCell className="text-sm">{entry.email}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="text-xs">{entry.event_slug}</Badge>
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground max-w-xs truncate">
+                            {entry.goals || "—"}
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
+                            {formatShortDate(entry.created_at)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
                     </TableBody>
                   </Table>
                 </div>
