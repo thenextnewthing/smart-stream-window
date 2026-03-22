@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { CheckCircle, Calendar, Clock, MapPin, Loader2, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Accordion,
@@ -13,25 +15,85 @@ import { toast } from "sonner";
 import speakerImg from "@/assets/adam-brakhane.jpg";
 import andrewImg from "@/assets/andrew-warner.jpg";
 
-const EventClaudeCode = () => {
+const WaitlistForm = () => {
   const [loading, setLoading] = useState(false);
-  const [videoPlaying, setVideoPlaying] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [goals, setGoals] = useState("");
 
-  const handleCheckout = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !email.trim()) return;
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("create-event-checkout");
+      const { error } = await supabase.from("event_waitlist").insert({
+        name: name.trim(),
+        email: email.trim(),
+        goals: goals.trim() || null,
+        event_slug: "claude-code",
+      });
       if (error) throw error;
-      if (data?.url) {
-        window.open(data.url, "_blank");
-      }
+      setSubmitted(true);
+      toast.success("You're on the waitlist!");
     } catch (err) {
-      console.error("Checkout error:", err);
+      console.error("Waitlist error:", err);
       toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
+  if (submitted) {
+    return (
+      <div className="text-center py-4">
+        <CheckCircle className="w-10 h-10 text-primary mx-auto mb-3" />
+        <p className="font-serif text-xl font-semibold">You're on the list!</p>
+        <p className="text-muted-foreground text-sm mt-1">We'll reach out when spots open up.</p>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto space-y-4 text-left">
+      <div>
+        <Input
+          placeholder="Your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          maxLength={100}
+        />
+      </div>
+      <div>
+        <Input
+          type="email"
+          placeholder="Your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          maxLength={255}
+        />
+      </div>
+      <div>
+        <Textarea
+          placeholder="What are you hoping to get out of this course?"
+          value={goals}
+          onChange={(e) => setGoals(e.target.value)}
+          maxLength={1000}
+          rows={3}
+        />
+      </div>
+      <Button type="submit" size="lg" className="w-full text-base py-6 rounded-xl shadow-lg" disabled={loading}>
+        {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
+        Join the Waitlist
+      </Button>
+    </form>
+  );
+};
+
+const EventClaudeCode = () => {
+  const [videoPlaying, setVideoPlaying] = useState(false);
 
   return (
     <>
@@ -55,8 +117,8 @@ const EventClaudeCode = () => {
               <span className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase bg-primary/10 text-primary rounded-full px-3 py-1">
                 <Calendar className="w-3 h-3" /> March 31 & April 7
               </span>
-              <span className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase bg-primary/10 text-primary rounded-full px-3 py-1">
-                Only <span className="line-through opacity-60">20</span> 7 seats
+              <span className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase bg-destructive/10 text-destructive rounded-full px-3 py-1 font-semibold">
+                Sold Out — Waitlist Open
               </span>
             </div>
             <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-semibold leading-tight mb-5">
@@ -65,12 +127,7 @@ const EventClaudeCode = () => {
             <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-8">
               Two sessions. You build real apps. Or your money back.
             </p>
-            <div className="flex flex-col items-center justify-center gap-2">
-              <Button size="lg" className="text-base px-8 py-6 rounded-xl shadow-lg" onClick={handleCheckout} disabled={loading}>
-                {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
-                Register Now — $199
-              </Button>
-            </div>
+            <WaitlistForm />
 
             {/* Video */}
             <div className="mt-10 w-full max-w-2xl mx-auto aspect-video rounded-xl overflow-hidden shadow-lg border border-border/60 relative">
@@ -182,23 +239,16 @@ const EventClaudeCode = () => {
           </div>
         </section>
 
-        {/* ─── Guarantee ─── */}
+        {/* ─── Guarantee / Waitlist ─── */}
         <section className="bg-primary/5">
           <div className="max-w-2xl mx-auto px-6 py-14 text-center">
             <h2 className="font-serif text-3xl font-semibold mb-3">
-              100% Money-Back Guarantee
+              Don't Miss the Next One
             </h2>
-            <p className="text-muted-foreground mb-2 leading-relaxed">
-              If you attend both sessions and can't build on your own afterward, you get every penny back. No forms. No hoops. Just email us.
+            <p className="text-muted-foreground mb-8 leading-relaxed">
+              This round sold out fast. Join the waitlist and we'll let you know as soon as new spots open up.
             </p>
-            <p className="text-sm text-muted-foreground mb-8">
-              We'd rather refund you than have you feel stuck.
-            </p>
-            <p className="text-4xl font-serif font-semibold text-foreground mb-6">$199</p>
-            <Button size="lg" className="text-base px-10 py-6 rounded-xl shadow-lg" onClick={handleCheckout} disabled={loading}>
-              {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
-              Register Now — $199
-            </Button>
+            <WaitlistForm />
           </div>
         </section>
 
