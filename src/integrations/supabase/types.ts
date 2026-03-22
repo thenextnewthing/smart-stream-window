@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      event_waitlist: {
+        Row: {
+          created_at: string
+          email: string
+          event_slug: string
+          goals: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          event_slug?: string
+          goals?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          event_slug?: string
+          goals?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       landing_pages: {
         Row: {
           cloned_from: string | null
