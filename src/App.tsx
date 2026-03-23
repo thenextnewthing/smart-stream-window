@@ -36,6 +36,8 @@ const App = () => (
           <Route path="/studio" element={<Studio />} />
           <Route path="/youtube" element={<YouTube />} />
           <Route path="/caleb-interview" element={<CalebInterview />} />
+          <Route path="/l/events/:slug" element={<EventLandingPageView />} />
+          <Route path="/l/:slug" element={<LandingPageView />} />
           <Route path="/l/*" element={<LinkRedirect />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
