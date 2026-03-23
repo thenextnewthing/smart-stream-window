@@ -59,6 +59,7 @@ import {
   Archive,
   ArchiveRestore,
   Users,
+  Download,
 } from "lucide-react";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
@@ -995,9 +996,40 @@ const Admin = () => {
           {/* ── Waitlist ───────────────────────────────────────────────────── */}
           <TabsContent value="waitlist" className="mt-4">
             <div className="space-y-3">
-              <p className="text-sm text-muted-foreground">
-                People who signed up for the waitlist across your events.
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">
+                  People who signed up for the waitlist across your events.
+                </p>
+                {waitlist.length > 0 && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const headers = ["Name", "Email", "Event", "Goals", "Signed Up"];
+                      const rows = waitlist.map((e) => [
+                        e.name,
+                        e.email,
+                        e.event_slug,
+                        e.goals || "",
+                        new Date(e.created_at).toLocaleDateString(),
+                      ]);
+                      const csv = [headers, ...rows]
+                        .map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
+                        .join("\n");
+                      const blob = new Blob([csv], { type: "text/csv" });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement("a");
+                      a.href = url;
+                      a.download = "waitlist.csv";
+                      a.click();
+                      URL.revokeObjectURL(url);
+                    }}
+                  >
+                    <Download className="h-4 w-4 mr-1" />
+                    Export CSV
+                  </Button>
+                )}
+              </div>
               {waitlistLoading ? (
                 <div className="flex items-center justify-center py-12">
                   <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
