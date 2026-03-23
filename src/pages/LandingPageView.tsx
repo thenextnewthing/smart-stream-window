@@ -79,7 +79,7 @@ const LandingPageView = () => {
         <meta name="description" content={page.seo_description} />
       )}
 
-      <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center">
+      <main className="min-h-screen bg-background text-foreground flex flex-col items-center">
         <LandingPageChatLayout
           slug={page.slug}
           headline={page.headline}
