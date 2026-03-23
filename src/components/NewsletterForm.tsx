@@ -75,7 +75,7 @@ export function NewsletterForm() {
   return (
     <div className="mt-4">
       <p className="text-foreground mb-4">
-        Where should I send it?
+        Where should I send the resources?
       </p>
       
       <form onSubmit={handleSubmit} className="animate-slide-up opacity-0" style={{ animationDelay: "200ms" }}>
