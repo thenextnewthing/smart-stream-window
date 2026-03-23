@@ -228,6 +228,12 @@ export function LandingPageChatLayout({
                       {lead_magnet_type === "content" && !lead_magnet_value &&
                   <p className="text-base text-foreground">Thanks! You're on the list. 🎉</p>
                   }
+                      {lead_magnet_type === "html" && lead_magnet_value &&
+                  <div className="text-base text-foreground" dangerouslySetInnerHTML={{ __html: lead_magnet_value }} />
+                  }
+                      {lead_magnet_type === "html" && !lead_magnet_value &&
+                  <p className="text-base text-foreground">Thanks! You're on the list. 🎉</p>
+                  }
                     </div>
                   </div>
                 </>
