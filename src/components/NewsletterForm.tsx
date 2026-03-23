@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 export function NewsletterForm() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+  const [copied, setCopied] = useState(false);
 
   const triggerConfetti = () => {
     const duration = 3000;
