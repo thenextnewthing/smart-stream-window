@@ -97,7 +97,7 @@ export function NewsletterForm() {
                 <Terminal className="w-4 h-4 text-muted-foreground shrink-0" />
                 <code className="text-foreground truncate">npx paperclipai onboard --yes</code>
                 <button onClick={handleCopy} className="ml-auto shrink-0 p-1 rounded hover:bg-muted transition-colors">
-                  {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-muted-foreground hover:text-foreground" />}
+                  {copied ? <Check className="w-4 h-4 text-primary" /> : <Copy className="w-4 h-4 text-muted-foreground hover:text-foreground" />}
                 </button>
               </div>
             </div>
