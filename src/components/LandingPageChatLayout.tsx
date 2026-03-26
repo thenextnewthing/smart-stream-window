@@ -1,4 +1,5 @@
 import { useState } from "react";
+import confetti from "canvas-confetti";
 import { supabase } from "@/integrations/supabase/client";
 
 interface LandingPageChatLayoutProps {
@@ -143,6 +144,14 @@ export function LandingPageChatLayout({
                     const trimmed = emailValue.trim();
                     if (trimmed && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
                       setSubmittedEmail(trimmed);
+                      // Confetti from top
+                      const duration = 2500;
+                      const end = Date.now() + duration;
+                      const frame = () => {
+                        confetti({ particleCount: 4, angle: 90, spread: 120, origin: { x: Math.random(), y: -0.05 }, colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'] });
+                        if (Date.now() < end) requestAnimationFrame(frame);
+                      };
+                      frame();
                       try {
                         await supabase.functions.invoke('subscribe-beehiiv', {
                           body: { email: trimmed, utm_source: 'lovable-landing', utm_medium: utm_medium || (slug ? slug.replace(/\//g, '-') : 'landing-page'), send_welcome_email: false }
@@ -181,6 +190,13 @@ export function LandingPageChatLayout({
                   <div className="flex justify-end">
                     <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-md px-5 py-3 max-w-md">
                       <p className="text-base">{submittedEmail}</p>
+                    </div>
+                  </div>
+
+                  {/* Thank you bubble */}
+                  <div className="flex justify-start">
+                    <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-3 max-w-lg">
+                      <p className="text-base text-foreground">Thank you.</p>
                     </div>
                   </div>
 
