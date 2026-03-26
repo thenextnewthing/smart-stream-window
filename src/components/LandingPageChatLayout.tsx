@@ -144,6 +144,14 @@ export function LandingPageChatLayout({
                     const trimmed = emailValue.trim();
                     if (trimmed && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
                       setSubmittedEmail(trimmed);
+                      // Confetti from top
+                      const duration = 2500;
+                      const end = Date.now() + duration;
+                      const frame = () => {
+                        confetti({ particleCount: 4, angle: 90, spread: 120, origin: { x: Math.random(), y: -0.05 }, colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'] });
+                        if (Date.now() < end) requestAnimationFrame(frame);
+                      };
+                      frame();
                       try {
                         await supabase.functions.invoke('subscribe-beehiiv', {
                           body: { email: trimmed, utm_source: 'lovable-landing', utm_medium: utm_medium || (slug ? slug.replace(/\//g, '-') : 'landing-page'), send_welcome_email: false }
