@@ -39,7 +39,7 @@ export function LandingPageChatLayout({
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
 
   const displayUrl = slug ?
-  `thenextnew.thing/${slug}` :
+  `thenextnew.thing/l/${slug}` :
   "thenextnew.thing";
 
   return (
