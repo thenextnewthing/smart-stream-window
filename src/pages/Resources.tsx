@@ -4,27 +4,6 @@ import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { supabase } from "@/integrations/supabase/client";
 
-import resourceLarry from "@/assets/resource-larry-agent.jpg";
-import resourceVideoSop from "@/assets/resource-video-sop.jpg";
-import resourcePaperclip from "@/assets/resource-paperclip.jpg";
-import resourceAgentCompanies from "@/assets/resource-agent-companies.jpg";
-
-// Fallback images keyed by partial title match
-const FALLBACK_IMAGES: Record<string, string> = {
-  larry: resourceLarry,
-  video: resourceVideoSop,
-  paperclip: resourcePaperclip,
-  agent: resourceAgentCompanies,
-};
-
-function getFallbackImage(title: string): string {
-  const lower = title.toLowerCase();
-  for (const [key, img] of Object.entries(FALLBACK_IMAGES)) {
-    if (lower.includes(key)) return img;
-  }
-  return resourceAgentCompanies;
-}
-
 interface ResourceLink {
   label: string;
   url: string;
