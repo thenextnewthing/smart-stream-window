@@ -431,6 +431,14 @@ const Admin = () => {
         .order("created_at", { ascending: false });
       if (wl) setWaitlist(wl);
       setWaitlistLoading(false);
+
+      // Load resource center items
+      const { data: rcItems } = await supabase
+        .from("resource_center_items")
+        .select("*")
+        .order("display_order", { ascending: true });
+      if (rcItems) setResourceItems(rcItems.map((r: any) => ({ ...r, links: r.links || [] })));
+      setResourcesLoading(false);
     };
 
     init();
