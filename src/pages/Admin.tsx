@@ -109,6 +109,23 @@ interface StaticPage {
   external?: boolean;
 }
 
+interface ResourceLink {
+  label: string;
+  url: string;
+}
+
+interface ResourceCenterItem {
+  id: string;
+  title: string;
+  description: string | null;
+  tag: string | null;
+  thumbnail_url: string | null;
+  links: ResourceLink[];
+  display_order: number;
+  is_visible: boolean;
+  created_at: string;
+}
+
 // ─── Static site map ─────────────────────────────────────────────────────────
 
 const LOVABLE_PROJECT_ID = "1fb725f6-59d2-4adc-9d02-122eab9f8a4d";
