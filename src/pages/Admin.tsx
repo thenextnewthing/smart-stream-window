@@ -281,6 +281,13 @@ const Admin = () => {
   const [waitlist, setWaitlist] = useState<WaitlistEntry[]>([]);
   const [waitlistLoading, setWaitlistLoading] = useState(true);
 
+  // Resource center state
+  const [resourceItems, setResourceItems] = useState<ResourceCenterItem[]>([]);
+  const [resourcesLoading, setResourcesLoading] = useState(true);
+  const [resourceEditOpen, setResourceEditOpen] = useState(false);
+  const [resourceEditItem, setResourceEditItem] = useState<Partial<ResourceCenterItem> | null>(null);
+  const [resourceSaving, setResourceSaving] = useState(false);
+
   // New redirect state
   const [newRedirectOpen, setNewRedirectOpen] = useState(false);
   const [newRedirectSlug, setNewRedirectSlug] = useState("");
