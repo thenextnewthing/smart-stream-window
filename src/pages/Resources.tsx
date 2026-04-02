@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowRight, Loader2, Lock, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
@@ -9,76 +9,67 @@ import resourceVideoSop from "@/assets/resource-video-sop.jpg";
 import resourcePaperclip from "@/assets/resource-paperclip.jpg";
 import resourceAgentCompanies from "@/assets/resource-agent-companies.jpg";
 
-interface Resource {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  tag: string;
-  links: { label: string; url: string }[];
+// Fallback images keyed by partial title match
+const FALLBACK_IMAGES: Record<string, string> = {
+  larry: resourceLarry,
+  video: resourceVideoSop,
+  paperclip: resourcePaperclip,
+  agent: resourceAgentCompanies,
+};
+
+function getFallbackImage(title: string): string {
+  const lower = title.toLowerCase();
+  for (const [key, img] of Object.entries(FALLBACK_IMAGES)) {
+    if (lower.includes(key)) return img;
+  }
+  return resourceAgentCompanies;
 }
 
-const resources: Resource[] = [
-  {
-    id: "larry-agent",
-    title: "The Larry Agent",
-    description:
-      "The TikTok AI agent that got 2.3M+ views. Get the bot and the video walkthrough.",
-    image: resourceLarry,
-    tag: "AI Agent",
-    links: [
-      { label: "Video Walkthrough", url: "https://www.youtube.com/watch?v=O7ft9o-zbps" },
-      { label: "Larry Bot on ClawHub", url: "https://clawhub.ai/OllieWazza/larry" },
-    ],
-  },
-  {
-    id: "video-sop",
-    title: "Eric's Video Creation SOP",
-    description:
-      "The exact standard operating procedure for creating high-performing video content.",
-    image: resourceVideoSop,
-    tag: "SOP",
-    links: [
-      {
-        label: "Open SOP Document",
-        url: "https://docs.google.com/document/d/1t41ddoUGIeCCMbM5pMXCu7OT9O7DgttxmseMStQHGts/edit?tab=t.0",
-      },
-    ],
-  },
-  {
-    id: "paperclip",
-    title: "Paperclip AI Setup Guide",
-    description:
-      "Everything you need to get started with Paperclip — install guide, tips, and Cathryn's pro tricks.",
-    image: resourcePaperclip,
-    tag: "Dev Tool",
-    links: [
-      { label: "Paperclip Website", url: "https://paperclip.ing" },
-      { label: "Helpful Article", url: "https://x.com/NickSpisak_/status/2033518072724705437" },
-      { label: "What You Can Build", url: "https://x.com/NickSpisak_/status/2034635430700679445" },
-      { label: "Follow Cathryn on X", url: "https://x.com/cathrynlavery" },
-    ],
-  },
-  {
-    id: "agent-companies",
-    title: "How Agent Companies Are Built",
-    description:
-      "Research on YC W26 vs FeltSense clones, plus a deep dive into agent-built companies.",
-    image: resourceAgentCompanies,
-    tag: "Research",
-    links: [
-      { label: "YC W26 vs FeltSense Clones", url: "https://n.thenextnewthing.ai/yc-w26-vs-feltsense" },
-      {
-        label: "Agent-built Companies",
-        url: "https://n.thenextnewthing.ai/Agent-Built-Companies-Featured-on-The-Next-New-Thing-335940d92a1f80de82e1f7ae2acc12cd",
-      },
-    ],
-  },
-];
+interface ResourceLink {
+  label: string;
+  url: string;
+}
+
+interface ResourceItem {
+  id: string;
+  title: string;
+  description: string | null;
+  tag: string | null;
+  thumbnail_url: string | null;
+  links: ResourceLink[];
+  display_order: number;
+}
 
 export default function Resources() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "unlocked">("idle");
+  const [resources, setResources] = useState<ResourceItem[]>([]);
+  const [loadingResources, setLoadingResources] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      const { data } = await supabase
+        .from("resource_center_items")
+        .select("*")
+        .eq("is_visible", true)
+        .order("display_order", { ascending: true });
+      if (data) {
+        setResources(
+          data.map((d: any) => ({
+            id: d.id,
+            title: d.title,
+            description: d.description,
+            tag: d.tag,
+            thumbnail_url: d.thumbnail_url,
+            links: (d.links as ResourceLink[]) || [],
+            display_order: d.display_order,
+          }))
+        );
+      }
+      setLoadingResources(false);
+    };
+    load();
+  }, []);
 
   const triggerConfetti = () => {
     const end = Date.now() + 2500;
@@ -126,10 +117,7 @@ export default function Resources() {
           </p>
 
           {!unlocked && (
-            <form
-              onSubmit={handleSubmit}
-              className="max-w-md mx-auto animate-slide-up"
-            >
+            <form onSubmit={handleSubmit} className="max-w-md mx-auto animate-slide-up">
               <p className="text-sm text-muted-foreground mb-3">
                 Enter your email to unlock all resources instantly.
               </p>
@@ -171,16 +159,17 @@ export default function Resources() {
 
       {/* Resource Grid */}
       <section className="max-w-5xl mx-auto px-6 py-12">
-        <div className="grid gap-8 sm:grid-cols-2">
-          {resources.map((r, i) => (
-            <ResourceCard
-              key={r.id}
-              resource={r}
-              unlocked={unlocked}
-              index={i}
-            />
-          ))}
-        </div>
+        {loadingResources ? (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : (
+          <div className="grid gap-8 sm:grid-cols-2">
+            {resources.map((r, i) => (
+              <ResourceCard key={r.id} resource={r} unlocked={unlocked} index={i} />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Bottom CTA */}
@@ -209,19 +198,20 @@ function ResourceCard({
   unlocked,
   index,
 }: {
-  resource: Resource;
+  resource: ResourceItem;
   unlocked: boolean;
   index: number;
 }) {
+  const imgSrc = resource.thumbnail_url || getFallbackImage(resource.title);
+
   return (
     <div
       className="group relative rounded-2xl border border-border bg-card overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-primary/30 animate-slide-up"
       style={{ animationDelay: `${index * 100}ms` }}
     >
-      {/* Image */}
       <div className="relative aspect-[5/4] overflow-hidden">
         <img
-          src={resource.image}
+          src={imgSrc}
           alt={resource.title}
           loading="lazy"
           width={640}
@@ -239,16 +229,12 @@ function ResourceCard({
           </div>
         )}
         <span className="absolute top-3 left-3 px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full bg-primary text-primary-foreground">
-          {resource.tag}
+          {resource.tag || "Resource"}
         </span>
       </div>
 
-      {/* Content */}
       <div className="p-5">
-        <h3
-          className="text-xl font-semibold text-foreground mb-1"
-          style={{ fontFamily: "var(--font-serif)" }}
-        >
+        <h3 className="text-xl font-semibold text-foreground mb-1" style={{ fontFamily: "var(--font-serif)" }}>
           {resource.title}
         </h3>
         <p className="text-sm text-muted-foreground mb-4">{resource.description}</p>
@@ -269,9 +255,7 @@ function ResourceCard({
             ))}
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground italic">
-            Enter your email above to access
-          </p>
+          <p className="text-sm text-muted-foreground italic">Enter your email above to access</p>
         )}
       </div>
     </div>

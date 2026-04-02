@@ -60,6 +60,9 @@ import {
   ArchiveRestore,
   Users,
   Download,
+  BookOpen,
+  GripVertical,
+  Image,
 } from "lucide-react";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
@@ -104,6 +107,23 @@ interface StaticPage {
   description: string;
   children?: StaticPage[];
   external?: boolean;
+}
+
+interface ResourceLink {
+  label: string;
+  url: string;
+}
+
+interface ResourceCenterItem {
+  id: string;
+  title: string;
+  description: string | null;
+  tag: string | null;
+  thumbnail_url: string | null;
+  links: ResourceLink[];
+  display_order: number;
+  is_visible: boolean;
+  created_at: string;
 }
 
 // ─── Static site map ─────────────────────────────────────────────────────────
@@ -261,6 +281,13 @@ const Admin = () => {
   const [waitlist, setWaitlist] = useState<WaitlistEntry[]>([]);
   const [waitlistLoading, setWaitlistLoading] = useState(true);
 
+  // Resource center state
+  const [resourceItems, setResourceItems] = useState<ResourceCenterItem[]>([]);
+  const [resourcesLoading, setResourcesLoading] = useState(true);
+  const [resourceEditOpen, setResourceEditOpen] = useState(false);
+  const [resourceEditItem, setResourceEditItem] = useState<Partial<ResourceCenterItem> | null>(null);
+  const [resourceSaving, setResourceSaving] = useState(false);
+
   // New redirect state
   const [newRedirectOpen, setNewRedirectOpen] = useState(false);
   const [newRedirectSlug, setNewRedirectSlug] = useState("");
@@ -404,6 +431,14 @@ const Admin = () => {
         .order("created_at", { ascending: false });
       if (wl) setWaitlist(wl);
       setWaitlistLoading(false);
+
+      // Load resource center items
+      const { data: rcItems } = await supabase
+        .from("resource_center_items")
+        .select("*")
+        .order("display_order", { ascending: true });
+      if (rcItems) setResourceItems(rcItems.map((r: any) => ({ ...r, links: r.links || [] })));
+      setResourcesLoading(false);
     };
 
     init();
@@ -605,6 +640,15 @@ const Admin = () => {
               {waitlist.length > 0 && (
                 <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0">
                   {waitlist.length}
+                </Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="resources" className="gap-2">
+              <BookOpen className="h-4 w-4" />
+              Resources
+              {resourceItems.length > 0 && (
+                <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0">
+                  {resourceItems.length}
                 </Badge>
               )}
             </TabsTrigger>
@@ -1070,6 +1114,117 @@ const Admin = () => {
               )}
             </div>
           </TabsContent>
+
+          {/* ── Resources ──────────────────────────────────────────────────── */}
+          <TabsContent value="resources" className="mt-4">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">
+                  Manage items shown in the <a href="/resources" target="_blank" className="text-primary underline">Resource Vault</a>.
+                </p>
+                <Button
+                  size="sm"
+                  className="gap-1.5"
+                  onClick={() => {
+                    setResourceEditItem({ title: "", description: "", tag: "Resource", links: [], display_order: resourceItems.length + 1, is_visible: true });
+                    setResourceEditOpen(true);
+                  }}
+                >
+                  <Plus className="h-4 w-4" />
+                  Add resource
+                </Button>
+              </div>
+
+              {resourcesLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                </div>
+              ) : resourceItems.length === 0 ? (
+                <p className="text-sm text-muted-foreground py-8 text-center">No resources yet.</p>
+              ) : (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="w-10">#</TableHead>
+                        <TableHead>Title</TableHead>
+                        <TableHead>Tag</TableHead>
+                        <TableHead>Links</TableHead>
+                        <TableHead>Visible</TableHead>
+                        <TableHead />
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {resourceItems.map((item) => (
+                        <TableRow key={item.id}>
+                          <TableCell className="text-sm text-muted-foreground tabular-nums">{item.display_order}</TableCell>
+                          <TableCell className="font-medium text-sm">{item.title}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="text-xs">{item.tag || "—"}</Badge>
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">{item.links.length} link{item.links.length !== 1 ? "s" : ""}</TableCell>
+                          <TableCell>
+                            <button
+                              onClick={async () => {
+                                const { error } = await supabase
+                                  .from("resource_center_items")
+                                  .update({ is_visible: !item.is_visible })
+                                  .eq("id", item.id);
+                                if (!error) setResourceItems(prev => prev.map(r => r.id === item.id ? { ...r, is_visible: !r.is_visible } : r));
+                              }}
+                              className="inline-flex items-center gap-1.5 text-xs transition-opacity hover:opacity-70"
+                            >
+                              {item.is_visible ? (
+                                <><Eye className="h-3.5 w-3.5 text-primary" /><span className="text-primary font-medium">Visible</span></>
+                              ) : (
+                                <><EyeOff className="h-3.5 w-3.5 text-muted-foreground" /><span className="text-muted-foreground">Hidden</span></>
+                              )}
+                            </button>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-1 justify-end">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7 text-primary"
+                                title="Edit"
+                                onClick={() => {
+                                  setResourceEditItem({ ...item });
+                                  setResourceEditOpen(true);
+                                }}
+                              >
+                                <Pencil className="h-3.5 w-3.5" />
+                              </Button>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" title="Delete">
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Delete "{item.title}"?</AlertDialogTitle>
+                                    <AlertDialogDescription>This will permanently remove this resource from the vault.</AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction onClick={async () => {
+                                      const { error } = await supabase.from("resource_center_items").delete().eq("id", item.id);
+                                      if (!error) setResourceItems(prev => prev.filter(r => r.id !== item.id));
+                                    }}>Delete</AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </div>
+          </TabsContent>
         </Tabs>
       </div>
 
@@ -1403,6 +1558,117 @@ const Admin = () => {
               disabled={!editRedirectSlug.trim() || !editRedirectDest.trim() || editRedirectSaving}
             >
               {editRedirectSaving ? "Saving…" : "Save changes"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* ── Resource Edit/Create dialog ─────────────────────────────────── */}
+      <Dialog open={resourceEditOpen} onOpenChange={(v) => { if (!v) { setResourceEditOpen(false); setResourceEditItem(null); } }}>
+        <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{resourceEditItem?.id ? "Edit resource" : "Add resource"}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-1.5">
+              <Label>Title</Label>
+              <Input value={resourceEditItem?.title || ""} onChange={(e) => setResourceEditItem(prev => prev ? { ...prev, title: e.target.value } : prev)} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Description</Label>
+              <Textarea value={resourceEditItem?.description || ""} onChange={(e) => setResourceEditItem(prev => prev ? { ...prev, description: e.target.value } : prev)} className="min-h-[60px]" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label>Tag</Label>
+                <Input value={resourceEditItem?.tag || ""} onChange={(e) => setResourceEditItem(prev => prev ? { ...prev, tag: e.target.value } : prev)} placeholder="e.g. AI Agent, SOP" />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Display order</Label>
+                <Input type="number" value={resourceEditItem?.display_order ?? 0} onChange={(e) => setResourceEditItem(prev => prev ? { ...prev, display_order: parseInt(e.target.value) || 0 } : prev)} />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label>Thumbnail URL (optional)</Label>
+              <Input value={resourceEditItem?.thumbnail_url || ""} onChange={(e) => setResourceEditItem(prev => prev ? { ...prev, thumbnail_url: e.target.value } : prev)} placeholder="https://..." />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label>Links</Label>
+                <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={() => {
+                  setResourceEditItem(prev => prev ? { ...prev, links: [...(prev.links || []), { label: "", url: "" }] } : prev);
+                }}>
+                  <Plus className="h-3 w-3" /> Add link
+                </Button>
+              </div>
+              {(resourceEditItem?.links || []).map((link, idx) => (
+                <div key={idx} className="flex gap-2 items-start">
+                  <div className="flex-1 space-y-1">
+                    <Input
+                      placeholder="Label"
+                      value={link.label}
+                      onChange={(e) => {
+                        const newLinks = [...(resourceEditItem?.links || [])];
+                        newLinks[idx] = { ...newLinks[idx], label: e.target.value };
+                        setResourceEditItem(prev => prev ? { ...prev, links: newLinks } : prev);
+                      }}
+                      className="h-8 text-sm"
+                    />
+                    <Input
+                      placeholder="https://..."
+                      value={link.url}
+                      onChange={(e) => {
+                        const newLinks = [...(resourceEditItem?.links || [])];
+                        newLinks[idx] = { ...newLinks[idx], url: e.target.value };
+                        setResourceEditItem(prev => prev ? { ...prev, links: newLinks } : prev);
+                      }}
+                      className="h-8 text-sm"
+                    />
+                  </div>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive shrink-0" onClick={() => {
+                    const newLinks = (resourceEditItem?.links || []).filter((_, i) => i !== idx);
+                    setResourceEditItem(prev => prev ? { ...prev, links: newLinks } : prev);
+                  }}>
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setResourceEditOpen(false); setResourceEditItem(null); }}>Cancel</Button>
+            <Button
+              disabled={!resourceEditItem?.title?.trim() || resourceSaving}
+              onClick={async () => {
+                if (!resourceEditItem?.title?.trim()) return;
+                setResourceSaving(true);
+                const payload = {
+                  title: resourceEditItem.title.trim(),
+                  description: resourceEditItem.description || null,
+                  tag: resourceEditItem.tag || "Resource",
+                  thumbnail_url: resourceEditItem.thumbnail_url || null,
+                  links: (resourceEditItem.links || []) as any,
+                  display_order: resourceEditItem.display_order ?? 0,
+                  is_visible: resourceEditItem.is_visible ?? true,
+                };
+
+                if (resourceEditItem.id) {
+                  const { error } = await supabase.from("resource_center_items").update(payload as any).eq("id", resourceEditItem.id);
+                  if (!error) {
+                    setResourceItems(prev => prev.map(r => r.id === resourceEditItem.id ? { ...r, ...payload, links: resourceEditItem.links || [] } as ResourceCenterItem : r));
+                  }
+                } else {
+                  const { data, error } = await supabase.from("resource_center_items").insert(payload as any).select().single();
+                  if (!error && data) {
+                    setResourceItems(prev => [...prev, { ...(data as any), links: (data as any).links || [] } as ResourceCenterItem]);
+                  }
+                }
+                setResourceSaving(false);
+                setResourceEditOpen(false);
+                setResourceEditItem(null);
+              }}
+            >
+              {resourceSaving ? "Saving…" : resourceEditItem?.id ? "Save changes" : "Add resource"}
             </Button>
           </DialogFooter>
         </DialogContent>
