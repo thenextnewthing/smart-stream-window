@@ -1114,6 +1114,117 @@ const Admin = () => {
               )}
             </div>
           </TabsContent>
+
+          {/* ── Resources ──────────────────────────────────────────────────── */}
+          <TabsContent value="resources" className="mt-4">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">
+                  Manage items shown in the <a href="/resources" target="_blank" className="text-primary underline">Resource Vault</a>.
+                </p>
+                <Button
+                  size="sm"
+                  className="gap-1.5"
+                  onClick={() => {
+                    setResourceEditItem({ title: "", description: "", tag: "Resource", links: [], display_order: resourceItems.length + 1, is_visible: true });
+                    setResourceEditOpen(true);
+                  }}
+                >
+                  <Plus className="h-4 w-4" />
+                  Add resource
+                </Button>
+              </div>
+
+              {resourcesLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                </div>
+              ) : resourceItems.length === 0 ? (
+                <p className="text-sm text-muted-foreground py-8 text-center">No resources yet.</p>
+              ) : (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="w-10">#</TableHead>
+                        <TableHead>Title</TableHead>
+                        <TableHead>Tag</TableHead>
+                        <TableHead>Links</TableHead>
+                        <TableHead>Visible</TableHead>
+                        <TableHead />
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {resourceItems.map((item) => (
+                        <TableRow key={item.id}>
+                          <TableCell className="text-sm text-muted-foreground tabular-nums">{item.display_order}</TableCell>
+                          <TableCell className="font-medium text-sm">{item.title}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="text-xs">{item.tag || "—"}</Badge>
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">{item.links.length} link{item.links.length !== 1 ? "s" : ""}</TableCell>
+                          <TableCell>
+                            <button
+                              onClick={async () => {
+                                const { error } = await supabase
+                                  .from("resource_center_items")
+                                  .update({ is_visible: !item.is_visible })
+                                  .eq("id", item.id);
+                                if (!error) setResourceItems(prev => prev.map(r => r.id === item.id ? { ...r, is_visible: !r.is_visible } : r));
+                              }}
+                              className="inline-flex items-center gap-1.5 text-xs transition-opacity hover:opacity-70"
+                            >
+                              {item.is_visible ? (
+                                <><Eye className="h-3.5 w-3.5 text-primary" /><span className="text-primary font-medium">Visible</span></>
+                              ) : (
+                                <><EyeOff className="h-3.5 w-3.5 text-muted-foreground" /><span className="text-muted-foreground">Hidden</span></>
+                              )}
+                            </button>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-1 justify-end">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7 text-primary"
+                                title="Edit"
+                                onClick={() => {
+                                  setResourceEditItem({ ...item });
+                                  setResourceEditOpen(true);
+                                }}
+                              >
+                                <Pencil className="h-3.5 w-3.5" />
+                              </Button>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" title="Delete">
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Delete "{item.title}"?</AlertDialogTitle>
+                                    <AlertDialogDescription>This will permanently remove this resource from the vault.</AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction onClick={async () => {
+                                      const { error } = await supabase.from("resource_center_items").delete().eq("id", item.id);
+                                      if (!error) setResourceItems(prev => prev.filter(r => r.id !== item.id));
+                                    }}>Delete</AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </div>
+          </TabsContent>
         </Tabs>
       </div>
 
