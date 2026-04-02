@@ -21,6 +21,7 @@ import EventLandingPageView from "./pages/EventLandingPageView";
 import EventClaudeCode from "./pages/EventClaudeCode";
 import EventClaudeCodeConfirmation from "./pages/EventClaudeCodeConfirmation";
 import EventClaudeCodeWaitlist from "./pages/EventClaudeCodeWaitlist";
+import Resources from "./pages/Resources";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
