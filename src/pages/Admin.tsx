@@ -1647,20 +1647,20 @@ const Admin = () => {
                   description: resourceEditItem.description || null,
                   tag: resourceEditItem.tag || "Resource",
                   thumbnail_url: resourceEditItem.thumbnail_url || null,
-                  links: resourceEditItem.links || [],
+                  links: (resourceEditItem.links || []) as any,
                   display_order: resourceEditItem.display_order ?? 0,
                   is_visible: resourceEditItem.is_visible ?? true,
                 };
 
                 if (resourceEditItem.id) {
-                  const { error } = await supabase.from("resource_center_items").update(payload).eq("id", resourceEditItem.id);
+                  const { error } = await supabase.from("resource_center_items").update(payload as any).eq("id", resourceEditItem.id);
                   if (!error) {
-                    setResourceItems(prev => prev.map(r => r.id === resourceEditItem.id ? { ...r, ...payload } as ResourceCenterItem : r));
+                    setResourceItems(prev => prev.map(r => r.id === resourceEditItem.id ? { ...r, ...payload, links: resourceEditItem.links || [] } as ResourceCenterItem : r));
                   }
                 } else {
-                  const { data, error } = await supabase.from("resource_center_items").insert(payload).select().single();
+                  const { data, error } = await supabase.from("resource_center_items").insert(payload as any).select().single();
                   if (!error && data) {
-                    setResourceItems(prev => [...prev, { ...data, links: data.links || [] } as ResourceCenterItem]);
+                    setResourceItems(prev => [...prev, { ...(data as any), links: (data as any).links || [] } as ResourceCenterItem]);
                   }
                 }
                 setResourceSaving(false);
