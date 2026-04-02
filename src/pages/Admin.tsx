@@ -1562,6 +1562,117 @@ const Admin = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* ── Resource Edit/Create dialog ─────────────────────────────────── */}
+      <Dialog open={resourceEditOpen} onOpenChange={(v) => { if (!v) { setResourceEditOpen(false); setResourceEditItem(null); } }}>
+        <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{resourceEditItem?.id ? "Edit resource" : "Add resource"}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-1.5">
+              <Label>Title</Label>
+              <Input value={resourceEditItem?.title || ""} onChange={(e) => setResourceEditItem(prev => prev ? { ...prev, title: e.target.value } : prev)} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Description</Label>
+              <Textarea value={resourceEditItem?.description || ""} onChange={(e) => setResourceEditItem(prev => prev ? { ...prev, description: e.target.value } : prev)} className="min-h-[60px]" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label>Tag</Label>
+                <Input value={resourceEditItem?.tag || ""} onChange={(e) => setResourceEditItem(prev => prev ? { ...prev, tag: e.target.value } : prev)} placeholder="e.g. AI Agent, SOP" />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Display order</Label>
+                <Input type="number" value={resourceEditItem?.display_order ?? 0} onChange={(e) => setResourceEditItem(prev => prev ? { ...prev, display_order: parseInt(e.target.value) || 0 } : prev)} />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label>Thumbnail URL (optional)</Label>
+              <Input value={resourceEditItem?.thumbnail_url || ""} onChange={(e) => setResourceEditItem(prev => prev ? { ...prev, thumbnail_url: e.target.value } : prev)} placeholder="https://..." />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label>Links</Label>
+                <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={() => {
+                  setResourceEditItem(prev => prev ? { ...prev, links: [...(prev.links || []), { label: "", url: "" }] } : prev);
+                }}>
+                  <Plus className="h-3 w-3" /> Add link
+                </Button>
+              </div>
+              {(resourceEditItem?.links || []).map((link, idx) => (
+                <div key={idx} className="flex gap-2 items-start">
+                  <div className="flex-1 space-y-1">
+                    <Input
+                      placeholder="Label"
+                      value={link.label}
+                      onChange={(e) => {
+                        const newLinks = [...(resourceEditItem?.links || [])];
+                        newLinks[idx] = { ...newLinks[idx], label: e.target.value };
+                        setResourceEditItem(prev => prev ? { ...prev, links: newLinks } : prev);
+                      }}
+                      className="h-8 text-sm"
+                    />
+                    <Input
+                      placeholder="https://..."
+                      value={link.url}
+                      onChange={(e) => {
+                        const newLinks = [...(resourceEditItem?.links || [])];
+                        newLinks[idx] = { ...newLinks[idx], url: e.target.value };
+                        setResourceEditItem(prev => prev ? { ...prev, links: newLinks } : prev);
+                      }}
+                      className="h-8 text-sm"
+                    />
+                  </div>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive shrink-0" onClick={() => {
+                    const newLinks = (resourceEditItem?.links || []).filter((_, i) => i !== idx);
+                    setResourceEditItem(prev => prev ? { ...prev, links: newLinks } : prev);
+                  }}>
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setResourceEditOpen(false); setResourceEditItem(null); }}>Cancel</Button>
+            <Button
+              disabled={!resourceEditItem?.title?.trim() || resourceSaving}
+              onClick={async () => {
+                if (!resourceEditItem?.title?.trim()) return;
+                setResourceSaving(true);
+                const payload = {
+                  title: resourceEditItem.title.trim(),
+                  description: resourceEditItem.description || null,
+                  tag: resourceEditItem.tag || "Resource",
+                  thumbnail_url: resourceEditItem.thumbnail_url || null,
+                  links: resourceEditItem.links || [],
+                  display_order: resourceEditItem.display_order ?? 0,
+                  is_visible: resourceEditItem.is_visible ?? true,
+                };
+
+                if (resourceEditItem.id) {
+                  const { error } = await supabase.from("resource_center_items").update(payload).eq("id", resourceEditItem.id);
+                  if (!error) {
+                    setResourceItems(prev => prev.map(r => r.id === resourceEditItem.id ? { ...r, ...payload } as ResourceCenterItem : r));
+                  }
+                } else {
+                  const { data, error } = await supabase.from("resource_center_items").insert(payload).select().single();
+                  if (!error && data) {
+                    setResourceItems(prev => [...prev, { ...data, links: data.links || [] } as ResourceCenterItem]);
+                  }
+                }
+                setResourceSaving(false);
+                setResourceEditOpen(false);
+                setResourceEditItem(null);
+              }}
+            >
+              {resourceSaving ? "Saving…" : resourceEditItem?.id ? "Save changes" : "Add resource"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
