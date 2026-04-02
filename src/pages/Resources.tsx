@@ -181,7 +181,7 @@ function ResourceCard({
   unlocked: boolean;
   index: number;
 }) {
-  const imgSrc = resource.thumbnail_url || getFallbackImage(resource.title);
+  const imgSrc = resource.thumbnail_url || "";
 
   return (
     <div
