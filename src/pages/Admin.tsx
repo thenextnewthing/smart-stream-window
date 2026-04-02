@@ -643,6 +643,15 @@ const Admin = () => {
                 </Badge>
               )}
             </TabsTrigger>
+            <TabsTrigger value="resources" className="gap-2">
+              <BookOpen className="h-4 w-4" />
+              Resources
+              {resourceItems.length > 0 && (
+                <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0">
+                  {resourceItems.length}
+                </Badge>
+              )}
+            </TabsTrigger>
           </TabsList>
 
           {/* ── Site Pages ─────────────────────────────────────────────────── */}
