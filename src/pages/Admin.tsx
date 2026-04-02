@@ -60,6 +60,9 @@ import {
   ArchiveRestore,
   Users,
   Download,
+  BookOpen,
+  GripVertical,
+  Image,
 } from "lucide-react";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
