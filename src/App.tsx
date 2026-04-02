@@ -52,6 +52,7 @@ const App = () => (
           <Route path="/events/claude-code/confirmation" element={<EventClaudeCodeConfirmation />} />
           <Route path="/events/claude-code/waitlist" element={<EventClaudeCodeWaitlist />} />
           <Route path="/events/:slug" element={<EventLandingPageView />} />
+          <Route path="/resources" element={<Resources />} />
           <Route path="/:slug" element={<LandingPageView />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
