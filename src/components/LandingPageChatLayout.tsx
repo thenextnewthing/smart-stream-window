@@ -217,13 +217,42 @@ export function LandingPageChatLayout({
                       {lead_magnet_type === "url" && !lead_magnet_value &&
                   <p className="text-base text-foreground">Thanks! You're on the list. 🎉</p>
                   }
-                      {lead_magnet_type === "file" && lead_magnet_value &&
-                  <p className="text-base text-foreground">
-                          Here's your download! 📄{" "}
-                          <a href={lead_magnet_value.match(/^https?:\/\//) ? lead_magnet_value : `https://${lead_magnet_value}`} target="_blank" rel="noopener noreferrer" className="text-primary underline">
-                            Download file
-                          </a>
-                        </p>
+                      {lead_magnet_type === "file" && lead_magnet_value && (() => {
+                        const fileUrl = lead_magnet_value.match(/^https?:\/\//) ? lead_magnet_value : `https://${lead_magnet_value}`;
+                        const isPdf = fileUrl.toLowerCase().endsWith('.pdf');
+                        return isPdf ? (
+                          <div className="space-y-3 w-full">
+                            <p className="text-base text-foreground">Here's your file! 📄</p>
+                            <div className="rounded-xl overflow-hidden border border-border bg-background">
+                              <iframe
+                                src={`${fileUrl}#toolbar=0&navpanes=0`}
+                                className="w-full"
+                                style={{ height: '360px' }}
+                                title="PDF preview"
+                              />
+                              <div className="flex justify-end px-3 py-2 border-t border-border bg-muted/50">
+                                <a
+                                  href={fileUrl}
+                                  download
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                                  Download PDF
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="text-base text-foreground">
+                            Here's your download! 📄{" "}
+                            <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="text-primary underline">
+                              Download file
+                            </a>
+                          </p>
+                        );
+                      })()
                   }
                       {lead_magnet_type === "file" && !lead_magnet_value &&
                   <p className="text-base text-foreground">Thanks! You're on the list. 🎉</p>
