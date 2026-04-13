@@ -193,13 +193,6 @@ export function LandingPageChatLayout({
                     </div>
                   </div>
 
-                  {/* Thank you bubble */}
-                  <div className="flex justify-start">
-                    <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-3 max-w-lg">
-                      <p className="text-base text-foreground">Thank you.</p>
-                    </div>
-                  </div>
-
                   {/* Response based on lead magnet type */}
                   <div className="flex justify-start">
                     <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-3 max-w-lg">
