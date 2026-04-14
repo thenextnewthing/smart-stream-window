@@ -126,19 +126,30 @@ export function LandingPageChatLayout({
                 </div>
             }
 
-              {/* Description as a chat bubble */}
-              {description &&
-            <div className="flex justify-start">
-                  <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-3 max-w-lg">
-                    <p className="text-base text-foreground whitespace-pre-line">{description}</p>
-                  </div>
-                </div>}
+              {/* Description bubbles — split by double newline, last paragraph wraps the form */}
+              {(() => {
+                const descParts = description ? description.split('\n\n').filter(Boolean) : [];
+                const standaloneDesc = descParts.length > 1 ? descParts.slice(0, -1) : descParts.length === 1 && hasContent && !submittedEmail ? [] : descParts;
+                const formPrompt = descParts.length > 1 ? descParts[descParts.length - 1] : null;
+                const showDescAsBubble = descParts.length === 1 && (submittedEmail || !hasContent);
 
-              {/* Email capture — as a chat bubble, or submitted email as user message */}
-              {hasContent && !submittedEmail &&
-            <div className="flex justify-start">
-                  <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-4 max-w-lg w-full space-y-3">
-                    <form
+                return (
+                  <>
+                    {(standaloneDesc.length > 0 || showDescAsBubble) && (standaloneDesc.length > 0 ? standaloneDesc : descParts).map((part, i) => (
+                      <div key={i} className="flex justify-start">
+                        <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-3 max-w-lg">
+                          <p className="text-base text-foreground whitespace-pre-line">{part}</p>
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* Email capture — as a chat bubble */}
+                    {hasContent && !submittedEmail &&
+                      <div className="flex justify-start">
+                        <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-4 max-w-lg w-full space-y-3">
+                          {formPrompt && <p className="text-base text-foreground">{formPrompt}</p>}
+                          {!formPrompt && descParts.length === 1 && <p className="text-base text-foreground whitespace-pre-line">{descParts[0]}</p>}
+                          <form
                   onSubmit={async (e) => {
                     e.preventDefault();
                     const trimmed = emailValue.trim();
