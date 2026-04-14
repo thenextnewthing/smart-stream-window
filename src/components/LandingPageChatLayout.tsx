@@ -287,6 +287,9 @@ export function LandingPageChatLayout({
                   </div>
                 </>
             }
+                  </>
+                );
+              })()}
             </div>
           </div>
         </>
