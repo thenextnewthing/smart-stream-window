@@ -38,6 +38,7 @@ export function LandingPageChatLayout({
   const [emailValue, setEmailValue] = useState("");
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
   const [visibleBubbles, setVisibleBubbles] = useState(editable ? 99 : 0);
+  const [visiblePostBubbles, setVisiblePostBubbles] = useState(0);
 
   // Count how many bubbles we have
   const descParts = description ? description.split('\n\n').filter(Boolean) : [];
