@@ -89,85 +89,83 @@ export function LandingPageChatLayout({
 
             {/* Chat content */}
             <div className="px-8 py-6 space-y-5">
-              {/* Headline as a chat bubble */}
-              {headline &&
-            <div className="flex justify-start">
-                  <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-3 max-w-md">
-                    <p className="text-base text-foreground">{headline}</p>
-                  </div>
-                </div>
-            }
-
-              {/* Hero image */}
-              {hero_image_url &&
-            <div>
-                  <div className="relative group">
-                    <img
-                  src={hero_image_url}
-                  alt="Content"
-                  className="rounded-2xl object-cover w-full max-w-48" />
-                
-                    {editable &&
-                <div className="absolute top-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                    onClick={onImageUploadClick}
-                    className="bg-background/80 hover:bg-background border rounded-full p-1.5 text-foreground">
-                    
-                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg>
-                        </button>
-                        <button
-                    onClick={onImageRemove}
-                    className="bg-background/80 hover:bg-background border rounded-full p-1.5 text-foreground">
-                    
-                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
-                        </button>
-                      </div>
-                }
-                  </div>
-                </div>
-            }
-
-              {/* Upload placeholder when editable and no image */}
-              {editable && !hero_image_url &&
-            <div className="flex justify-start">
-                  <button
-                onClick={onImageUploadClick}
-                disabled={imageUploading}
-                className="border-2 border-dashed rounded-2xl px-6 py-4 flex items-center gap-2 text-muted-foreground hover:border-primary hover:text-primary transition-colors text-sm">
-                
-                    {imageUploading ?
-                <svg className="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg> :
-
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" x2="12" y1="3" y2="15" /></svg>
-                }
-                    Upload image
-                  </button>
-                </div>
-            }
-
-              {/* Description bubbles — split by double newline, last paragraph wraps the form */}
               {(() => {
-                const descParts = description ? description.split('\n\n').filter(Boolean) : [];
-                const standaloneDesc = descParts.length > 1 ? descParts.slice(0, -1) : descParts.length === 1 && hasContent && !submittedEmail ? [] : descParts;
-                const formPrompt = descParts.length > 1 ? descParts[descParts.length - 1] : null;
-                const showDescAsBubble = descParts.length === 1 && (submittedEmail || !hasContent);
+                let idx = 0;
+                const bubble = (visible: boolean) =>
+                  visible
+                    ? "animate-fade-in"
+                    : "opacity-0 pointer-events-none";
+
+                const headlineIdx = headline ? idx++ : -1;
+                const imageIdx = hero_image_url ? idx++ : -1;
+
+                const localDescParts = description ? description.split('\n\n').filter(Boolean) : [];
+                const standaloneDesc = localDescParts.length > 1 ? localDescParts.slice(0, -1) : localDescParts.length === 1 && hasContent && !submittedEmail ? [] : localDescParts;
+                const formPrompt = localDescParts.length > 1 ? localDescParts[localDescParts.length - 1] : null;
+                const showDescAsBubble = localDescParts.length === 1 && (submittedEmail || !hasContent);
+                const descBubbles = (standaloneDesc.length > 0 || showDescAsBubble) ? (standaloneDesc.length > 0 ? standaloneDesc : localDescParts) : [];
+                const descStartIdx = idx;
+                idx += descBubbles.length;
+                const formIdx = hasContent ? idx++ : -1;
 
                 return (
                   <>
-                    {(standaloneDesc.length > 0 || showDescAsBubble) && (standaloneDesc.length > 0 ? standaloneDesc : descParts).map((part, i) => (
-                      <div key={i} className="flex justify-start">
+                    {/* Headline */}
+                    {headline &&
+                      <div className={`flex justify-start ${bubble(visibleBubbles > headlineIdx)}`}>
+                        <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-3 max-w-md">
+                          <p className="text-base text-foreground">{headline}</p>
+                        </div>
+                      </div>
+                    }
+
+                    {/* Hero image */}
+                    {hero_image_url &&
+                      <div className={bubble(visibleBubbles > imageIdx)}>
+                        <div className="relative group">
+                          <img src={hero_image_url} alt="Content" className="rounded-2xl object-cover w-full max-w-48" />
+                          {editable &&
+                            <div className="absolute top-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <button onClick={onImageUploadClick} className="bg-background/80 hover:bg-background border rounded-full p-1.5 text-foreground">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg>
+                              </button>
+                              <button onClick={onImageRemove} className="bg-background/80 hover:bg-background border rounded-full p-1.5 text-foreground">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                              </button>
+                            </div>
+                          }
+                        </div>
+                      </div>
+                    }
+
+                    {/* Upload placeholder when editable and no image */}
+                    {editable && !hero_image_url &&
+                      <div className="flex justify-start">
+                        <button onClick={onImageUploadClick} disabled={imageUploading} className="border-2 border-dashed rounded-2xl px-6 py-4 flex items-center gap-2 text-muted-foreground hover:border-primary hover:text-primary transition-colors text-sm">
+                          {imageUploading ?
+                            <svg className="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg> :
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" x2="12" y1="3" y2="15" /></svg>
+                          }
+                          Upload image
+                        </button>
+                      </div>
+                    }
+
+                    {/* Description bubbles */}
+                    {descBubbles.map((part, i) => (
+                      <div key={i} className={`flex justify-start ${bubble(visibleBubbles > descStartIdx + i)}`}>
                         <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-3 max-w-lg">
                           <p className="text-base text-foreground whitespace-pre-line">{part}</p>
                         </div>
                       </div>
                     ))}
 
-                    {/* Email capture — as a chat bubble */}
+                    {/* Email capture */}
                     {hasContent && !submittedEmail &&
-                      <div className="flex justify-start">
+                      <div className={`flex justify-start ${bubble(visibleBubbles > formIdx)}`}>
                         <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-4 max-w-lg w-full space-y-3">
                           {formPrompt && <p className="text-base text-foreground">{formPrompt}</p>}
-                          {!formPrompt && descParts.length === 1 && <p className="text-base text-foreground whitespace-pre-line">{descParts[0]}</p>}
+                          {!formPrompt && localDescParts.length === 1 && <p className="text-base text-foreground whitespace-pre-line">{localDescParts[0]}</p>}
                           <form
                   onSubmit={async (e) => {
                     e.preventDefault();
