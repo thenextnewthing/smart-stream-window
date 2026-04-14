@@ -58,6 +58,20 @@ export function LandingPageChatLayout({
     return () => clearTimeout(t);
   }, [bubbleCount, editable]);
 
+  // Staggered reveal for post-submission bubbles
+  useEffect(() => {
+    if (!submittedEmail) return;
+    setVisiblePostBubbles(0);
+    let i = 0;
+    const reveal = () => {
+      i++;
+      setVisiblePostBubbles(i);
+      if (i < 3) setTimeout(reveal, 1000);
+    };
+    const t = setTimeout(reveal, 600);
+    return () => clearTimeout(t);
+  }, [submittedEmail]);
+
   const displayUrl = slug ?
   `thenextnew.thing/l/${slug}` :
   "thenextnew.thing";
