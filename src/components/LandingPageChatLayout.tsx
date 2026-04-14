@@ -97,7 +97,6 @@ export function LandingPageChatLayout({
                     : "opacity-0 pointer-events-none";
 
                 const headlineIdx = headline ? idx++ : -1;
-                const imageIdx = hero_image_url ? idx++ : -1;
 
                 const localDescParts = description ? description.split('\n\n').filter(Boolean) : [];
                 const standaloneDesc = localDescParts.length > 1 ? localDescParts.slice(0, -1) : localDescParts.length === 1 && hasContent && !submittedEmail ? [] : localDescParts;
@@ -106,6 +105,8 @@ export function LandingPageChatLayout({
                 const descBubbles = (standaloneDesc.length > 0 || showDescAsBubble) ? (standaloneDesc.length > 0 ? standaloneDesc : localDescParts) : [];
                 const descStartIdx = idx;
                 idx += descBubbles.length;
+
+                const imageIdx = hero_image_url ? idx++ : -1;
                 const formIdx = hasContent ? idx++ : -1;
 
                 return (
@@ -118,6 +119,15 @@ export function LandingPageChatLayout({
                         </div>
                       </div>
                     }
+
+                    {/* Description bubbles (before image) */}
+                    {descBubbles.map((part, i) => (
+                      <div key={i} className={`flex justify-start ${bubble(visibleBubbles > descStartIdx + i)}`}>
+                        <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-3 max-w-lg">
+                          <p className="text-base text-foreground whitespace-pre-line">{part}</p>
+                        </div>
+                      </div>
+                    ))}
 
                     {/* Hero image */}
                     {hero_image_url &&
@@ -150,15 +160,6 @@ export function LandingPageChatLayout({
                         </button>
                       </div>
                     }
-
-                    {/* Description bubbles */}
-                    {descBubbles.map((part, i) => (
-                      <div key={i} className={`flex justify-start ${bubble(visibleBubbles > descStartIdx + i)}`}>
-                        <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-3 max-w-lg">
-                          <p className="text-base text-foreground whitespace-pre-line">{part}</p>
-                        </div>
-                      </div>
-                    ))}
 
                     {/* Email capture */}
                     {hasContent && !submittedEmail &&
