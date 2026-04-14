@@ -38,6 +38,7 @@ export function LandingPageChatLayout({
   const [emailValue, setEmailValue] = useState("");
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
   const [visibleBubbles, setVisibleBubbles] = useState(editable ? 99 : 0);
+  const [visiblePostBubbles, setVisiblePostBubbles] = useState(0);
 
   // Count how many bubbles we have
   const descParts = description ? description.split('\n\n').filter(Boolean) : [];
@@ -56,6 +57,20 @@ export function LandingPageChatLayout({
     const t = setTimeout(reveal, 600);
     return () => clearTimeout(t);
   }, [bubbleCount, editable]);
+
+  // Staggered reveal for post-submission bubbles
+  useEffect(() => {
+    if (!submittedEmail) return;
+    setVisiblePostBubbles(0);
+    let i = 0;
+    const reveal = () => {
+      i++;
+      setVisiblePostBubbles(i);
+      if (i < 3) setTimeout(reveal, 1000);
+    };
+    const t = setTimeout(reveal, 600);
+    return () => clearTimeout(t);
+  }, [submittedEmail]);
 
   const displayUrl = slug ?
   `thenextnew.thing/l/${slug}` :
@@ -216,14 +231,14 @@ export function LandingPageChatLayout({
               {/* Submitted email — shown as a user message (right-aligned) */}
               {submittedEmail &&
             <>
-                  <div className="flex justify-end">
+                  <div className={`flex justify-end ${bubble(visiblePostBubbles > 0)}`}>
                     <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-md px-5 py-3 max-w-md">
                       <p className="text-base">{submittedEmail}</p>
                     </div>
                   </div>
 
                   {/* Response based on lead magnet type */}
-                  <div className="flex justify-start">
+                  <div className={`flex justify-start ${bubble(visiblePostBubbles > 1)}`}>
                     <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-3 max-w-lg">
                       {(!lead_magnet_type || lead_magnet_type === "email") &&
                   <p className="text-base text-foreground">Thanks! You're on the list. 🎉</p>
