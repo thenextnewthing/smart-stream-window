@@ -231,14 +231,14 @@ export function LandingPageChatLayout({
               {/* Submitted email — shown as a user message (right-aligned) */}
               {submittedEmail &&
             <>
-                  <div className="flex justify-end">
+                  <div className={`flex justify-end ${bubble(visiblePostBubbles > 0)}`}>
                     <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-md px-5 py-3 max-w-md">
                       <p className="text-base">{submittedEmail}</p>
                     </div>
                   </div>
 
                   {/* Response based on lead magnet type */}
-                  <div className="flex justify-start">
+                  <div className={`flex justify-start ${bubble(visiblePostBubbles > 1)}`}>
                     <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-3 max-w-lg">
                       {(!lead_magnet_type || lead_magnet_type === "email") &&
                   <p className="text-base text-foreground">Thanks! You're on the list. 🎉</p>
