@@ -138,9 +138,6 @@ export function LandingPageChatLayout({
               {hasContent && !submittedEmail &&
             <div className="flex justify-start">
                   <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-4 max-w-lg w-full space-y-3">
-                    {description && slug === 'zero-human-downlaod' && (
-                      <p className="text-base text-foreground">Where should I send the walk-through?</p>
-                    )}
                     <form
                   onSubmit={async (e) => {
                     e.preventDefault();
