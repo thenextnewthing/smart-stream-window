@@ -37,6 +37,25 @@ export function LandingPageChatLayout({
   const hasContent = headline || description || hero_image_url;
   const [emailValue, setEmailValue] = useState("");
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
+  const [visibleBubbles, setVisibleBubbles] = useState(editable ? 99 : 0);
+
+  // Count how many bubbles we have
+  const descParts = description ? description.split('\n\n').filter(Boolean) : [];
+  const bubbleCount = (headline ? 1 : 0) + (hero_image_url ? 1 : 0) + (descParts.length > 1 ? descParts.length - 1 : 0) + (hasContent ? 1 : 0);
+
+  useEffect(() => {
+    if (editable) return;
+    let i = 0;
+    const reveal = () => {
+      i++;
+      setVisibleBubbles(i);
+      if (i < bubbleCount) {
+        setTimeout(reveal, 1000);
+      }
+    };
+    const t = setTimeout(reveal, 600);
+    return () => clearTimeout(t);
+  }, [bubbleCount, editable]);
 
   const displayUrl = slug ?
   `thenextnew.thing/l/${slug}` :
