@@ -135,15 +135,6 @@ export function LandingPageChatLayout({
                       </div>
                     }
 
-                    {/* Description bubbles (before image) */}
-                    {descBubbles.map((part, i) => (
-                      <div key={i} className={`flex justify-start ${bubble(visibleBubbles > descStartIdx + i)}`}>
-                        <div className="bg-muted rounded-2xl rounded-tl-md px-5 py-3 max-w-lg">
-                          <p className="text-base text-foreground whitespace-pre-line">{part}</p>
-                        </div>
-                      </div>
-                    ))}
-
                     {/* Hero image */}
                     {hero_image_url &&
                       <div className={bubble(visibleBubbles > imageIdx)}>
