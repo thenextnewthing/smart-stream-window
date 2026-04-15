@@ -113,6 +113,8 @@ export function LandingPageChatLayout({
 
                 const headlineIdx = headline ? idx++ : -1;
 
+                const imageIdx = hero_image_url ? idx++ : -1;
+
                 const localDescParts = description ? description.split('\n\n').filter(Boolean) : [];
                 const standaloneDesc = localDescParts.length > 1 ? localDescParts.slice(0, -1) : localDescParts.length === 1 && hasContent && !submittedEmail ? [] : localDescParts;
                 const formPrompt = localDescParts.length > 1 ? localDescParts[localDescParts.length - 1] : null;
@@ -121,7 +123,6 @@ export function LandingPageChatLayout({
                 const descStartIdx = idx;
                 idx += descBubbles.length;
 
-                const imageIdx = hero_image_url ? idx++ : -1;
                 const formIdx = hasContent ? idx++ : -1;
 
                 return (
