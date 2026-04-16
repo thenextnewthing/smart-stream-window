@@ -68,6 +68,7 @@ const LandingPageView = () => {
         }
         setRedirecting(false);
         setNotFound(true);
+      } else {
         setPage(data as LandingPage);
         supabase
           .from("landing_pages")
