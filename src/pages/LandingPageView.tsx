@@ -44,8 +44,30 @@ const LandingPageView = () => {
         .maybeSingle();
 
       if (error || !data) {
+        // No landing page found — try redirect lookup
+        setRedirecting(true);
+        try {
+          const res = await fetch(
+            `${SUPABASE_URL}/functions/v1/track-redirect`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                apikey: SUPABASE_ANON_KEY,
+              },
+              body: JSON.stringify({ path: slug }),
+            }
+          );
+          const json = await res.json();
+          if (res.ok && json.destination) {
+            window.location.replace(json.destination);
+            return;
+          }
+        } catch {
+          // redirect lookup failed, show not found
+        }
+        setRedirecting(false);
         setNotFound(true);
-      } else {
         setPage(data as LandingPage);
         supabase
           .from("landing_pages")
