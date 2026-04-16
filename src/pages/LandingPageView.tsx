@@ -3,6 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { LandingPageChatLayout } from "@/components/LandingPageChatLayout";
 
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
 interface LandingPage {
   id: string;
   slug: string;
@@ -27,6 +30,7 @@ const LandingPageView = () => {
   const [page, setPage] = useState<LandingPage | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
     if (!slug) { navigate("/", { replace: true }); return; }
@@ -40,6 +44,29 @@ const LandingPageView = () => {
         .maybeSingle();
 
       if (error || !data) {
+        // No landing page found — try redirect lookup
+        setRedirecting(true);
+        try {
+          const res = await fetch(
+            `${SUPABASE_URL}/functions/v1/track-redirect`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                apikey: SUPABASE_ANON_KEY,
+              },
+              body: JSON.stringify({ path: slug }),
+            }
+          );
+          const json = await res.json();
+          if (res.ok && json.destination) {
+            window.location.replace(json.destination);
+            return;
+          }
+        } catch {
+          // redirect lookup failed, show not found
+        }
+        setRedirecting(false);
         setNotFound(true);
       } else {
         setPage(data as LandingPage);
@@ -55,7 +82,7 @@ const LandingPageView = () => {
     load();
   }, [slug, navigate]);
 
-  if (loading) {
+  if (loading || redirecting) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
