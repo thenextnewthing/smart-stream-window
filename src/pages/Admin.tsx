@@ -964,7 +964,7 @@ const Admin = () => {
                                 rel="noopener noreferrer"
                                 className="text-primary underline underline-offset-2 hover:opacity-70 transition-opacity"
                               >
-                                /l/{r.path}
+                                /{r.path}
                               </a>
                             </TableCell>
                             <TableCell className="font-mono text-sm text-muted-foreground max-w-[300px] truncate">
@@ -1007,7 +1007,7 @@ const Admin = () => {
                                   </AlertDialogTrigger>
                                   <AlertDialogContent>
                                     <AlertDialogHeader>
-                                      <AlertDialogTitle>Delete redirect "/l/{r.path}"?</AlertDialogTitle>
+                                      <AlertDialogTitle>Delete redirect "/{r.path}"?</AlertDialogTitle>
                                       <AlertDialogDescription>
                                         This will permanently remove this redirect. Anyone visiting this link will see a "not found" page.
                                       </AlertDialogDescription>
@@ -1431,7 +1431,7 @@ const Admin = () => {
             <div className="space-y-1.5">
               <Label htmlFor="redir-slug">Link path</Label>
               <div className="flex items-center rounded-md border border-input bg-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 ring-offset-background">
-                <span className="pl-3 pr-1 text-sm font-medium text-foreground whitespace-nowrap select-none">TheNextNewThing.ai/l/</span>
+                <span className="pl-3 pr-1 text-sm font-medium text-foreground whitespace-nowrap select-none">TheNextNewThing.ai/</span>
                 <input
                   id="redir-slug"
                   className="flex h-10 w-full bg-transparent py-2 pr-3 text-sm text-foreground placeholder:text-foreground/25 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
@@ -1504,7 +1504,7 @@ const Admin = () => {
             <div className="space-y-1.5">
               <Label htmlFor="edit-redir-slug">Link path</Label>
               <div className="flex items-center rounded-md border border-input bg-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 ring-offset-background">
-                <span className="pl-3 pr-1 text-sm font-medium text-foreground whitespace-nowrap select-none">TheNextNewThing.ai/l/</span>
+                <span className="pl-3 pr-1 text-sm font-medium text-foreground whitespace-nowrap select-none">TheNextNewThing.ai/</span>
                 <input
                   id="edit-redir-slug"
                   className="flex h-10 w-full bg-transparent py-2 pr-3 text-sm text-foreground placeholder:text-foreground/25 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
