@@ -30,6 +30,7 @@ const LandingPageView = () => {
   const [page, setPage] = useState<LandingPage | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
     if (!slug) { navigate("/", { replace: true }); return; }
