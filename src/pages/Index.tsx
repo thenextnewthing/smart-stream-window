@@ -54,6 +54,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <div className="bg-primary/10 border-b border-border text-center text-xs text-foreground px-4 py-2">
+        Want to reach thousands of AI founders and builders? Sponsor The Next New Thing — email{" "}
+        <a href="mailto:HiAndrew@thenextnewthing.ai" className="text-primary underline hover:text-primary/80 font-medium">
+          HiAndrew@thenextnewthing.ai
+        </a>
+      </div>
       <ChatHeader />
       
       <main className="flex-1 max-w-3xl mx-auto w-full px-4 py-3">
@@ -117,14 +123,6 @@ const Index = () => {
       </main>
 
       <ChatInput onSubmit={handleUserSubmit} />
-
-      <footer className="max-w-3xl mx-auto w-full px-4 py-6 text-center text-sm text-muted-foreground">
-        Want to reach thousands of AI founders and builders? Sponsor The Next New Thing — email{" "}
-        <a href="mailto:HiAndrew@thenextnewthing.ai" className="text-primary underline hover:text-primary/80">
-          HiAndrew@thenextnewthing.ai
-        </a>{" "}
-        to learn more.
-      </footer>
     </div>
   );
 };
