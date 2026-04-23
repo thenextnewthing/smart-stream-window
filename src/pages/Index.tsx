@@ -117,6 +117,14 @@ const Index = () => {
       </main>
 
       <ChatInput onSubmit={handleUserSubmit} />
+
+      <footer className="max-w-3xl mx-auto w-full px-4 py-6 text-center text-sm text-muted-foreground">
+        Want to reach thousands of AI founders and builders? Sponsor The Next New Thing — email{" "}
+        <a href="mailto:HiAndrew@thenextnewthing.ai" className="text-primary underline hover:text-primary/80">
+          HiAndrew@thenextnewthing.ai
+        </a>{" "}
+        to learn more.
+      </footer>
     </div>
   );
 };
