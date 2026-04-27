@@ -19,6 +19,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { toast } from "sonner";
+import { AddToVaultDialog } from "@/components/AddToVaultDialog";
 
 interface LandingPage {
   id: string;
@@ -136,6 +137,7 @@ export default function LandingPageEditor() {
 
   // Publish toggle
   const [publishing, setPublishing] = useState(false);
+  const [vaultDialogOpen, setVaultDialogOpen] = useState(false);
 
   useEffect(() => {
     const init = async () => {
@@ -253,9 +255,23 @@ export default function LandingPageEditor() {
   // ── Publish toggle ──────────────────────────────────────────────────────────
   const handleTogglePublish = async () => {
     if (!page) return;
+    const willPublish = !page.is_published;
     setPublishing(true);
-    await saveFields({ is_published: !page.is_published });
+    await saveFields({ is_published: willPublish });
     setPublishing(false);
+
+    if (willPublish && page.lead_magnet_type && page.lead_magnet_type !== "none") {
+      const landingUrl = `${window.location.origin}/l/${page.slug}`;
+      const { data: existing } = await supabase
+        .from("resource_center_items")
+        .select("id, title, links");
+      const alreadyInVault = (existing ?? []).some((row: any) => {
+        if (row.title === page.title) return true;
+        const links = (row.links as Array<{ url: string }>) || [];
+        return links.some((l) => l.url === landingUrl || l.url === page.lead_magnet_value);
+      });
+      if (!alreadyInVault) setVaultDialogOpen(true);
+    }
   };
 
   if (loading) {
@@ -483,6 +499,11 @@ export default function LandingPageEditor() {
           <PagePreview key={previewKey} page={page} />
         </div>
       </div>
+      <AddToVaultDialog
+        page={page}
+        open={vaultDialogOpen}
+        onOpenChange={setVaultDialogOpen}
+      />
     </div>
   );
 }
