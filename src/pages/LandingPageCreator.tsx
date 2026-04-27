@@ -190,9 +190,25 @@ export default function LandingPageCreator() {
 
   const handleTogglePublish = async () => {
     if (!page) return;
+    const willPublish = !page.is_published;
     setPublishing(true);
-    await saveFields({ is_published: !page.is_published });
+    await saveFields({ is_published: willPublish });
     setPublishing(false);
+
+    // On publish (draft → live), prompt to add to Resource Vault if there's a giveaway
+    if (willPublish && page.lead_magnet_type && page.lead_magnet_type !== "none") {
+      const landingUrl = `${window.location.origin}/l/${page.slug}`;
+      const { data: existing } = await supabase
+        .from("resource_center_items")
+        .select("id, title, links")
+        .or(`title.eq.${page.title}`);
+      const alreadyInVault = (existing ?? []).some((row: any) => {
+        if (row.title === page.title) return true;
+        const links = (row.links as Array<{ url: string }>) || [];
+        return links.some((l) => l.url === landingUrl || l.url === page.lead_magnet_value);
+      });
+      if (!alreadyInVault) setVaultDialogOpen(true);
+    }
   };
 
   const handleImageUpload = async (file: File) => {
