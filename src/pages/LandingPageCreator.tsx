@@ -615,6 +615,11 @@ export default function LandingPageCreator() {
           />
         </div>
       </div>
+      <AddToVaultDialog
+        page={page}
+        open={vaultDialogOpen}
+        onOpenChange={setVaultDialogOpen}
+      />
     </div>
   );
 }
