@@ -31,7 +31,7 @@ export default function Resources() {
         .from("resource_center_items")
         .select("*")
         .eq("is_visible", true)
-        .order("display_order", { ascending: true });
+        .order("created_at", { ascending: false });
       if (data) {
         setResources(
           data.map((d: any) => ({
