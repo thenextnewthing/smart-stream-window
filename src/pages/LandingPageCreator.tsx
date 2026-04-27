@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { LandingPageChatLayout } from "@/components/LandingPageChatLayout";
+import { AddToVaultDialog } from "@/components/AddToVaultDialog";
 import {
   ArrowLeft,
   Loader2,
