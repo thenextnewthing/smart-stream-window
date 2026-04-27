@@ -499,6 +499,11 @@ export default function LandingPageEditor() {
           <PagePreview key={previewKey} page={page} />
         </div>
       </div>
+      <AddToVaultDialog
+        page={page}
+        open={vaultDialogOpen}
+        onOpenChange={setVaultDialogOpen}
+      />
     </div>
   );
 }
