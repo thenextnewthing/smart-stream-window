@@ -72,6 +72,7 @@ export default function LandingPageCreator() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [leadMagnetUploading, setLeadMagnetUploading] = useState(false);
+  const [vaultDialogOpen, setVaultDialogOpen] = useState(false);
 
   const [slugValue, setSlugValue] = useState("");
   const [slugSaving, setSlugSaving] = useState(false);
