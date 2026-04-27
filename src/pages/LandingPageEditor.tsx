@@ -19,6 +19,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { toast } from "sonner";
+import { AddToVaultDialog } from "@/components/AddToVaultDialog";
 
 interface LandingPage {
   id: string;
