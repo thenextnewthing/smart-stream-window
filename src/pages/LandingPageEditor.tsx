@@ -137,6 +137,7 @@ export default function LandingPageEditor() {
 
   // Publish toggle
   const [publishing, setPublishing] = useState(false);
+  const [vaultDialogOpen, setVaultDialogOpen] = useState(false);
 
   useEffect(() => {
     const init = async () => {
