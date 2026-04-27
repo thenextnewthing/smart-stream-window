@@ -26,6 +26,9 @@ export default function Resources() {
   const [loadingResources, setLoadingResources] = useState(true);
 
   useEffect(() => {
+    // Record a page view (fire-and-forget)
+    supabase.from("page_views").insert({ page_path: "/resources" }).then(() => {});
+
     const load = async () => {
       const { data } = await supabase
         .from("resource_center_items")
