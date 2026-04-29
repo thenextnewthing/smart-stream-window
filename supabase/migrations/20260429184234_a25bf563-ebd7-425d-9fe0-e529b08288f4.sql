@@ -1,0 +1,1 @@
+UPDATE landing_pages SET hero_image_url = 'https://bytetcbqpirrtcqxpyku.supabase.co/storage/v1/object/public/landing-page-images/evan-mcp-tools.png' WHERE slug = 'evan-mcp-tools';
