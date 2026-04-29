@@ -63,7 +63,9 @@ import {
   BookOpen,
   GripVertical,
   Image,
+  BarChart3,
 } from "lucide-react";
+import PageViewsTab from "@/components/admin/PageViewsTab";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
@@ -652,7 +654,16 @@ const Admin = () => {
                 </Badge>
               )}
             </TabsTrigger>
+            <TabsTrigger value="pageviews" className="gap-2">
+              <BarChart3 className="h-4 w-4" />
+              Page Views
+            </TabsTrigger>
           </TabsList>
+
+          {/* ── Page Views ─────────────────────────────────────────────────── */}
+          <TabsContent value="pageviews" className="mt-4">
+            <PageViewsTab />
+          </TabsContent>
 
           {/* ── Site Pages ─────────────────────────────────────────────────── */}
           <TabsContent value="pages" className="mt-4">
