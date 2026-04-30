@@ -71,9 +71,7 @@ const LandingPageView = () => {
       } else {
         setPage(data as LandingPage);
         supabase
-          .from("landing_pages")
-          .update({ view_count: (data.view_count ?? 0) + 1 })
-          .eq("id", data.id)
+          .rpc("increment_view_count", { page_id: data.id })
           .then(() => {});
       }
       setLoading(false);
