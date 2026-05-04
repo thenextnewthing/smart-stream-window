@@ -291,6 +291,9 @@ const Admin = () => {
   const [resourceEditItem, setResourceEditItem] = useState<Partial<ResourceCenterItem> | null>(null);
   const [resourceSaving, setResourceSaving] = useState(false);
 
+  const [intents, setIntents] = useState<any[]>([]);
+  const [intentsLoading, setIntentsLoading] = useState(true);
+
   // New redirect state
   const [newRedirectOpen, setNewRedirectOpen] = useState(false);
   const [newRedirectSlug, setNewRedirectSlug] = useState("");
