@@ -64,6 +64,7 @@ import {
   GripVertical,
   Image,
   BarChart3,
+  MessageSquare,
 } from "lucide-react";
 import PageViewsTab from "@/components/admin/PageViewsTab";
 
