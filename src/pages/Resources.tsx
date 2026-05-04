@@ -106,6 +106,7 @@ export default function Resources() {
       if (error) throw error;
       setStatus("unlocked");
       triggerConfetti();
+      setTimeout(() => setIntentOpen(true), 600);
     } catch {
       setStatus("idle");
       toast.error("Something went wrong. Please try again.");
