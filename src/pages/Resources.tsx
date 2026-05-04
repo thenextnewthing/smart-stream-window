@@ -3,6 +3,7 @@ import { ArrowRight, Loader2, Lock, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { supabase } from "@/integrations/supabase/client";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 interface ResourceLink {
   label: string;
@@ -24,6 +25,41 @@ export default function Resources() {
   const [status, setStatus] = useState<"idle" | "loading" | "unlocked">("idle");
   const [resources, setResources] = useState<ResourceItem[]>([]);
   const [loadingResources, setLoadingResources] = useState(true);
+  const [intentOpen, setIntentOpen] = useState(false);
+  const [intentText, setIntentText] = useState("");
+  const [intentSaving, setIntentSaving] = useState(false);
+
+  const saveIntent = async (response: string) => {
+    const params = new URLSearchParams(window.location.search);
+    await supabase.from("resource_intents").insert({
+      email: email || null,
+      response: response || null,
+      page_path: window.location.pathname,
+      utm_source: params.get("utm_source"),
+      utm_medium: params.get("utm_medium"),
+      referrer: document.referrer || null,
+    });
+  };
+
+  const handleIntentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!intentText.trim()) return;
+    setIntentSaving(true);
+    try {
+      await saveIntent(intentText.trim());
+      setIntentOpen(false);
+      toast.success("Thanks — browse the vault below.");
+    } catch {
+      toast.error("Couldn't save that. Browse the vault below.");
+      setIntentOpen(false);
+    } finally {
+      setIntentSaving(false);
+    }
+  };
+
+  const handleIntentSkip = () => {
+    setIntentOpen(false);
+  };
 
   useEffect(() => {
     const load = async () => {
@@ -71,6 +107,7 @@ export default function Resources() {
       if (error) throw error;
       setStatus("unlocked");
       triggerConfetti();
+      setTimeout(() => setIntentOpen(true), 600);
     } catch {
       setStatus("idle");
       toast.error("Something went wrong. Please try again.");
@@ -168,6 +205,45 @@ export default function Resources() {
           </button>
         </section>
       )}
+
+      <Dialog open={intentOpen} onOpenChange={(o) => !o && handleIntentSkip()}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle style={{ fontFamily: "var(--font-serif)" }}>
+              Got it — you came for a resource.
+            </DialogTitle>
+            <DialogDescription>
+              What video or resource are you looking for? (Optional — helps us send you the right stuff.)
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleIntentSubmit} className="space-y-3">
+            <input
+              autoFocus
+              type="text"
+              value={intentText}
+              onChange={(e) => setIntentText(e.target.value)}
+              placeholder="e.g. Liam Lawson interview, MCP tools…"
+              className="w-full px-4 py-3 rounded-xl bg-card border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground"
+            />
+            <div className="flex gap-2 justify-end">
+              <button
+                type="button"
+                onClick={handleIntentSkip}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Skip — let me browse
+              </button>
+              <button
+                type="submit"
+                disabled={intentSaving || !intentText.trim()}
+                className="px-5 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 inline-flex items-center gap-1.5"
+              >
+                {intentSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Send <ArrowRight className="w-3.5 h-3.5" /></>}
+              </button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
