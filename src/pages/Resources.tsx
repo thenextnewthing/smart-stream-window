@@ -208,40 +208,56 @@ export default function Resources() {
       )}
 
       <Dialog open={intentOpen} onOpenChange={(o) => !o && handleIntentSkip()}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle style={{ fontFamily: "var(--font-serif)" }}>
-              Got it — you came for a resource.
-            </DialogTitle>
-            <DialogDescription>
-              What video or resource are you looking for? (Optional — helps us send you the right stuff.)
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleIntentSubmit} className="space-y-3">
-            <input
-              autoFocus
-              type="text"
-              value={intentText}
-              onChange={(e) => setIntentText(e.target.value)}
-              placeholder="e.g. Liam Lawson interview, MCP tools…"
-              className="w-full px-4 py-3 rounded-xl bg-card border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground"
-            />
-            <div className="flex gap-2 justify-end">
-              <button
-                type="button"
-                onClick={handleIntentSkip}
-                className="px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Skip — let me browse
-              </button>
+        <DialogContent className="sm:max-w-md p-0 overflow-hidden bg-background border-chat-border">
+          <div className="flex items-center gap-2 px-5 py-3 border-b border-chat-border bg-card">
+            <span className="text-xl">🧨</span>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-foreground leading-tight">The Next New Thing</p>
+              <p className="text-xs text-muted-foreground leading-tight flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
+                online
+              </p>
+            </div>
+          </div>
+
+          <div className="px-4 py-5 space-y-1 max-h-[55vh] overflow-y-auto">
+            <ChatMessage role="assistant" delay={0}>
+              <p className="text-foreground">🎉 You're in. Vault unlocked.</p>
+            </ChatMessage>
+            <ChatMessage role="assistant" delay={900}>
+              <p className="text-foreground">Quick one before you dive in — what brought you here?</p>
+            </ChatMessage>
+            <ChatMessage role="assistant" delay={1800}>
+              <p className="text-foreground">Any specific video, playbook, or resource you're hunting for?</p>
+            </ChatMessage>
+          </div>
+
+          <form onSubmit={handleIntentSubmit} className="px-4 pb-4 pt-2 border-t border-chat-border bg-gradient-to-t from-card to-background">
+            <div className="relative">
+              <input
+                autoFocus
+                type="text"
+                value={intentText}
+                onChange={(e) => setIntentText(e.target.value)}
+                placeholder="Type what you're looking for…"
+                disabled={intentSaving}
+                className="w-full px-4 py-3 pr-12 rounded-2xl bg-card border border-chat-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground text-sm disabled:opacity-50"
+              />
               <button
                 type="submit"
                 disabled={intentSaving || !intentText.trim()}
-                className="px-5 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 inline-flex items-center gap-1.5"
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                {intentSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Send <ArrowRight className="w-3.5 h-3.5" /></>}
+                {intentSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-5 h-5" />}
               </button>
             </div>
+            <button
+              type="button"
+              onClick={handleIntentSkip}
+              className="mt-3 mx-auto block text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Skip — just let me browse the vault →
+            </button>
           </form>
         </DialogContent>
       </Dialog>
