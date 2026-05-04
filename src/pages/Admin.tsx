@@ -669,7 +669,52 @@ const Admin = () => {
               <BarChart3 className="h-4 w-4" />
               Page Views
             </TabsTrigger>
+            <TabsTrigger value="intents" className="gap-2">
+              <MessageSquare className="h-4 w-4" />
+              Intents
+              {intents.length > 0 && (
+                <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0">
+                  {intents.length}
+                </Badge>
+              )}
+            </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="intents" className="mt-4">
+            <div className="rounded-lg border border-border bg-card overflow-hidden">
+              <div className="px-4 py-3 border-b border-border">
+                <h3 className="font-semibold text-foreground">Resource Vault — Visitor Intents</h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  What people typed when asked "What resource are you looking for?" after unlocking the vault.
+                </p>
+              </div>
+              {intentsLoading ? (
+                <div className="p-8 text-center text-muted-foreground text-sm">Loading…</div>
+              ) : intents.length === 0 ? (
+                <div className="p-8 text-center text-muted-foreground text-sm">No intents captured yet.</div>
+              ) : (
+                <div className="divide-y divide-border max-h-[70vh] overflow-y-auto">
+                  {intents.map((it) => (
+                    <div key={it.id} className="p-4 text-sm">
+                      <div className="flex items-start justify-between gap-3 mb-1">
+                        <p className="text-foreground font-medium">"{it.response || <em className="text-muted-foreground">(skipped)</em>}"</p>
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">
+                          {new Date(it.created_at).toLocaleString()}
+                        </span>
+                      </div>
+                      <div className="text-xs text-muted-foreground flex flex-wrap gap-x-3 gap-y-1">
+                        {it.email && <span>📧 {it.email}</span>}
+                        {it.page_path && <span>📄 {it.page_path}</span>}
+                        {it.utm_source && <span>utm_source: {it.utm_source}</span>}
+                        {it.utm_medium && <span>utm_medium: {it.utm_medium}</span>}
+                        {it.referrer && <span className="truncate max-w-xs">ref: {it.referrer}</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </TabsContent>
 
           {/* ── Page Views ─────────────────────────────────────────────────── */}
           <TabsContent value="pageviews" className="mt-4">
