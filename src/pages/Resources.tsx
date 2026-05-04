@@ -24,6 +24,41 @@ export default function Resources() {
   const [status, setStatus] = useState<"idle" | "loading" | "unlocked">("idle");
   const [resources, setResources] = useState<ResourceItem[]>([]);
   const [loadingResources, setLoadingResources] = useState(true);
+  const [intentOpen, setIntentOpen] = useState(false);
+  const [intentText, setIntentText] = useState("");
+  const [intentSaving, setIntentSaving] = useState(false);
+
+  const saveIntent = async (response: string) => {
+    const params = new URLSearchParams(window.location.search);
+    await supabase.from("resource_intents").insert({
+      email: email || null,
+      response: response || null,
+      page_path: window.location.pathname,
+      utm_source: params.get("utm_source"),
+      utm_medium: params.get("utm_medium"),
+      referrer: document.referrer || null,
+    });
+  };
+
+  const handleIntentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!intentText.trim()) return;
+    setIntentSaving(true);
+    try {
+      await saveIntent(intentText.trim());
+      setIntentOpen(false);
+      toast.success("Thanks — browse the vault below.");
+    } catch {
+      toast.error("Couldn't save that. Browse the vault below.");
+      setIntentOpen(false);
+    } finally {
+      setIntentSaving(false);
+    }
+  };
+
+  const handleIntentSkip = () => {
+    setIntentOpen(false);
+  };
 
   useEffect(() => {
     const load = async () => {
