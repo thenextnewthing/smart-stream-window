@@ -445,6 +445,13 @@ const Admin = () => {
         .order("display_order", { ascending: true });
       if (rcItems) setResourceItems(rcItems.map((r: any) => ({ ...r, links: r.links || [] })));
       setResourcesLoading(false);
+
+      const { data: intentsData } = await supabase
+        .from("resource_intents" as any)
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (intentsData) setIntents(intentsData);
+      setIntentsLoading(false);
     };
 
     init();
