@@ -229,6 +229,39 @@ export type Database = {
         }
         Relationships: []
       }
+      resource_intents: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          page_path: string | null
+          referrer: string | null
+          response: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          page_path?: string | null
+          referrer?: string | null
+          response?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          page_path?: string | null
+          referrer?: string | null
+          response?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
