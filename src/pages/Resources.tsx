@@ -29,12 +29,21 @@ export default function Resources() {
   const [intentOpen, setIntentOpen] = useState(false);
   const [intentText, setIntentText] = useState("");
   const [intentSaving, setIntentSaving] = useState(false);
+  const [convStep, setConvStep] = useState<"asking" | "guessing" | "wrong" | "done">("asking");
+  const [userQuery, setUserQuery] = useState("");
+  const [guess, setGuess] = useState<ResourceItem | null>(null);
 
-  const saveIntent = async (response: string) => {
+  const saveIntent = async (
+    response: string,
+    matchedTitle: string | null,
+    confirmed: boolean | null,
+  ) => {
     const params = new URLSearchParams(window.location.search);
     await supabase.from("resource_intents").insert({
       email: email || null,
-      response: response || null,
+      response: response
+        ? `${response}${matchedTitle ? ` | matched: ${matchedTitle}${confirmed === null ? "" : confirmed ? " ✓" : " ✗"}` : ""}`
+        : null,
       page_path: window.location.pathname,
       utm_source: params.get("utm_source"),
       utm_medium: params.get("utm_medium"),
@@ -42,24 +51,56 @@ export default function Resources() {
     });
   };
 
+  const findBestMatch = (query: string): ResourceItem | null => {
+    const q = query.toLowerCase().replace(/[^a-z0-9 ]/g, " ").split(/\s+/).filter((w) => w.length > 2);
+    if (q.length === 0) return null;
+    let best: { item: ResourceItem; score: number } | null = null;
+    for (const r of resources) {
+      const haystack = `${r.title} ${r.description ?? ""} ${r.tag ?? ""}`.toLowerCase();
+      let score = 0;
+      for (const word of q) if (haystack.includes(word)) score += 1;
+      if (!best || score > best.score) best = { item: r, score };
+    }
+    return best && best.score > 0 ? best.item : null;
+  };
+
   const handleIntentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!intentText.trim()) return;
     setIntentSaving(true);
+    const q = intentText.trim();
+    setUserQuery(q);
+    const match = findBestMatch(q);
+    setGuess(match);
     try {
-      await saveIntent(intentText.trim());
-      setIntentOpen(false);
-      toast.success("Thanks — browse the vault below.");
-    } catch {
-      toast.error("Couldn't save that. Browse the vault below.");
-      setIntentOpen(false);
-    } finally {
-      setIntentSaving(false);
-    }
+      await saveIntent(q, match?.title ?? null, null);
+    } catch {}
+    setIntentSaving(false);
+    setIntentText("");
+    setConvStep(match ? "guessing" : "wrong");
+  };
+
+  const confirmGuess = async () => {
+    try {
+      await saveIntent(userQuery, guess?.title ?? null, true);
+    } catch {}
+    setConvStep("done");
+  };
+
+  const rejectGuess = async () => {
+    try {
+      await saveIntent(userQuery, guess?.title ?? null, false);
+    } catch {}
+    setConvStep("wrong");
   };
 
   const handleIntentSkip = () => {
     setIntentOpen(false);
+    setTimeout(() => {
+      setConvStep("asking");
+      setUserQuery("");
+      setGuess(null);
+    }, 300);
   };
 
   useEffect(() => {
