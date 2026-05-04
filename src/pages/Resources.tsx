@@ -29,12 +29,21 @@ export default function Resources() {
   const [intentOpen, setIntentOpen] = useState(false);
   const [intentText, setIntentText] = useState("");
   const [intentSaving, setIntentSaving] = useState(false);
+  const [convStep, setConvStep] = useState<"asking" | "guessing" | "wrong" | "done">("asking");
+  const [userQuery, setUserQuery] = useState("");
+  const [guess, setGuess] = useState<ResourceItem | null>(null);
 
-  const saveIntent = async (response: string) => {
+  const saveIntent = async (
+    response: string,
+    matchedTitle: string | null,
+    confirmed: boolean | null,
+  ) => {
     const params = new URLSearchParams(window.location.search);
     await supabase.from("resource_intents").insert({
       email: email || null,
-      response: response || null,
+      response: response
+        ? `${response}${matchedTitle ? ` | matched: ${matchedTitle}${confirmed === null ? "" : confirmed ? " ✓" : " ✗"}` : ""}`
+        : null,
       page_path: window.location.pathname,
       utm_source: params.get("utm_source"),
       utm_medium: params.get("utm_medium"),
@@ -42,24 +51,56 @@ export default function Resources() {
     });
   };
 
+  const findBestMatch = (query: string): ResourceItem | null => {
+    const q = query.toLowerCase().replace(/[^a-z0-9 ]/g, " ").split(/\s+/).filter((w) => w.length > 2);
+    if (q.length === 0) return null;
+    let best: { item: ResourceItem; score: number } | null = null;
+    for (const r of resources) {
+      const haystack = `${r.title} ${r.description ?? ""} ${r.tag ?? ""}`.toLowerCase();
+      let score = 0;
+      for (const word of q) if (haystack.includes(word)) score += 1;
+      if (!best || score > best.score) best = { item: r, score };
+    }
+    return best && best.score > 0 ? best.item : null;
+  };
+
   const handleIntentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!intentText.trim()) return;
     setIntentSaving(true);
+    const q = intentText.trim();
+    setUserQuery(q);
+    const match = findBestMatch(q);
+    setGuess(match);
     try {
-      await saveIntent(intentText.trim());
-      setIntentOpen(false);
-      toast.success("Thanks — browse the vault below.");
-    } catch {
-      toast.error("Couldn't save that. Browse the vault below.");
-      setIntentOpen(false);
-    } finally {
-      setIntentSaving(false);
-    }
+      await saveIntent(q, match?.title ?? null, null);
+    } catch {}
+    setIntentSaving(false);
+    setIntentText("");
+    setConvStep(match ? "guessing" : "wrong");
+  };
+
+  const confirmGuess = async () => {
+    try {
+      await saveIntent(userQuery, guess?.title ?? null, true);
+    } catch {}
+    setConvStep("done");
+  };
+
+  const rejectGuess = async () => {
+    try {
+      await saveIntent(userQuery, guess?.title ?? null, false);
+    } catch {}
+    setConvStep("wrong");
   };
 
   const handleIntentSkip = () => {
     setIntentOpen(false);
+    setTimeout(() => {
+      setConvStep("asking");
+      setUserQuery("");
+      setGuess(null);
+    }, 300);
   };
 
   useEffect(() => {
@@ -225,40 +266,140 @@ export default function Resources() {
               <p className="text-foreground">🎉 You're in. Vault unlocked.</p>
             </ChatMessage>
             <ChatMessage role="assistant" delay={900}>
-              <p className="text-foreground">Quick one before you dive in — what brought you here?</p>
+              <p className="text-foreground">Tell me what you're looking for and I'll take you straight to it.</p>
             </ChatMessage>
             <ChatMessage role="assistant" delay={1800}>
-              <p className="text-foreground">Any specific video, playbook, or resource you're hunting for?</p>
+              <p className="text-foreground">Which video, playbook, or resource do you want?</p>
             </ChatMessage>
+
+            {userQuery && (
+              <ChatMessage role="user" delay={0}>
+                <p className="text-foreground">{userQuery}</p>
+              </ChatMessage>
+            )}
+
+            {convStep === "guessing" && guess && (
+              <>
+                <ChatMessage role="assistant" delay={0}>
+                  <p className="text-foreground">Got it. Are you talking about this one?</p>
+                </ChatMessage>
+                <ChatMessage role="assistant" delay={400}>
+                  <div className="flex gap-3 items-center">
+                    {guess.thumbnail_url && (
+                      <img src={guess.thumbnail_url} alt={guess.title} className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
+                    )}
+                    <div className="min-w-0">
+                      <p className="font-semibold text-foreground text-sm truncate">{guess.title}</p>
+                      {guess.description && (
+                        <p className="text-xs text-muted-foreground line-clamp-2">{guess.description}</p>
+                      )}
+                    </div>
+                  </div>
+                </ChatMessage>
+                <ChatMessage role="assistant" delay={800}>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={confirmGuess}
+                      className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors"
+                    >
+                      Yes, that's it
+                    </button>
+                    <button
+                      onClick={rejectGuess}
+                      className="px-3 py-1.5 rounded-lg bg-card border border-chat-border text-foreground text-xs font-medium hover:bg-muted transition-colors"
+                    >
+                      Nope, not it
+                    </button>
+                  </div>
+                </ChatMessage>
+              </>
+            )}
+
+            {convStep === "done" && guess && (
+              <>
+                <ChatMessage role="assistant" delay={0}>
+                  <p className="text-foreground">🎯 Boom. Here you go:</p>
+                </ChatMessage>
+                <ChatMessage role="assistant" delay={400}>
+                  <div className="space-y-2">
+                    <p className="font-semibold text-foreground text-sm">{guess.title}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {guess.links.map((l) => (
+                        <a
+                          key={l.url}
+                          href={l.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors"
+                        >
+                          {l.label}
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </ChatMessage>
+                <ChatMessage role="assistant" delay={900}>
+                  <button
+                    onClick={handleIntentSkip}
+                    className="text-xs text-primary hover:underline"
+                  >
+                    Close & browse the rest →
+                  </button>
+                </ChatMessage>
+              </>
+            )}
+
+            {convStep === "wrong" && (
+              <>
+                <ChatMessage role="assistant" delay={0}>
+                  <p className="text-foreground">Ah, my bad — couldn't pin that one down.</p>
+                </ChatMessage>
+                <ChatMessage role="assistant" delay={500}>
+                  <p className="text-foreground">No worries, the full vault is right behind me. Have a browse 👇</p>
+                </ChatMessage>
+                <ChatMessage role="assistant" delay={1000}>
+                  <button
+                    onClick={handleIntentSkip}
+                    className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors inline-flex items-center gap-1.5"
+                  >
+                    Browse the vault
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                </ChatMessage>
+              </>
+            )}
           </div>
 
-          <form onSubmit={handleIntentSubmit} className="px-4 pb-4 pt-2 border-t border-chat-border bg-gradient-to-t from-card to-background">
-            <div className="relative">
-              <input
-                autoFocus
-                type="text"
-                value={intentText}
-                onChange={(e) => setIntentText(e.target.value)}
-                placeholder="Type what you're looking for…"
-                disabled={intentSaving}
-                className="w-full px-4 py-3 pr-12 rounded-2xl bg-card border border-chat-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground text-sm disabled:opacity-50"
-              />
+          {convStep === "asking" && (
+            <form onSubmit={handleIntentSubmit} className="px-4 pb-4 pt-2 border-t border-chat-border bg-gradient-to-t from-card to-background">
+              <div className="relative">
+                <input
+                  autoFocus
+                  type="text"
+                  value={intentText}
+                  onChange={(e) => setIntentText(e.target.value)}
+                  placeholder="e.g. Liam Lawson interview, MCP tools…"
+                  disabled={intentSaving}
+                  className="w-full px-4 py-3 pr-12 rounded-2xl bg-card border border-chat-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground text-sm disabled:opacity-50"
+                />
+                <button
+                  type="submit"
+                  disabled={intentSaving || !intentText.trim()}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {intentSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-5 h-5" />}
+                </button>
+              </div>
               <button
-                type="submit"
-                disabled={intentSaving || !intentText.trim()}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                type="button"
+                onClick={handleIntentSkip}
+                className="mt-3 mx-auto block text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
-                {intentSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-5 h-5" />}
+                Skip — just let me browse the vault →
               </button>
-            </div>
-            <button
-              type="button"
-              onClick={handleIntentSkip}
-              className="mt-3 mx-auto block text-xs text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Skip — just let me browse the vault →
-            </button>
-          </form>
+            </form>
+          )}
         </DialogContent>
       </Dialog>
     </div>
